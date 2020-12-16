@@ -1,0 +1,15 @@
+.LogoSVG {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  bottom: ;
+
+  animation: Move linear;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+}
+
+@keyframes Move {
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
