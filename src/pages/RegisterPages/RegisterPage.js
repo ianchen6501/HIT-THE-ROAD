@@ -10,7 +10,7 @@ import {
   UserButtonText,
   ErrorMessage
  } from '../../components/UserForm'
- import { Container } from '../../components/public'
+ import { Wrapper } from '../../components/public'
  import { handleRegister } from '../../redux/reducers/userReducer'
  import { useDispatch } from 'react-redux'
  import { setAuthTokenToLocalStorage } from '../../utils'
@@ -66,7 +66,7 @@ export default function LoginPage() {
   }, [username, password, nickname, usernameErrorMessage, passwordErrorMessage, nicknameErrorMessage])
 
   return (
-    <Container $solidPlate={true}>
+    <Wrapper $solidPlate={true}>
       <FormContainer>
         <Title>please sign in</Title>
           <UserInputContainer>
@@ -86,6 +86,6 @@ export default function LoginPage() {
           <UserButtonBackground />
         </UserButtonBorder>
       </FormContainer>
-    </Container>
+    </Wrapper>
   )
 }

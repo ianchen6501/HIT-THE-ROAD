@@ -9,7 +9,7 @@ const PostContainer = styled.div `
   display: flex;
   align-items: center;
   height: 160px;
-  margin: 10px 0px;
+  margin-bottom: 20px;
   box-shadow: 0.5px 0.5px 3px -1px;
   transition: background 0.2s;
 
@@ -89,7 +89,6 @@ const Date = styled.div `
 `
 
 export default function Post({postData}) {
-  console.log(postData)
   const title = postData.title
   const content = postData.content
   const arthur = postData.arthur

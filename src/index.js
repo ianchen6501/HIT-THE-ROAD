@@ -35,16 +35,15 @@ const theme = {
   },
 
   Wrappers : {
-    maxWidth: '80vw',
+    maxWidth: '1200px',
     mediumWidth: '70vw',
   },
 
   heights : {
     header: '80px',
-    homepageHeader: '280px',
+    homepageHeader: '400px',
     footer: '70px',
   }
-
 }
 
 ReactDOM.render(

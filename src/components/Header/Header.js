@@ -1,11 +1,13 @@
-import React from 'react'
+import React, {Component} from 'react'
 import styled from 'styled-components'
 import {
   Link,
   useLocation,
   useHistory
 } from 'react-router-dom';
-import logo from '../../static/logo.png'
+import logo from '../../static/logo.svg'
+import {ReactComponent as LogoSVG} from '../../static/logo.svg'
+import "./Header.css"
 
 const HeaderContainer =styled.div `
   position: ${props => props.$atHomepage? `relative` : `absolute`};
@@ -34,12 +36,14 @@ const HeaderUpContainer = styled.div `
 `
 
 const Logo = styled.div `
-  height: 60px;
-  width: 180px;
+  position: relative;
+  width: ${props => props.$atHomepage? '360px' : '210px'};
+  height: ${props => props.$atHomepage? '120px' : '70px'};
   background: url(${logo});
   background-position: center;
   background-repeat: no-repeat;
-  background-size: 180px 60px;
+  background-size: ${props => props.$atHomepage? '360px 120px' : '210px 70px'};
+  ${props => props.$atHomepage && `bottom: 20px;`}
 `
 
 const Brand = styled.div `
@@ -92,7 +96,8 @@ const HeaderSlogan = styled.div `
   top: -40px;
   display: flex;
   align-items: center;
-  padding: 25px;
+  margin-top: 20px;
+  padding: 15px 25px;
   border: solid 2px ${props => props.theme.primaryColors.primaryDarker};
   font-size: ${props => props.theme.titles.h3};
   font-weight: bold;
@@ -104,18 +109,23 @@ export default function Header() {
   return (
     <HeaderContainer $atHomepage={location.pathname === '/'}>
       <HeaderUpContainer $atHomepage={location.pathname === '/'}>
-      <LeftContainer>
+        <LeftContainer>
           <Brand as={Link} to='/'>HitTheRoad</Brand>
         </LeftContainer>
-        <Logo></Logo>
+        { location.pathname !== '/' && (
+          <Logo $atHomepage={location.pathname === '/'}></Logo>
+        )}
         <NavbarList>
           <Nav to='/login' $active={location.pathname === '/login'}>登入</Nav>
           <Nav to='/register' $active={location.pathname === '/register'}>註冊</Nav>
           <Nav >登出</Nav>
         </NavbarList>
       </HeaderUpContainer>
-        {location.pathname === '/' && (
-          <HeaderSlogan>開始探索旅程</HeaderSlogan>
+        { location.pathname === '/' && (
+          <>
+            <LogoSVG className="LogoSVG" stroke="#DB7290" strokeWidth="1rem" fill="#000000"></LogoSVG>
+            <HeaderSlogan>開始探索旅程</HeaderSlogan>
+          </>
         )}
     </HeaderContainer>
   )

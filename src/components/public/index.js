@@ -1,3 +1,3 @@
 export { 
-  Container,
+  Wrapper,
  } from './public'
