@@ -22,7 +22,7 @@
     "styled-components": "^5.2.1",
     "web-vitals": "^0.2.4"
   },
-  "homepage": "https://ianchen6501.github.io/HIT-THE-ROAD-DEAMO",
+  "homepage": "https://ianchen6501.github.io/HIT-THE-ROAD-DEAMO/",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
@@ -30,7 +30,7 @@
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
-    "cypress:open": "cypress open",
+    "cypress:open": "cypress open"
   },
   "eslintConfig": {
     "extends": [
