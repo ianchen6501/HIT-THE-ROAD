@@ -8,21 +8,21 @@ import { Provider } from 'react-redux'
 
 const theme = {
   primaryColors : {
-    primaryLighter : '#00000',
-    primaryLight : '#00000',
-    primaryMedium : '#00000',
-    primaryDark : '#00000',
-    primaryDarker : '#00000',
-    white: '#00000',
-    black: '#00000',
+    primaryLighter : '#e6e6e6',
+    primaryLight : '#c9c9c9',
+    primary : '#9e9e9e',
+    primaryDark : '#808080',
+    primaryDarker : '#474747',
+    white: '#fff5f6',
+    black: '#000000',
   },
 
   fontSizes : {
-    extraLarge : '36px',
-    Large: '30px',
-    medium: '26px',
-    Small: '20px',
-    extraSmall: '16px',
+    extraLarge : '30px',
+    large: '26px',
+    medium: '20px',
+    small: '16px',
+    extraSmall: '12px',
   },
 
   titles : {
@@ -37,6 +37,12 @@ const theme = {
   Wrappers : {
     maxWidth: '80vw',
     mediumWidth: '70vw',
+  },
+
+  heights : {
+    header: '80px',
+    homepageHeader: '280px',
+    footer: '70px',
   }
 
 }

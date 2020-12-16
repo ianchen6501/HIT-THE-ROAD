@@ -1,4 +1,20 @@
-.App {
+@import "~antd/dist/antd.css";
+
+* {
   box-sizing: border-box;
   font-family: "微軟正黑體", sans-serif;
+}
+
+div {
+  text-transform: uppercase;
+}
+
+input,
+textarea,
+button {
+  margin: 0;
+  padding: 0;
+  outline: 0;
+  text-decoration: none;
+  border: none;
 }
