@@ -77,7 +77,7 @@ function initFacebookSdk() {
 const FBstartApp = () => {
   console.log('getStatus')
   window.FB.getLoginStatus(function(response) {
-    statusChangeCallback(response);
+    return statusChangeCallback(response)
   });
 
   function testAPI() {
@@ -124,19 +124,19 @@ const FBstartApp = () => {
 
 function FBdeleteApp() { 
   window.FB.getLoginStatus(function (response) {//取得目前user是否登入FB網站
-      //debug用
-      console.log(response);
-      if (response.status === 'connected') {
-          // Logged into Facebook.
-          //抓userID
-          window.FB.api("/me/permissions", "DELETE", function (response) {
-              console.log("刪除結果");
-              console.log(response); //gives true on app delete success 
-          });
-      } else {
-          // FB取消授權
-          console.log("無法刪除FB App");
-      }
+    //debug用
+    console.log(response);
+    if (response.status === 'connected') {
+        // Logged into Facebook.
+        //抓userID
+        window.FB.api("/me/permissions", "DELETE", function (response) {
+            console.log("刪除結果");
+            console.log(response); //gives true on app delete success 
+        });
+    } else {
+        // FB取消授權
+        console.log("無法刪除FB App");
+    }
   });
 }
 
