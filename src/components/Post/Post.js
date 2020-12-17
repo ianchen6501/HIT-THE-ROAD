@@ -102,10 +102,10 @@ export default function Post({postData}) {
             <TitleContainer>
               <Title>{title}</Title>
               <HeartOutlined style={{
-                  position: 'relative',
-                  transform: 'Scale(1.5)',
-                  margin: '0px 0px 0px 10px',
-              }} fill={"#49c"}/>
+                position: 'relative',
+                transform: 'Scale(1.5)',
+                margin: '0px 0px 0px 10px',
+              }}/>
             </TitleContainer>
             <Content>{content}</Content>
           </ContentLeftContainer>

@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-export const userReducer = createSlice({
+export const usersReducer = createSlice({
   name: 'users',
   initialState: {
     isLoading: false,
@@ -24,7 +24,7 @@ export const {
   setIsLoading,
   setAuthTokenResponse,
   setUserData
-} = userReducer.actions;
+} = usersReducer.actions;
 
 export const getAuthToken = (loginData) => (dispatch) => {
   dispatch(setIsLoading(true))
@@ -50,12 +50,16 @@ export const getAuthToken = (loginData) => (dispatch) => {
 
 export const handleRegister = (registerData) => (dispatch) => {
   dispatch(setIsLoading(true))
-  //這邊要修正為真實串 API 確認是否註冊
+  //這邊要修正為真實串 API
+  //1. 確認是否註冊
+  //2. 註冊並回傳 response
+  //3. 回前端處理 login
   const response = {
     ok: true,
     username: registerData.username,
     password: registerData.password,
     nickname: registerData.nickname,
+    email: registerData.email,
     token: "23456"
   }
   dispatch(setIsLoading(false))
@@ -63,4 +67,22 @@ export const handleRegister = (registerData) => (dispatch) => {
   //缺錯誤處理
 }
 
-export default userReducer.reducer; 
+export const handleFBRegister =(FBregisterData) => (dispatch) => {
+  dispatch(setIsLoading(true))
+  //這邊要修正為真實串 API
+  //1. 確認是否註冊FB
+  //2. 註冊並回傳 response
+  //3. 回前端處理 login
+  const response = {
+    ok: true,
+    FBName: FBregisterData.name,
+    FBId: FBregisterData.id,
+    FBEmail: FBregisterData.email,
+    token: "34567",
+  }
+  dispatch(setIsLoading(false))
+  return response
+  //缺錯誤處理
+}
+
+export default usersReducer.reducer; 

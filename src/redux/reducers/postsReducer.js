@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-export const scheduleReducer = createSlice({
+export const postsReducer = createSlice({
   name: 'schedules',
   initialState: {
     posts: null,
@@ -18,7 +18,7 @@ export const scheduleReducer = createSlice({
 export const { 
   setIsLoading,
   setPosts,
-} = scheduleReducer.actions;
+} = postsReducer.actions;
 
 export const getPosts = () => (dispatch) => {
   console.log('getPosts')
@@ -45,4 +45,4 @@ export const getPosts = () => (dispatch) => {
   return response
 }
 
-export default scheduleReducer.reducer; 
+export default postsReducer.reducer; 

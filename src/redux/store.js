@@ -1,10 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
-import  scheduleReducer from './reducers/scheduleReducer';
-import userReducer from './reducers/userReducer';
+import  schedulesReducer from './reducers/schedulesReducer';
+import usersReducer from './reducers/usersReducer';
+import postsReducer from './reducers/postsReducer';
 
 export default configureStore({
   reducer: {
-    schedules: scheduleReducer,
-    users: userReducer,
+    schedules: schedulesReducer,
+    users: usersReducer,
+    posts: postsReducer,
   },
 });

@@ -1,4 +1,5 @@
 import './App.css';
+import { createContext, useContext } from 'react'
 import {
   HashRouter as Router,
   Switch,
@@ -13,7 +14,8 @@ import UserPage from '../../pages/UserPages';
 import Footer from '../Footer'
 import Header from '../Header'
 
-function App() {
+function App({FBstartApp, FBdeleteApp}) {
+
   return (
     <Router>
       <Header />
@@ -25,7 +27,7 @@ function App() {
           <LoginPage/>
         </Route>
         <Route exact path='/register'> 
-          <RegisterPage/>
+          <RegisterPage FBstartApp={FBstartApp} FBdeleteApp={FBdeleteApp}/>
         </Route>
         <Route exact path='/user/:id'> 
           <UserPage/>

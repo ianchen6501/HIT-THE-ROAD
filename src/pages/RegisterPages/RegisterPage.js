@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import {
   FormContainer,
   UserInput,
@@ -9,20 +9,26 @@ import {
   UserButtonBackground,
   UserButtonText,
   ErrorMessage
- } from '../../components/UserForm'
- import { Wrapper } from '../../components/public'
- import { handleRegister } from '../../redux/reducers/userReducer'
- import { useDispatch } from 'react-redux'
- import { setAuthTokenToLocalStorage } from '../../utils'
+} from '../../components/UserForm'
+import { Wrapper } from '../../components/public'
+import { handleRegister } from '../../redux/reducers/usersReducer'
+import { useDispatch } from 'react-redux'
+import { setAuthTokenToLocalStorage } from '../../utils'
+import { FacebookOutlined } from '@ant-design/icons'
 
-export default function LoginPage() {
+export default function RegisterPage({FBstartApp, FBdeleteApp}) {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [nickname, setNickname] = useState('')
+  const [email, setEmail] = useState('')
   const [usernameErrorMessage, setUsernameErrorMessage] = useState("")
   const [passwordErrorMessage, setPasswordErrorMessage] = useState("")
   const [nicknameErrorMessage, setNicknameErrorMessage] = useState("")
+  const [emailErrorMessage, setEmailErrorMessage] = useState("")
   const dispatch = useDispatch()
+
+  const [authResponse, setAuthResponse] = useState(null)
+  const [FBuserData, setFBuserData] = useState(null)
 
   const handleLogin = () => {
     const message = 'this field can not be empty.'
@@ -36,10 +42,13 @@ export default function LoginPage() {
     if(!nickname) {
       setNicknameErrorMessage(message)
     }
-    if(!username || !password || !nickname) {
+    if(!email) {
+      setEmailErrorMessage(message)
+    }
+    if(!username || !password || !nickname || !email) {
       return
     } else {
-      const res = dispatch(handleRegister({username, password, nickname}))
+      const res = dispatch(handleRegister({username, password, nickname, email}))
       console.log(res)
       if(res.ok === true) {
         setAuthTokenToLocalStorage(res.token)
@@ -47,11 +56,9 @@ export default function LoginPage() {
     }
   }
   
-  // useEffect(() => {
-  //   console.log(username)
-  //   console.log(password)
-  //   console.log(nickname)
-  // })
+  function handleSetFBuserData() {
+    FBstartApp().then(response => setFBuserData(response))
+  }
 
   useEffect(() => {
     if(username) {
@@ -63,24 +70,38 @@ export default function LoginPage() {
     if(nickname) {
       setNicknameErrorMessage('')
     }
-  }, [username, password, nickname, usernameErrorMessage, passwordErrorMessage, nicknameErrorMessage])
+    if(email) {
+      setEmailErrorMessage('')
+    }
+  }, [username, password, nickname, email])
 
   return (
     <Wrapper $solidPlate={true}>
       <FormContainer>
         <Title>please sign in</Title>
-          <UserInputContainer>
-            <UserInput placeholder={'USERNAME'} onChange={(event) => setUsername(event.target.value)} value={username}></UserInput>
-            {usernameErrorMessage && <ErrorMessage>{usernameErrorMessage}</ErrorMessage>}
-          </UserInputContainer>
-          <UserInputContainer>
-            <UserInput placeholder={'PASSWORD'} onChange={(event) => setPassword(event.target.value)} value={password}></UserInput>
-            {passwordErrorMessage && <ErrorMessage>{passwordErrorMessage}</ErrorMessage>}
-          </UserInputContainer>
-          <UserInputContainer>
-            <UserInput placeholder={'NICKNAME'} onChange={(event) => setNickname(event.target.value)} value={nickname}></UserInput>
-            {nicknameErrorMessage && <ErrorMessage>{nicknameErrorMessage}</ErrorMessage>}
-          </UserInputContainer>
+        <FacebookOutlined onClick={handleSetFBuserData} style={{
+          position: 'absolute',
+          right: '10px',
+          top: '10px',
+          transform: 'scale(1.2)',
+          cursor: 'pointer',
+        }}/>
+        <UserInputContainer>
+          <UserInput placeholder={'USERNAME'} onChange={(event) => setUsername(event.target.value)} value={username}></UserInput>
+          {usernameErrorMessage && <ErrorMessage>{usernameErrorMessage}</ErrorMessage>}
+        </UserInputContainer>
+        <UserInputContainer>
+          <UserInput placeholder={'PASSWORD'} onChange={(event) => setPassword(event.target.value)} value={password}></UserInput>
+          {passwordErrorMessage && <ErrorMessage>{passwordErrorMessage}</ErrorMessage>}
+        </UserInputContainer>
+        <UserInputContainer>
+          <UserInput placeholder={'NICKNAME'} onChange={(event) => setNickname(event.target.value)} value={nickname}></UserInput>
+          {nicknameErrorMessage && <ErrorMessage>{nicknameErrorMessage}</ErrorMessage>}
+        </UserInputContainer>
+        <UserInputContainer>
+          <UserInput placeholder={'EMAIL'} onChange={(event) => setEmail(event.target.value)} value={email}></UserInput>
+          {emailErrorMessage && <ErrorMessage>{emailErrorMessage}</ErrorMessage>}
+        </UserInputContainer>
         <UserButtonBorder onClick={() => handleLogin()}>
           <UserButtonText>next</UserButtonText>
           <UserButtonBackground />

@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { Wrapper } from '../../components/public'
 import { useLocation, Link } from 'react-router-dom'
 import Post from '../../components/Post'
-import { getPosts } from '../../redux/reducers/scheduleReducer'
+import { getPosts } from '../../redux/reducers/postsReducer'
 import { useDispatch, useSelector } from 'react-redux'
 
 const Heading = styled.h1 `
@@ -73,7 +73,7 @@ const MoreTag = styled.div `
 export default function HomePage() {
   const location = useLocation()
   const dispatch = useDispatch()
-  const postsData = useSelector(store => store.schedules.posts)
+  const postsData = useSelector(store => store.posts.posts)
 
   useEffect(() => {
     dispatch(getPosts())

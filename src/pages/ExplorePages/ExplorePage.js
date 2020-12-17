@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { Wrapper } from '../../components/public'
 import Post from '../../components/Post'
-import { getPosts } from '../../redux/reducers/scheduleReducer'
+import { getPosts } from '../../redux/reducers/postsReducer'
 
 const SearchContainer = styled.div `
   display: flex;
@@ -33,7 +33,7 @@ const SearchButton = styled.button `
 
 export default function ExplorePage() {
   const dispatch = useDispatch()
-  const postsData = useSelector(store => store.schedules.posts)
+  const postsData = useSelector(store => store.posts.posts)
 
   useEffect(() => {
     dispatch(getPosts())

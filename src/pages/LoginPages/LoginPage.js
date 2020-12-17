@@ -10,11 +10,9 @@ import {
   ErrorMessage
  } from '../../components/UserForm'
 import { Wrapper } from '../../components/public'
-import { getAuthToken, setAuthTokenResponse } from '../../redux/reducers/userReducer'
+import { getAuthToken, setAuthTokenResponse } from '../../redux/reducers/usersReducer'
 import { useDispatch } from 'react-redux'
 import { setAuthTokenToLocalStorage } from '../../utils'
-
-
 
 export default function LoginPage() {
   const [username, setUsername] = useState("")
