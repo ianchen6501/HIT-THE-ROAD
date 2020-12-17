@@ -13,10 +13,10 @@ import {
 import { Wrapper } from '../../components/public'
 import { handleRegister } from '../../redux/reducers/usersReducer'
 import { useDispatch } from 'react-redux'
-import { setAuthTokenToLocalStorage } from '../../utils'
+import { setAuthTokenToLocalStorage, FBstartApp, FBdeleteApp } from '../../utils'
 import { FacebookOutlined } from '@ant-design/icons'
 
-export default function RegisterPage({FBstartApp, FBdeleteApp}) {
+export default function RegisterPage() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [nickname, setNickname] = useState('')
@@ -57,9 +57,8 @@ export default function RegisterPage({FBstartApp, FBdeleteApp}) {
   }
   
   function handleSetFBuserData() {
-    FBstartApp().then(response => setFBuserData(response))
+    FBstartApp().then(res => console.log(res))
   }
-
   useEffect(() => {
     if(username) {
       setUsernameErrorMessage('')
