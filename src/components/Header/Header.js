@@ -8,6 +8,10 @@ import logo from '../../static/logo.svg'
 import {ReactComponent as LogoSVG} from '../../static/logo.svg'
 import "./Header.css"
 import { FBdeleteApp } from '../../utils';
+import { useDispatch, useSelector } from 'react-redux';
+import store from '../../redux/store';
+import { deleteAuthTokenFromLocalStorage } from '../../utils'
+import { setUserData } from '../../redux/reducers/usersReducer';
 
 const HeaderContainer =styled.div `
   position: ${props => props.$atHomepage? `relative` : `absolute`};
@@ -104,7 +108,15 @@ const HeaderSlogan = styled.div `
 `
 
 export default function Header() {
+  const dispatch = useDispatch()
   const location = useLocation()
+  const userData = useSelector(store => store.users.userData)
+
+  function handleLogout() {
+    // FBdeleteApp()
+    deleteAuthTokenFromLocalStorage()
+    dispatch(setUserData(null))
+  }
 
   return (
     <HeaderContainer $atHomepage={location.pathname === '/'}>
@@ -116,9 +128,9 @@ export default function Header() {
           <Logo $atHomepage={location.pathname === '/'}></Logo>
         )}
         <NavbarList>
-          <Nav to='/login' $active={location.pathname === '/login'}>登入</Nav>
-          <Nav to='/register' $active={location.pathname === '/register'}>註冊</Nav>
-          <Nav onClick={FBdeleteApp}>登出</Nav>
+          {!userData && <Nav to='/login' $active={location.pathname === '/login'}>登入</Nav>}
+          {!userData && <Nav to='/register' $active={location.pathname === '/register'}>註冊</Nav>}
+          {userData && <Nav onClick={() => handleLogout()}>登出</Nav>}
         </NavbarList>
       </HeaderUpContainer>
         { location.pathname === '/' && (

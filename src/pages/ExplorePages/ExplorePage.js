@@ -31,9 +31,31 @@ const SearchButton = styled.button `
   }
 `
 
+const FilterContainer = styled.div `
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
+`
+
+const KeywordFilter = styled.div `
+  border: solid 1px ${props => props.theme.primaryColors.primaryLight};
+  margin-left: 20px;
+  border-radius: 13px;
+  padding: 4px 8px;
+  color: ${props => props.theme.primaryColors.dark};
+  font-size: ${props => props.theme.fontSizes.medium};
+  trasiton: transform
+
+  &:hover {
+    transform: scale(1.1);
+  }
+`
+
 export default function ExplorePage() {
   const dispatch = useDispatch()
   const postsData = useSelector(store => store.posts.posts)
+  //假的 filter 資料，之後從資料庫拿
+  const keywords = ['東部', '西部', '北部', '南部', '中部']
 
   useEffect(() => {
     dispatch(getPosts())
@@ -45,6 +67,9 @@ export default function ExplorePage() {
         <SearchInput placeholder={"關鍵字搜尋"}/>
         <SearchButton>search</SearchButton>
       </SearchContainer>
+      <FilterContainer>
+        {keywords.map(keyword => <KeywordFilter>{keyword}</KeywordFilter>)}
+      </FilterContainer>
       {postsData && 
         postsData.map((post, index) => <Post postData={post} key={index}></Post>)
       }

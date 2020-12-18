@@ -1,4 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { useHistory, useLocation } from 'react-router-dom'
+import { setAuthTokenToLocalStorage, FBstartApp, FBdeleteApp } from '../../utils'
+import { handleRegister, handleFBRegister, setUserData } from '../../redux/reducers/usersReducer'
 import {
   FormContainer,
   UserInput,
@@ -11,11 +15,7 @@ import {
   ErrorMessage
 } from '../../components/UserForm'
 import { Wrapper } from '../../components/public'
-import { handleRegister, handleFBRegister } from '../../redux/reducers/usersReducer'
-import { useDispatch } from 'react-redux'
-import { setAuthTokenToLocalStorage, FBstartApp, FBdeleteApp } from '../../utils'
 import { FacebookOutlined } from '@ant-design/icons'
-import { useHistory, useLocation } from 'react-router-dom'
 
 export default function RegisterPage() {
   const [username, setUsername] = useState('')
@@ -26,7 +26,7 @@ export default function RegisterPage() {
   const [passwordErrorMessage, setPasswordErrorMessage] = useState("")
   const [nicknameErrorMessage, setNicknameErrorMessage] = useState("")
   const [emailErrorMessage, setEmailErrorMessage] = useState("")
-  const [FBRegistererrorMessage, setFBRegistererrorMessage] = useState("")
+  const [FBRegistErerrorMessage, setFBRegistErerrorMessage] = useState("")
   const dispatch = useDispatch()
   const history = useHistory()
 
@@ -53,7 +53,7 @@ export default function RegisterPage() {
       const res = dispatch(handleRegister({username, password, nickname, email}))
       console.log(res)
       if(res.ok === true) {
-        setAuthTokenToLocalStorage(res.token)
+        setAuthTokenToLocalStorage(res.id)
       };
     }
   }
@@ -62,15 +62,14 @@ export default function RegisterPage() {
     const errorMessage = "there is something wrong with the FB system, please use the formal register method."
     FBstartApp().then(res => {
       if(!res.ok) {
-        setFBRegistererrorMessage(errorMessage)
-        return
+        setFBRegistErerrorMessage(errorMessage)
+        return 
       }
-      handleFBRegister(res).then(res => {
-        setAuthTokenToLocalStorage(res.id)
+      dispatch(handleFBRegister(res.FBUserData))
+      .then(data => {
+        setAuthTokenToLocalStorage(data.id)
+        console.log('register success!')
       })
-      console.log('register success!')
-    }).finally(() => {
-      history.push('/')
     })
   }
 
@@ -120,7 +119,7 @@ export default function RegisterPage() {
           <UserButtonText>next</UserButtonText>
           <UserButtonBackground />
         </UserButtonBorder>
-        {FBRegistererrorMessage && <ErrorMessage>there is something wrong with the FB system, please use the formal register method.</ErrorMessage>}
+        {FBRegistErerrorMessage && <ErrorMessage>there is something wrong with the FB system, please use the formal register method.</ErrorMessage>}
       </FormContainer>
     </Wrapper>
   )

@@ -14,14 +14,17 @@ import UserPage from '../../pages/UserPages';
 import Footer from '../Footer'
 import Header from '../Header'
 import { getAuthTokenFromLocalStorage } from '../../utils'
+import { handleSetUserData } from '../../redux/reducers/usersReducer'
+import { useDispatch } from 'react-redux';
 
 function App({FBstartApp, FBdeleteApp}) {
+  const dispatch = useDispatch()
+
   useEffect(() => {
     if(getAuthTokenFromLocalStorage()) {
-      //dispatch(getUserData)
+      dispatch(handleSetUserData())
     }
-    
-  })
+  }, [])
 
   return (
     <Router>

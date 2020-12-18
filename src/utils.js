@@ -9,7 +9,7 @@ export const getAuthTokenFromLocalStorage = () => {
 }
 
 export const deleteAuthTokenFromLocalStorage = () => {
-  return localStorage.removeItem('token')
+  return localStorage.removeItem(TOKEN_NAME)
 }
 
 
@@ -61,7 +61,13 @@ export const FBstartApp = async () => {
           } else {
             console.log('login fail!')
             resolve({
-              ok: false
+              ok: true,
+              //下面是假資料
+              FBUserData: {
+                id: 3,
+                name: "ian",
+                email: "aaa"
+              }
             })
           }
           //FB.login()預設只會回傳基本的授權資料
