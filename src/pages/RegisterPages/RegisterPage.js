@@ -11,10 +11,11 @@ import {
   ErrorMessage
 } from '../../components/UserForm'
 import { Wrapper } from '../../components/public'
-import { handleRegister } from '../../redux/reducers/usersReducer'
+import { handleRegister, handleFBRegister } from '../../redux/reducers/usersReducer'
 import { useDispatch } from 'react-redux'
 import { setAuthTokenToLocalStorage, FBstartApp, FBdeleteApp } from '../../utils'
 import { FacebookOutlined } from '@ant-design/icons'
+import { useHistory, useLocation } from 'react-router-dom'
 
 export default function RegisterPage() {
   const [username, setUsername] = useState('')
@@ -25,25 +26,26 @@ export default function RegisterPage() {
   const [passwordErrorMessage, setPasswordErrorMessage] = useState("")
   const [nicknameErrorMessage, setNicknameErrorMessage] = useState("")
   const [emailErrorMessage, setEmailErrorMessage] = useState("")
+  const [FBRegistererrorMessage, setFBRegistererrorMessage] = useState("")
   const dispatch = useDispatch()
+  const history = useHistory()
 
-  const [authResponse, setAuthResponse] = useState(null)
   const [FBuserData, setFBuserData] = useState(null)
 
-  const handleLogin = () => {
-    const message = 'this field can not be empty.'
+  function handleOnClickRegister() {
+    const errorMessage = 'this field can not be empty.'
 
     if(!username) {
-      setUsernameErrorMessage(message)
+      setUsernameErrorMessage(errorMessage)
     }
     if(!password) {
-      setPasswordErrorMessage(message)
+      setPasswordErrorMessage(errorMessage)
     }
     if(!nickname) {
-      setNicknameErrorMessage(message)
+      setNicknameErrorMessage(errorMessage)
     }
     if(!email) {
-      setEmailErrorMessage(message)
+      setEmailErrorMessage(errorMessage)
     }
     if(!username || !password || !nickname || !email) {
       return
@@ -56,9 +58,22 @@ export default function RegisterPage() {
     }
   }
   
-  function handleSetFBuserData() {
-    FBstartApp().then(res => console.log(res))
+  function handleOnClickFBRegister() {
+    const errorMessage = "there is something wrong with the FB system, please use the formal register method."
+    FBstartApp().then(res => {
+      if(!res.ok) {
+        setFBRegistererrorMessage(errorMessage)
+        return
+      }
+      handleFBRegister(res).then(res => {
+        setAuthTokenToLocalStorage(res.id)
+      })
+      console.log('register success!')
+    }).finally(() => {
+      history.push('/')
+    })
   }
+
   useEffect(() => {
     if(username) {
       setUsernameErrorMessage('')
@@ -78,7 +93,7 @@ export default function RegisterPage() {
     <Wrapper $solidPlate={true}>
       <FormContainer>
         <Title>please sign in</Title>
-        <FacebookOutlined onClick={handleSetFBuserData} style={{
+        <FacebookOutlined onClick={handleOnClickFBRegister} style={{
           position: 'absolute',
           right: '10px',
           top: '10px',
@@ -101,10 +116,11 @@ export default function RegisterPage() {
           <UserInput placeholder={'EMAIL'} onChange={(event) => setEmail(event.target.value)} value={email}></UserInput>
           {emailErrorMessage && <ErrorMessage>{emailErrorMessage}</ErrorMessage>}
         </UserInputContainer>
-        <UserButtonBorder onClick={() => handleLogin()}>
+        <UserButtonBorder onClick={() => handleOnClickRegister()}>
           <UserButtonText>next</UserButtonText>
           <UserButtonBackground />
         </UserButtonBorder>
+        {FBRegistererrorMessage && <ErrorMessage>there is something wrong with the FB system, please use the formal register method.</ErrorMessage>}
       </FormContainer>
     </Wrapper>
   )

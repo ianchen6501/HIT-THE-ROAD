@@ -1,4 +1,4 @@
-const TOKEN_NAME = 'token'
+const TOKEN_NAME = 'id'
 
 export const setAuthTokenToLocalStorage = (token) => {
   localStorage.setItem(TOKEN_NAME, JSON.stringify(token))
@@ -38,7 +38,10 @@ export const FBstartApp = async () => {
       return await new Promise(resolve => {
         window.FB.api('/me',{fields: 'id,name,email'}, function (response) {
           console.log(response)
-          resolve(response)
+          resolve({
+            ok: true,
+            FBUserData: response
+          })
         })
       })
     } else {
@@ -50,10 +53,16 @@ export const FBstartApp = async () => {
           if (response.authResponse) {
             window.FB.api('/me',{fields: 'id,name,email'}, function (response) {
               console.log(response)
-              resolve(response)
+              resolve({
+                ok: true,
+                FBUserData: response
+              })
             })
           } else {
-            resolve('login fail!')
+            console.log('login fail!')
+            resolve({
+              ok: false
+            })
           }
           //FB.login()預設只會回傳基本的授權資料
           //如果想取得額外的授權資料需要另外設定在scope參數裡面

@@ -1,5 +1,5 @@
 import './App.css';
-import { createContext, useContext } from 'react'
+import { createContext, useContext, useEffect } from 'react'
 import {
   HashRouter as Router,
   Switch,
@@ -13,8 +13,15 @@ import ExpolorePage from '../../pages/ExplorePages';
 import UserPage from '../../pages/UserPages';
 import Footer from '../Footer'
 import Header from '../Header'
+import { getAuthTokenFromLocalStorage } from '../../utils'
 
 function App({FBstartApp, FBdeleteApp}) {
+  useEffect(() => {
+    if(getAuthTokenFromLocalStorage()) {
+      //dispatch(getUserData)
+    }
+    
+  })
 
   return (
     <Router>

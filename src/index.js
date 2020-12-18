@@ -9,11 +9,11 @@ import { ConsoleSqlOutlined } from '@ant-design/icons';
 
 const theme = {
   primaryColors : {
-    primaryLighter : '#e6e6e6',
-    primaryLight : '#c9c9c9',
-    primary : '#9e9e9e',
-    primaryDark : '#808080',
-    primaryDarker : '#474747',
+    primaryLighter : '#ED784A',
+    primaryLight : '#ED784A',
+    primary : '#ED784A',
+    primaryDark : '#ED784A',
+    primaryDarker : '#ED784A',
     white: '#fff5f6',
     black: '#000000',
   },

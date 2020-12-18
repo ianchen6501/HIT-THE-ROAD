@@ -56,10 +56,14 @@ export const handleRegister = (registerData) => (dispatch) => {
   //3. 回前端處理 login
   const response = {
     ok: true,
+    id: 1,
     username: registerData.username,
     password: registerData.password,
     nickname: registerData.nickname,
     email: registerData.email,
+    FBName: null,
+    FBId: null,
+    FBEmail: null,
     token: "23456"
   }
   dispatch(setIsLoading(false))
@@ -68,20 +72,27 @@ export const handleRegister = (registerData) => (dispatch) => {
 }
 
 export const handleFBRegister =(FBregisterData) => (dispatch) => {
+  if(!FBregisterData) {
+    return
+  }
   dispatch(setIsLoading(true))
   //這邊要修正為真實串 API
   //1. 確認是否註冊FB
   //2. 註冊並回傳 response
   //3. 回前端處理 login
-  const response = {
+  dispatch(setIsLoading(false))
+  return new Promise (resolve => resolve({
     ok: true,
+    id: 2,
+    username: null,
+    password: null,
+    nickname: null,
+    email: null,
     FBName: FBregisterData.name,
     FBId: FBregisterData.id,
     FBEmail: FBregisterData.email,
     token: "34567",
-  }
-  dispatch(setIsLoading(false))
-  return response
+  }))
   //缺錯誤處理
 }
 

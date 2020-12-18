@@ -3,11 +3,11 @@ import styled from 'styled-components'
 import {
   Link,
   useLocation,
-  useHistory
 } from 'react-router-dom';
 import logo from '../../static/logo.svg'
 import {ReactComponent as LogoSVG} from '../../static/logo.svg'
 import "./Header.css"
+import { FBdeleteApp } from '../../utils';
 
 const HeaderContainer =styled.div `
   position: ${props => props.$atHomepage? `relative` : `absolute`};
@@ -118,7 +118,7 @@ export default function Header() {
         <NavbarList>
           <Nav to='/login' $active={location.pathname === '/login'}>登入</Nav>
           <Nav to='/register' $active={location.pathname === '/register'}>註冊</Nav>
-          <Nav >登出</Nav>
+          <Nav onClick={FBdeleteApp}>登出</Nav>
         </NavbarList>
       </HeaderUpContainer>
         { location.pathname === '/' && (
