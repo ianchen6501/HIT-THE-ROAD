@@ -1,8 +1,24 @@
 import styled from "styled-components";
-
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { DragDropContext, Droppable } from "react-beautiful-dnd";
 
 import { MEDIA_QUERY_SM } from "../../constants/break_point";
+import PostItItem from "../../components/PostItItem";
+import DayLists from "./DayLists";
+import ScheduleAddForm from "./ScheduleAddForm";
+import ScheduleUpdateForm from "./ScheduleUpdateForm";
+import {
+  setEditId,
+  setOrderByStartRoutines,
+  addFromPostIt,
+  deleteSpot,
+} from "../../redux/reducers/schedulesReducer";
+import {
+  setOriginalColumns,
+  setDestinationColumn,
+  setIsScheduled,
+} from "../../redux/reducers/postItsReducer";
 
 const PlanWrapper = styled.div`
   display: flex;
@@ -17,32 +33,10 @@ const ScheduleWrapper = styled.div`
   display: flex;
 `;
 
-const DayList = styled.div`
-  display: flex;
-  flex-direction: column;
-  background: black;
-`;
-
-const DayButton = styled.button`
-  margin-left: 5px;
-  background: wheat;
-  border-top-left-radius: 5px;
-  border-bottom-left-radius: 5px;
-  border: none;
-  border-bottom: 1px solid black;
-  height: 36px;
-
-  ${(props) =>
-    props.$active &&
-    `
-    background: gray;
-  `}
-`;
-
 const Schedule = styled.div`
   padding: 20px;
   min-width: 240px;
-  background: gray;
+  background: ${(props) => (props.isDraggingOver ? "white" : "gray")};
 
   ${MEDIA_QUERY_SM} {
     width: 100%;
@@ -115,6 +109,12 @@ const ScheduleTime = styled.div`
   font-size: ${(props) => props.theme.fontSizes.extraSmall};
 `;
 
+const DeleteButton = styled.button`
+  display: block;
+  border: none;
+  background: transparent;
+`;
+
 const SchedulePlus = styled.button`
   display: block;
   margin: auto;
@@ -124,369 +124,196 @@ const SchedulePlus = styled.button`
   font-size: ${(props) => props.theme.fontSizes.large};
 `;
 
-const ScheduleDetailForm = styled.form`
-  display: block;
-  position: absolute;
-  left: 260px;
-  top: 0;
-  padding: 20px;
-  background: black;
-  color: white;
-  font-size: ${(props) => props.theme.fontSizes.small};
-
-  ${(props) =>
-    !props.$isEdit &&
-    `
-    display: none;
-  `}
-`;
-
-const ScheduleAddForm = styled.form`
-  display: block;
-  position: absolute;
-  transform: translateX(-50%);
-  top: 60px;
-  left: 50%;
-  padding: 32px;
-  border: 1px solid black;
-  border-radius: 5px;
-  background: white;
-
-  ${(props) =>
-    !props.$isEdit &&
-    `
-    display: none;
-  `}
-
-  & div {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 5px;
-  }
-`;
-
-const CloseButton = styled.div`
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  border: none;
-  color: wheat;
-  background: transparent;
-  cursor: pointer;
-`;
-
-const Button = styled.button`
-  margin-top: 20px;
-  width: 100%;
-  background: wheat;
-  border: none;
-  border-radius: 5px;
-
-  transition: all 1s ease;
-
-  &:disabled {
-    opacity: 0;
-    width: 50%;
-  }
-`;
-
 const MapWrapper = styled.div`
   flex: 1;
 `;
 
-const PostItWrapper = styled.div`
-  position: relative;
-  background: pink;
-  width: 120px;
-  height: 100vh;
-`;
+export default function PlanningPage() {
+  const dispatch = useDispatch();
 
-const PostItItem = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  background: wheat;
-  width: 60px;
-  height: 60px;
-`;
+  const dailyRoutines = useSelector((store) => store.schedules.dailyRoutines);
+  const orderByStartRoutines = useSelector(
+    (store) => store.schedules.orderByStartRoutines
+  );
+  const currentDate = useSelector((store) => store.schedules.currentDate);
+  const editId = useSelector((store) => store.schedules.editId);
 
-export default function PlannginPage() {
-  const [routines, setRoutines] = useState(null);
-  const [currentDate, setCurrentDate] = useState(null);
-  const [editId, setEditId] = useState(null);
-
-  // 編輯 detail
-
-  const [location, setLocation] = useState("");
-  const [start, setStart] = useState("");
-  const [end, setEnd] = useState("");
-  const [budget, setBudget] = useState("");
-  const [memo, setMemo] = useState("");
-
-  // 依 start 排列
-  const [orderByStartRoutines, setOrderByStartRoutines] = useState([]);
+  const columns = useSelector((store) => store.postIts.columns);
+  const spots = useSelector((store) => store.postIts.spots);
 
   useEffect(() => {
-    // 之後應該要是使用者選好天數會自動在 useState 時就把初始值設為拿到的第一天
-    setCurrentDate("0523");
-    // 先建假資料
-    setRoutines({
-      "0523": [
-        {
-          location: "台北101",
-          start: "0800",
-          end: "1000",
-          category: "food",
-          memo: "hohoho",
-          budget: 100,
-        },
-        {
-          location: "微風南山山山山山",
-          start: "1100",
-          end: "1300",
-          category: "food",
-          memo: "hao he",
-          budget: 300,
-        },
-      ],
-      "0524": [],
-    });
-  }, []);
-
-  function clearScheduleFormState() {
-    setLocation("");
-    setStart("");
-    setEnd("");
-    setBudget("");
-    setMemo("");
-  }
-
-  function handleScheduleItemClick(index) {
-    editId === index ? setEditId(null) : setEditId(index);
-    const editSchedule = orderByStartRoutines[index];
-    setLocation(editSchedule.location);
-    setStart(editSchedule.start);
-    setEnd(editSchedule.end);
-    setBudget(editSchedule.budget);
-    setMemo(editSchedule.memo);
-  }
-
-  function handleScheduleDetailFormSubmit(e) {
-    e.preventDefault();
-    // TODO: 編輯
-    setRoutines({
-      ...routines,
-      [currentDate]: [
-        ...routines[currentDate],
-        {
-          ...routines[currentDate][0],
-          location,
-          start,
-          end,
-          budget,
-          memo,
-        },
-      ],
-    });
-    setEditId(null);
-    clearScheduleFormState();
-  }
-
-  useEffect(() => {
-    setEditId(null);
-  }, [currentDate]);
-
-  function handleSchedulePlusClick() {
-    // 要跳新增框（ScheduleAddForm）
-    editId === "add" ? setEditId(null) : setEditId("add");
-    clearScheduleFormState();
-  }
-
-  function handleAddScheduleSubmit(e) {
-    e.preventDefault();
-    setRoutines({
-      ...routines,
-      [currentDate]: [
-        ...routines[currentDate],
-        { location, start, end, budget, memo },
-      ],
-    });
-    setEditId(null);
-    clearScheduleFormState();
-  }
+    dispatch(setEditId(null));
+  }, [currentDate, dispatch]);
 
   useEffect(() => {
     // 根據 start 排列
-    if (currentDate) {
-      const orderRoutines = routines[currentDate].slice();
+    if (currentDate && dailyRoutines) {
+      const orderRoutines = dailyRoutines[currentDate].slice();
       orderRoutines.sort(function (a, b) {
         return a.start - b.start;
       });
-      setOrderByStartRoutines(orderRoutines);
+      dispatch(setOrderByStartRoutines(orderRoutines));
+      console.log("dailyRoutines: ", dailyRoutines);
     }
-  }, [routines, currentDate]);
+  }, [dailyRoutines, currentDate, dispatch]);
 
-  const canSubmit = Boolean(location) && Boolean(start);
+  function handleScheduleItemClick(index) {
+    editId === index ? dispatch(setEditId(null)) : dispatch(setEditId(index));
+  }
+
+  function handleSchedulePlusClick() {
+    // 要跳新增框（ScheduleAddForm）
+    editId === "add" ? dispatch(setEditId(null)) : dispatch(setEditId("add"));
+  }
+
+  // TODO: 刪除
+  function handleDeleteClick(id) {
+    console.log("enter handleDelteClick");
+    const index = dailyRoutines[currentDate].findIndex(
+      (routine) => routine.id === id
+    );
+    dispatch(deleteSpot(index));
+    if (dailyRoutines[currentDate][index].postItId) {
+      const postItId = dailyRoutines[currentDate][index].postItId;
+      console.log("postItId test: ", postItId);
+      dispatch(setIsScheduled(postItId));
+    }
+  }
+
+  function onDragEnd(result) {
+    const { destination, source, draggableId } = result;
+
+    if (!destination) {
+      return;
+    }
+
+    if (
+      destination.droppableId === source.droppableId &&
+      destination.index === source.index
+    ) {
+      return;
+    }
+
+    // 有不同的 column
+    const startColumn = columns[source.droppableId];
+    const finishColumn = columns[destination.droppableId];
+
+    if (startColumn === finishColumn) {
+      // 在原 column 裡移動
+      const newSpotsIds = Array.from(startColumn.spotsIds); // 避免改變原 array
+      newSpotsIds.splice(source.index, 1);
+      newSpotsIds.splice(destination.index, 0, draggableId);
+
+      const newColumn = {
+        ...startColumn,
+        spotsIds: newSpotsIds,
+      };
+
+      return dispatch(setOriginalColumns(source.droppableId, newColumn));
+    }
+
+    const finishSpotsIds = Array.from(finishColumn.spotsIds);
+    finishSpotsIds.splice(destination.index, 0, draggableId);
+    const newFinish = {
+      ...finishColumn,
+      spotsIds: finishSpotsIds,
+    };
+
+    const spotId = startColumn.spotsIds[source.index]; // 拖曳的 spot id
+    const draggingSpot = spots[spotId];
+    console.log("draggingSpot: ", draggingSpot);
+    const { location, start, end, category, budget, memo, id } = draggingSpot;
+    console.log("id: ", id);
+    dispatch(
+      addFromPostIt({
+        location,
+        start,
+        end,
+        category,
+        budget,
+        memo,
+        id,
+      })
+    );
+
+    dispatch(
+      setDestinationColumn(destination.droppableId, newFinish, draggingSpot)
+    );
+  }
 
   return (
-    <PlanWrapper>
-      {!routines && <div>loading</div>}
-      {routines && (
-        <ScheduleWrapper>
-          <DayList>
-            {Object.keys(routines).map((date) => (
-              <DayButton
-                onClick={() => {
-                  setCurrentDate(date);
-                }}
-                $active={currentDate === date}
-                key={date}
-              >
-                {date}
-              </DayButton>
-            ))}
-          </DayList>
-          <Schedule>
-            <ScheduleTitle>{currentDate}</ScheduleTitle>
-            <ScheduleList>
-              {orderByStartRoutines.map((routine, index) => (
-                <ScheduleItemWrapper key={index}>
-                  <ScheduleCategory />
-                  <ScheduleItem
-                    onClick={() => {
-                      handleScheduleItemClick(index);
-                    }}
-                  >
-                    {routine.location}
-                  </ScheduleItem>
-                  <ScheduleTimeWrapper>
-                    <ScheduleTime>{routine.start}</ScheduleTime>
-                    <ScheduleTime>{routine.end}</ScheduleTime>
-                  </ScheduleTimeWrapper>
+    //  DropDragContext
+    <DragDropContext onDragEnd={onDragEnd}>
+      <PlanWrapper>
+        {!dailyRoutines && <div>loading</div>}
+        {dailyRoutines && (
+          <ScheduleWrapper>
+            <DayLists />
 
-                  {/* 編輯景點 */}
-                  <ScheduleDetailForm
-                    $isEdit={editId === index}
-                    onSubmit={(e) => handleScheduleDetailFormSubmit(e)}
-                  >
-                    <CloseButton
-                      onClick={() => {
-                        setEditId(null);
-                      }}
-                    >
-                      ✖
-                    </CloseButton>
-                    <div>
-                      景點：
-                      <input
-                        placeholder={routine.location}
-                        value={location}
-                        onChange={(e) => setLocation(e.target.value)}
-                      />
-                    </div>
-                    <div>
-                      開始時間：
-                      <input
-                        placeholder={routine.start}
-                        value={start}
-                        onChange={(e) => setStart(e.target.value)}
-                      />
-                    </div>
-                    <div>
-                      結束時間：
-                      <input
-                        placeholder={routine.end}
-                        value={end}
-                        onChange={(e) => setEnd(e.target.value)}
-                      />
-                    </div>
-                    <div>
-                      預算：
-                      <input
-                        placeholder={routine.budget}
-                        value={budget}
-                        onChange={(e) => setBudget(e.target.value)}
-                      />
-                    </div>
-                    <div>
-                      備註：
-                      <input
-                        placeholder={routine.memo}
-                        value={memo}
-                        onChange={(e) => setMemo(e.target.value)}
-                      />
-                    </div>
-                    <Button disabled={!canSubmit}>確認</Button>
-                  </ScheduleDetailForm>
-                </ScheduleItemWrapper>
-              ))}
-
-              {/* 新增 */}
-              <ScheduleAddForm
-                $isEdit={editId === "add"}
-                onSubmit={(e) => handleAddScheduleSubmit(e)}
-              >
-                <CloseButton
-                  onClick={() => {
-                    setEditId(null);
-                  }}
+            <Droppable droppableId={"dailyRoutine"}>
+              {(provided, snapshot) => (
+                <Schedule
+                  ref={provided.innerRef}
+                  {...provided.droppableProps}
+                  isDraggingOver={snapshot.isDraggingOver}
                 >
-                  ✖
-                </CloseButton>
-                <div>
-                  景點：
-                  <input
-                    value={location}
-                    onChange={(e) => setLocation(e.target.value)}
-                  />
-                </div>
-                <div>
-                  開始時間：
-                  <input
-                    value={start}
-                    onChange={(e) => setStart(e.target.value)}
-                  />
-                </div>
-                <div>
-                  結束時間：
-                  <input value={end} onChange={(e) => setEnd(e.target.value)} />
-                </div>
-                <div>
-                  預算：
-                  <input
-                    value={budget}
-                    onChange={(e) => setBudget(e.target.value)}
-                  />
-                </div>
-                <div>
-                  備註：
-                  <input
-                    value={memo}
-                    onChange={(e) => setMemo(e.target.value)}
-                  />
-                </div>
-                <Button disabled={!canSubmit}>確認</Button>
-              </ScheduleAddForm>
+                  <ScheduleTitle>{currentDate}</ScheduleTitle>
 
-              <SchedulePlus onClick={handleSchedulePlusClick}>+</SchedulePlus>
-            </ScheduleList>
-          </Schedule>
-        </ScheduleWrapper>
-      )}
-      <MapWrapper>
-        <iframe
-          title="test"
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d22094.645005374365!2d121.52617071979361!3d25.063810304921578!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3442a951fdd9f7f9%3A0x7a40c3880c03a171!2z6Ie65YyX5biC56uL576O6KGT6aSo!5e0!3m2!1szh-TW!2stw!4v1607933420613!5m2!1szh-TW!2stw"
-          width="100%"
-          height="100%"
-          frameBorder="0"
-          styled={{ border: 0 }}
-        ></iframe>
-      </MapWrapper>
+                  <ScheduleList>
+                    {orderByStartRoutines.map((routine, index) => (
+                      <ScheduleItemWrapper key={index}>
+                        <ScheduleCategory />
+                        <ScheduleItem
+                          onClick={() => {
+                            handleScheduleItemClick(index);
+                          }}
+                        >
+                          {routine.location}
+                        </ScheduleItem>
+                        <ScheduleTimeWrapper>
+                          <ScheduleTime>{routine.start}</ScheduleTime>
+                          <ScheduleTime>{routine.end}</ScheduleTime>
+                        </ScheduleTimeWrapper>
 
-      <PostItWrapper>
-        <PostItItem></PostItItem>
-      </PostItWrapper>
-    </PlanWrapper>
+                        {/* TODO: 刪除 */}
+                        <DeleteButton
+                          onClick={() => handleDeleteClick(routine.id)}
+                        >
+                          ✖
+                        </DeleteButton>
+
+                        {/* 編輯 */}
+                        <ScheduleUpdateForm index={index} routine={routine} />
+                      </ScheduleItemWrapper>
+                    ))}
+
+                    {/* 新增 */}
+                    <ScheduleAddForm />
+                    <SchedulePlus onClick={handleSchedulePlusClick}>
+                      +
+                    </SchedulePlus>
+                  </ScheduleList>
+
+                  {provided.placeholder}
+                </Schedule>
+              )}
+            </Droppable>
+          </ScheduleWrapper>
+        )}
+
+        <MapWrapper>
+          <iframe
+            title="test"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d22094.645005374365!2d121.52617071979361!3d25.063810304921578!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3442a951fdd9f7f9%3A0x7a40c3880c03a171!2z6Ie65YyX5biC56uL576O6KGT6aSo!5e0!3m2!1szh-TW!2stw!4v1607933420613!5m2!1szh-TW!2stw"
+            width="100%"
+            height="100%"
+            frameBorder="0"
+            styled={{ border: 0 }}
+          ></iframe>
+        </MapWrapper>
+
+        <PostItItem />
+      </PlanWrapper>
+    </DragDropContext>
   );
 }
