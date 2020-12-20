@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-// TODO: orderByStartRoutines 有動的話就要存到 dailyRoutines
+// orderByStartRoutines 有動的話就要存到 dailyRoutines
 
 let spotId = 0;
 
@@ -50,7 +50,6 @@ export const schedulesReducer = createSlice({
       });
     },
     addDailyRoutinesFromPostIt: (state, action) => {
-      console.log("action: ", action.payload);
       state.dailyRoutines[state.currentDate].push({
         ...action.payload,
         id: (spotId += 1),

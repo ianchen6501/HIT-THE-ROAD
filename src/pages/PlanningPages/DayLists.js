@@ -6,22 +6,25 @@ import { setCurrentDate } from "../../redux/reducers/schedulesReducer";
 const DayList = styled.div`
   display: flex;
   flex-direction: column;
-  background: black;
+  background: ${(props) => props.theme.basicColors.black};
 `;
 
 const DayButton = styled.button`
   margin-left: 5px;
-  background: wheat;
+  background: ${(props) => props.theme.primaryColors.primaryLight};
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
   border: none;
+  border-right: 0.5px solid black;
   border-bottom: 1px solid black;
   height: 36px;
+  color: ${(props) => props.theme.primaryColors.primaryDarker};
 
   ${(props) =>
     props.$active &&
     `
-    background: gray;
+    border-right: none;
+    background: ${props.theme.primaryColors.primaryLighter};
   `}
 `;
 

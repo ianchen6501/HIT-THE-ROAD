@@ -7,14 +7,28 @@ import store from "./redux/store";
 import { Provider } from "react-redux";
 
 const theme = {
+  basicColors: {
+    white: "#FFF5F6",
+    black: "#000000",
+  },
+
   primaryColors: {
-    primaryLighter: "#00000",
-    primaryLight: "#00000",
-    primary: "#00000",
-    primaryDark: "#00000",
-    primaryDarker: "#00000",
-    white: "#00000",
-    black: "#00000",
+    primaryLighter: "#f8dfc2",
+    // primaryLighter: "#FFC6B0",
+    primaryLight: "#FFC6B0",
+    // primaryLight: "#E68965",
+    primary: "#ED784A",
+    primaryDark: "#E98B2A",
+    // primaryDark: "#D65B2B",
+    primaryDarker: "#7A2F11",
+  },
+
+  secondaryColors: {
+    secondaryLighter: "#BFDBDE",
+    secondaryLight: "#9BB7BA",
+    secondary: "#77969A",
+    secondaryDark: "#5C7B80",
+    secondaryDarker: "#355257",
   },
 
   fontSizes: {

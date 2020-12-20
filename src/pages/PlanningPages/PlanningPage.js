@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 
@@ -35,8 +35,10 @@ const ScheduleWrapper = styled.div`
 
 const Schedule = styled.div`
   padding: 20px;
-  min-width: 240px;
-  background: ${(props) => (props.isDraggingOver ? "white" : "gray")};
+  min-width: 260px;
+  background: ${(props) =>
+    props.isDraggingOver ? "white" : props.theme.primaryColors.primaryLighter};
+  box-shadow: 2px 0 2px gray;
 
   ${MEDIA_QUERY_SM} {
     width: 100%;
@@ -45,8 +47,12 @@ const Schedule = styled.div`
 `;
 
 const ScheduleTitle = styled.div`
-  font-size: ${(props) => props.theme.fontSizes.medium};
   text-align: center;
+  font-size: ${(props) => props.theme.fontSizes.medium};
+  color: ${(props) => props.theme.basicColors.white};
+  text-shadow: 2px 1.2px ${(props) => props.theme.primaryColors.primary};
+  font-style: italic;
+  font-weight: bold;
 `;
 
 const ScheduleList = styled.ul``;
@@ -64,7 +70,7 @@ const ScheduleItemWrapper = styled.div`
 const ScheduleCategory = styled.div`
   width: 20px;
   height: 36px;
-  background: wheat;
+  background: white;
 `;
 
 const ScheduleItem = styled.li`
@@ -72,25 +78,27 @@ const ScheduleItem = styled.li`
   padding: 0 10px;
   width: 120px;
   height: 36px;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  background: ${(props) => props.theme.primaryColors.primaryDark};
+  text-align: center;
   line-height: 36px;
   font-size: ${(props) => props.theme.fontSizes.small};
-  background: black;
   color: white;
-  text-align: center;
-  ${"" /* 設定超出寬度的字 */}
+  cursor: pointer;
+
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 
-  transition: all 1s ease-out;
+  transition: all 0.5s ease-out;
 
   & + & {
     margin-top: 10px;
   }
 
   &:hover {
-    cursor: pointer;
-    border: 1px solid wheat;
+    background: ${(props) => props.theme.primaryColors.primaryDarker};
   }
 `;
 
@@ -98,9 +106,12 @@ const ScheduleTimeWrapper = styled.div`
   display: flex;
   flex-direction: column;
   padding: 2px;
-  border: 1px solid black;
+  border: 1px solid ${(props) => props.theme.primaryColors.primaryDark};
   border-left: none;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
   height: 36px;
+  color: ${(props) => props.theme.primaryColors.primaryDark};
 `;
 
 const ScheduleTime = styled.div`
@@ -112,6 +123,7 @@ const ScheduleTime = styled.div`
 const DeleteButton = styled.button`
   display: block;
   border: none;
+  color: ${(props) => props.theme.primaryColors.primary};
   background: transparent;
 `;
 
@@ -121,15 +133,19 @@ const SchedulePlus = styled.button`
   width: 120px;
   border: none;
   background: none;
+  color: ${(props) => props.theme.primaryColors.primary};
   font-size: ${(props) => props.theme.fontSizes.large};
 `;
 
 const MapWrapper = styled.div`
   flex: 1;
+  z-index: -1;
 `;
 
 export default function PlanningPage() {
   const dispatch = useDispatch();
+  const [editRoutine, setEditRoutine] = useState(null);
+  const [editIndex, setEditIndex] = useState(null);
 
   const dailyRoutines = useSelector((store) => store.schedules.dailyRoutines);
   const orderByStartRoutines = useSelector(
@@ -153,11 +169,12 @@ export default function PlanningPage() {
         return a.start - b.start;
       });
       dispatch(setOrderByStartRoutines(orderRoutines));
-      console.log("dailyRoutines: ", dailyRoutines);
     }
   }, [dailyRoutines, currentDate, dispatch]);
 
-  function handleScheduleItemClick(index) {
+  function handleScheduleItemClick(index, routine) {
+    setEditRoutine(routine);
+    setEditIndex(index);
     editId === index ? dispatch(setEditId(null)) : dispatch(setEditId(index));
   }
 
@@ -166,16 +183,14 @@ export default function PlanningPage() {
     editId === "add" ? dispatch(setEditId(null)) : dispatch(setEditId("add"));
   }
 
-  // TODO: 刪除
+  // 刪除
   function handleDeleteClick(id) {
-    console.log("enter handleDelteClick");
     const index = dailyRoutines[currentDate].findIndex(
       (routine) => routine.id === id
     );
     dispatch(deleteSpot(index));
     if (dailyRoutines[currentDate][index].postItId) {
       const postItId = dailyRoutines[currentDate][index].postItId;
-      console.log("postItId test: ", postItId);
       dispatch(setIsScheduled(postItId));
     }
   }
@@ -221,16 +236,11 @@ export default function PlanningPage() {
 
     const spotId = startColumn.spotsIds[source.index]; // 拖曳的 spot id
     const draggingSpot = spots[spotId];
-    console.log("draggingSpot: ", draggingSpot);
-    const { location, start, end, category, budget, memo, id } = draggingSpot;
-    console.log("id: ", id);
+    const { location, category, memo, id } = draggingSpot;
     dispatch(
       addFromPostIt({
         location,
-        start,
-        end,
         category,
-        budget,
         memo,
         id,
       })
@@ -265,7 +275,7 @@ export default function PlanningPage() {
                         <ScheduleCategory />
                         <ScheduleItem
                           onClick={() => {
-                            handleScheduleItemClick(index);
+                            handleScheduleItemClick(index, routine);
                           }}
                         >
                           {routine.location}
@@ -275,15 +285,12 @@ export default function PlanningPage() {
                           <ScheduleTime>{routine.end}</ScheduleTime>
                         </ScheduleTimeWrapper>
 
-                        {/* TODO: 刪除 */}
+                        {/* 刪除 */}
                         <DeleteButton
                           onClick={() => handleDeleteClick(routine.id)}
                         >
                           ✖
                         </DeleteButton>
-
-                        {/* 編輯 */}
-                        <ScheduleUpdateForm index={index} routine={routine} />
                       </ScheduleItemWrapper>
                     ))}
 
@@ -299,6 +306,10 @@ export default function PlanningPage() {
               )}
             </Droppable>
           </ScheduleWrapper>
+        )}
+
+        {editRoutine && (
+          <ScheduleUpdateForm editIndex={editIndex} editRoutine={editRoutine} />
         )}
 
         <MapWrapper>
