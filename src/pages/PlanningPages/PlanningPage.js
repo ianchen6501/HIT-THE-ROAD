@@ -37,7 +37,9 @@ const Schedule = styled.div`
   padding: 20px;
   min-width: 260px;
   background: ${(props) =>
-    props.isDraggingOver ? "white" : props.theme.primaryColors.primaryLighter};
+    props.isDraggingOver
+      ? props.theme.basicColors.white
+      : props.theme.primaryColors.primaryLighter};
   box-shadow: 2px 0 2px gray;
 
   ${MEDIA_QUERY_SM} {
@@ -272,7 +274,7 @@ export default function PlanningPage() {
                   <ScheduleList>
                     {orderByStartRoutines.map((routine, index) => (
                       <ScheduleItemWrapper key={index}>
-                        <ScheduleCategory />
+                        <ScheduleCategory>'test'</ScheduleCategory>
                         <ScheduleItem
                           onClick={() => {
                             handleScheduleItemClick(index, routine);

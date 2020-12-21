@@ -23,7 +23,7 @@ const PostItWrapper = styled.div`
   height: 100vh;
   background: ${(props) =>
     props.isDraggingOver
-      ? props.theme.secondaryColors.secondaryLighter
+      ? props.theme.basicColors.white
       : props.theme.primaryColors.primaryLighter};
 `;
 
@@ -35,7 +35,10 @@ const PostIt = styled.div`
   padding: 5px;
   width: 80px;
   height: 80px;
-  background: ${(props) => (props.isDragging ? "lightgreen" : "white")};
+  background: ${(props) =>
+    props.isDragging
+      ? props.theme.secondaryColors.secondaryLighter
+      : props.theme.basicColors.white};
   opacity: ${(props) => (props.isScheduled ? ".3" : "1")};
   box-shadow: 0px 2px 2px grey;
   overflow: hidden;
@@ -118,6 +121,10 @@ const PostItForm = styled.form`
       background: ${(props) => props.theme.primaryColors.primaryLighter};
     }
   }
+
+  & select {
+    outline: none;
+  }
 `;
 
 export default function PostItItem() {
@@ -132,6 +139,8 @@ export default function PostItItem() {
   const columns = useSelector((store) => store.postIts.columns);
   const column = columns["postIt"];
   const spotIds = column.spotsIds;
+
+  console.log("category: ", category);
 
   function handleDeletePostItClick(id, index) {
     dispatch(deletePostIt({ id, index }));
@@ -238,10 +247,16 @@ export default function PostItItem() {
           <div>
             分類
             <br />
-            <input
+            <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-            />
+            >
+              <option value="">--請選擇分類--</option>
+              <option value="food">必吃</option>
+              <option value="attraction">必去</option>
+              <option value="shopping">必買</option>
+              <option value="hotel">住宿</option>
+            </select>
           </div>
           <div>
             備註
@@ -265,10 +280,16 @@ export default function PostItItem() {
           <div>
             分類
             <br />
-            <input
+            <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-            />
+            >
+              <option value="">--請選擇分類--</option>
+              <option value="food">必吃</option>
+              <option value="attraction">必去</option>
+              <option value="shopping">必買</option>
+              <option value="hotel">住宿</option>
+            </select>
           </div>
           <div>
             備註

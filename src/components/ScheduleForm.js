@@ -25,6 +25,14 @@ export const ScheduleDetailForm = styled.form`
     }
   }
 
+  & select {
+    width: 100%;
+    margin-bottom: 5px;
+    padding: 2px;
+    outline: none;
+    border: none;
+  }
+
   ${(props) =>
     !props.$isEdit &&
     `

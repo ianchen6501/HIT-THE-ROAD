@@ -68,7 +68,13 @@ export default function ScheduleAddForm() {
       <div>
         類別：
         <br />
-        <input value={category} onChange={(e) => setCategory(e.target.value)} />
+        <select value={category} onChange={(e) => setCategory(e.target.value)}>
+          <option value="">--請選擇分類--</option>
+          <option value="food">必吃</option>
+          <option value="attraction">必去</option>
+          <option value="shopping">必買</option>
+          <option value="hotel">住宿</option>
+        </select>
       </div>
       <div>
         預算：
