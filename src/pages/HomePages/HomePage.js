@@ -15,6 +15,7 @@ const Heading = styled.h1 `
   left: 50%;
   transform: translate(-50%, 0);
   font-weight: bolder;
+  color: ${props => props.theme.secondaryColors.secondaryDarker};
 `
 
 const BannerContainer = styled.div `
@@ -36,7 +37,7 @@ const IntroContainer = styled.div `
 `
 
 const IntroImage = styled.div `
-  background: ${props => props.theme.primaryColors.primaryLighter};
+  background: ${props => props.theme.basicColors.white};
   height: 200px;
   width: 100%;
 `
@@ -66,7 +67,7 @@ const MoreTag = styled.div `
   transform: translate(-50%, 0);
   font-size: ${props => props.theme.fontSizes.medium};
   cursor: pointer;
-  color: black;
+  color: ${props => props.theme.secondaryColors.secondaryDarker};
 `
 
 

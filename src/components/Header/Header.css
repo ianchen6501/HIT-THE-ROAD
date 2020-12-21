@@ -1,7 +1,6 @@
 .LogoSVG {
   stroke-dasharray: 1000;
   stroke-dashoffset: 1000;
-  bottom: ;
 
   animation: Move linear;
   animation-duration: 2s;
@@ -11,5 +10,14 @@
 @keyframes Move {
   100% {
     stroke-dashoffset: 0;
+  }
+}
+
+@keyframes Gradient {
+  50% {
+    border: solid 3px white;
+  }
+  100% {
+    border: solid 3px transparent;
   }
 }

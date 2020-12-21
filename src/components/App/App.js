@@ -28,7 +28,7 @@ function App({FBstartApp, FBdeleteApp}) {
 
   return (
     <Router>
-      <Header />
+      <Header/>
       <Switch>
         <Route exact path='/'> 
           <HomePage/>
@@ -46,7 +46,7 @@ function App({FBstartApp, FBdeleteApp}) {
           <ExpolorePage/>
         </Route>
       </Switch>
-      <Footer>Made by ...</Footer>
+      <Footer style={{zIndex:'-1',}}>Made by ...</Footer>
     </Router>
   );
 }

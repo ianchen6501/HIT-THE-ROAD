@@ -8,10 +8,9 @@ const Footer = styled.div `
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 30px;
   background: ${props => props.theme.primaryColors.primaryLighter};
-  z-index: 3;
-  color: ${props => props.theme.primaryColors.primaryDarker};
+  z-index: 1;
+  color: ${props => props.theme.secondaryColors.secondaryDarker};
   font-size: 16px;
 `
 

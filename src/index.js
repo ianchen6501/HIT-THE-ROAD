@@ -5,17 +5,29 @@ import App from './components/App/App';
 import { ThemeProvider } from 'styled-components';
 import store from './redux/store';
 import { Provider } from 'react-redux'
-import { ConsoleSqlOutlined } from '@ant-design/icons';
+import Example from './components/DayPicker'
+
 
 const theme = {
-  primaryColors : {
-    primaryLighter : '#ED784A',
-    primaryLight : '#ED784A',
-    primary : '#ED784A',
-    primaryDark : '#ED784A',
-    primaryDarker : '#ED784A',
+  basicColors : {
     white: '#fff5f6',
     black: '#000000',
+  },
+
+  primaryColors : {
+    primaryLighter : '#F8DFC2',
+    primaryLight : '#FFC6B0',
+    primary : '#ED784A',
+    primaryDark : '"#E98B2A',
+    primaryDarker : '#7a2f11',
+  },
+
+  secondaryColors : {
+    secondaryLighter : '#bfdbde',
+    secondaryLight : '#9bb7ba',
+    secondary : '#77969A',
+    secondaryDark : '#5c7b80',
+    secondaryDarker : '#355257',
   },
 
   fontSizes : {
@@ -78,13 +90,20 @@ function initFacebookSdk() {
 
 initFacebookSdk().then(() => startApp())
 
+const birthdayStyle = `.DayPicker-Day--highlighted {
+  background-color: orange;
+  color: white;
+}`;
 
+const modifiers = {
+  highlighted: new Date(2020, 12, 19),
+};
 
 function startApp() {
   ReactDOM.render(
     <ThemeProvider theme={theme}>
       <Provider store={store}>
-        <App/>
+        <App />
       </Provider>
     </ThemeProvider>,
     document.getElementById('root')

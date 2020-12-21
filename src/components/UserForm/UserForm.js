@@ -4,7 +4,7 @@ import styled from 'styled-components'
 export const FormContainer = styled.div `
   position: relative;
   width: 600px;
-  border: 2px solid ${props => props.theme.primaryColors.primaryDarker};
+  border: 2px solid ${props => props.theme.secondaryColors.secondaryDarker};
   padding: 20px;
   top: 50%;
   left: 50%;
@@ -20,8 +20,13 @@ export const UserInput = styled.input `
   height: 50px;
   margin-top: 30px;
   padding-left: 5px;
-  border: 1px solid ${props => props.theme.primaryColors.primaryDark};
+  border: 1px solid ${props => props.theme.secondaryColors.secondaryLight};
   font-size: ${props => props.theme.fontSizes.medium};
+  color: ${props => props.theme.secondaryColors.secondaryDarker};
+
+  &::-webkit-input-placeholder {
+    color: ${props => props.theme.secondaryColors.secondaryDarker};
+  }
 `
 
 export const UserButton = styled.button `
@@ -51,8 +56,8 @@ export const UserButtonBorder = styled.div `
   margin-top: 30px;
   margin-bottom: 30px;
   padding-right: 476px;
-  border: 2px solid ${props => props.theme.primaryColors.primaryDarker};
-  z-index: 2;
+  border: 2px solid ${props => props.theme.secondaryColors.secondaryLight};
+  z-index: 1;
   transition: padding-right 0.2s;
   background: white;
 
@@ -68,10 +73,10 @@ export const UserButtonBorder = styled.div `
 export const UserButtonBackground = styled.div `
   position: relative;
   width: 100%;
-  height: 100%;
+  height: 47px;
   margin-right: 0%;
-  z-index: 1;
-  background: ${props => props.theme.primaryColors.primaryDarker};
+  z-index: 2;
+  background: ${props => props.theme.secondaryColors.secondaryLight};
 `
 
 export const UserButtonText = styled.div `
@@ -79,7 +84,7 @@ export const UserButtonText = styled.div `
   left: 50%;
   transform: translate(-50%, 0%);
   z-index: 3;
-  color: black;
+  color: ${props => props.theme.secondaryColors.secondaryDarker};
   font-size: ${props => props.theme.fontSizes.medium};
   transition: color 0.2s;
 `
@@ -87,5 +92,5 @@ export const UserButtonText = styled.div `
 export const ErrorMessage = styled.div `
   position: relative;
   font-size: ${props => props.theme.fontSizes.small};
-  color: red;
+  color: gray;
 `

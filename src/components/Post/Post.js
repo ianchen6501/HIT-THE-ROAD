@@ -14,7 +14,7 @@ const PostContainer = styled.div `
   transition: background 0.2s;
 
   &:hover {
-    background: ${props => props.theme.primaryColors.primaryLighter};
+    background: ${props => props.theme.basicColors.white};
   }
   
 `

@@ -26,9 +26,8 @@ const HeaderContainer =styled.div `
   top: 0;
   bottom: 0;
   padding: 0px, 30px;
-  background: ${props => props.theme.primaryColors.primaryLighter};
+  background: linear-gradient(${props => props.theme.primaryColors.primaryLight}, ${props => props.theme.secondaryColors.secondaryLighter});
   box-shadow: 0.2px 0.2px 0.3px;
-  z-index: 2;
 `
 
 const HeaderUpContainer = styled.div `
@@ -41,6 +40,7 @@ const HeaderUpContainer = styled.div `
 
 const Logo = styled.div `
   position: relative;
+  right: 30px;
   width: ${props => props.$atHomepage? '360px' : '210px'};
   height: ${props => props.$atHomepage? '120px' : '70px'};
   background: url(${logo});
@@ -55,7 +55,7 @@ const Brand = styled.div `
   font-size: 32px;
   font-weight: bold;
   text-decoration: none;
-  color: ${props => props.theme.primaryColors.black};
+  color: ${props => props.theme.secondaryColors.secondaryDarker};
 `
 
 const NavbarList = styled.div `
@@ -71,7 +71,7 @@ const Nav = styled(Link) `
   padding: 10px 15px;
   cursor: pointer;
   border-radius: 10px;
-  color: ${props => props.theme.primaryColors.black};
+  color: ${props => props.theme.secondaryColors.secondaryDarker};
   font-weight: bold;
   text-decoration: none;
   transition: font-size 0.3s, background 0.3s;
@@ -102,9 +102,20 @@ const HeaderSlogan = styled.div `
   align-items: center;
   margin-top: 20px;
   padding: 15px 25px;
-  border: solid 2px ${props => props.theme.primaryColors.primaryDarker};
+  border: solid 3px ${props => props.theme.basicColors.white};
   font-size: ${props => props.theme.titles.h3};
   font-weight: bold;
+  color: ${props => props.theme.basicColors.white};
+  cursor: pointer;
+  transition: border 1s;
+
+  &:hover {
+    animation: Gradient linear;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+
+    border: 3px solid transparent;
+  }
 `
 
 export default function Header() {
@@ -123,10 +134,10 @@ export default function Header() {
       <HeaderUpContainer $atHomepage={location.pathname === '/'}>
         <LeftContainer>
           <Brand as={Link} to='/'>HitTheRoad</Brand>
+          { location.pathname !== '/' && (
+            <Logo $atHomepage={location.pathname === '/'}></Logo>
+          )}
         </LeftContainer>
-        { location.pathname !== '/' && (
-          <Logo $atHomepage={location.pathname === '/'}></Logo>
-        )}
         <NavbarList>
           {!userData && <Nav to='/login' $active={location.pathname === '/login'}>登入</Nav>}
           {!userData && <Nav to='/register' $active={location.pathname === '/register'}>註冊</Nav>}
@@ -136,7 +147,7 @@ export default function Header() {
         { location.pathname === '/' && (
           <>
             <LogoSVG className="LogoSVG" stroke="#DB7290" strokeWidth="1rem" fill="#000000"></LogoSVG>
-            <HeaderSlogan>開始探索旅程</HeaderSlogan>
+            <Link to={'/user/1'}><HeaderSlogan>開始探索旅程</HeaderSlogan></Link>
           </>
         )}
     </HeaderContainer>

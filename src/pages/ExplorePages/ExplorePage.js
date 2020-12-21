@@ -44,10 +44,15 @@ const KeywordFilter = styled.div `
   padding: 4px 8px;
   color: ${props => props.theme.primaryColors.dark};
   font-size: ${props => props.theme.fontSizes.medium};
-  trasiton: transform
+  transition: transform 0.1s ease-out;
+  cursor: pointer;
 
   &:hover {
-    transform: scale(1.1);
+    transform: scale(1.02);
+  }
+
+  &:visited {
+    background: black;
   }
 `
 
