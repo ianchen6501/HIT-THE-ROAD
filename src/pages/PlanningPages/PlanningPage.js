@@ -3,6 +3,14 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faUtensils,
+  faCampground,
+  faHotel,
+  faShoppingBag,
+} from "@fortawesome/free-solid-svg-icons";
+
 import { MEDIA_QUERY_SM } from "../../constants/break_point";
 import PostItItem from "../../components/PostItItem";
 import DayLists from "./DayLists";
@@ -72,7 +80,9 @@ const ScheduleItemWrapper = styled.div`
 const ScheduleCategory = styled.div`
   width: 20px;
   height: 36px;
-  background: white;
+  line-height: 36px;
+  color: ${(props) => props.theme.primaryColors.primaryDarker};
+  background: transparent;
 `;
 
 const ScheduleItem = styled.li`
@@ -238,11 +248,15 @@ export default function PlanningPage() {
 
     const spotId = startColumn.spotsIds[source.index]; // 拖曳的 spot id
     const draggingSpot = spots[spotId];
+    const start = currentDate;
+    const end = currentDate;
     const { location, category, memo, id } = draggingSpot;
     dispatch(
       addFromPostIt({
         location,
         category,
+        start,
+        end,
         memo,
         id,
       })
@@ -269,12 +283,30 @@ export default function PlanningPage() {
                   {...provided.droppableProps}
                   isDraggingOver={snapshot.isDraggingOver}
                 >
-                  <ScheduleTitle>{currentDate}</ScheduleTitle>
+                  <ScheduleTitle>
+                    {new Date(currentDate).toLocaleString([], {
+                      month: "2-digit",
+                      day: "2-digit",
+                    })}
+                  </ScheduleTitle>
 
                   <ScheduleList>
                     {orderByStartRoutines.map((routine, index) => (
                       <ScheduleItemWrapper key={index}>
-                        <ScheduleCategory>'test'</ScheduleCategory>
+                        <ScheduleCategory>
+                          {routine.category === "hotel" && (
+                            <FontAwesomeIcon icon={faHotel} />
+                          )}
+                          {routine.category === "shopping" && (
+                            <FontAwesomeIcon icon={faShoppingBag} />
+                          )}
+                          {routine.category === "food" && (
+                            <FontAwesomeIcon icon={faUtensils} />
+                          )}
+                          {routine.category === "attraction" && (
+                            <FontAwesomeIcon icon={faCampground} />
+                          )}
+                        </ScheduleCategory>
                         <ScheduleItem
                           onClick={() => {
                             handleScheduleItemClick(index, routine);
@@ -283,8 +315,20 @@ export default function PlanningPage() {
                           {routine.location}
                         </ScheduleItem>
                         <ScheduleTimeWrapper>
-                          <ScheduleTime>{routine.start}</ScheduleTime>
-                          <ScheduleTime>{routine.end}</ScheduleTime>
+                          <ScheduleTime>
+                            {routine.start &&
+                              new Date(routine.start).toLocaleTimeString([], {
+                                timeStyle: "short",
+                                hour12: false,
+                              })}
+                          </ScheduleTime>
+                          <ScheduleTime>
+                            {routine.end &&
+                              new Date(routine.end).toLocaleTimeString([], {
+                                timeStyle: "short",
+                                hour12: false,
+                              })}
+                          </ScheduleTime>
                         </ScheduleTimeWrapper>
 
                         {/* 刪除 */}

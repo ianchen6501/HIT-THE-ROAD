@@ -7,31 +7,45 @@ let spotId = 0;
 export const schedulesReducer = createSlice({
   name: "schedules",
   initialState: {
-    currentDate: "0523",
+    dateRange: {
+      startDate: 1597766400000,
+      endDate: 1598025600000,
+    },
+    currentDate: null,
     // dailyRoutines 包含各個天數的行程
     dailyRoutines: {
-      "0523": [
-        {
-          id: (spotId += 1),
-          location: "台北10111111111111111",
-          start: "0800",
-          end: "1000",
-          category: "food",
-          memo: "hohoho",
-          budget: 100,
-        },
-      ],
-      "0524": [],
+      // "0523": [
+      //   {
+      //     id: (spotId += 1),
+      //     location: "台北10111111111111111",
+      //     start: "0800",
+      //     end: "1000",
+      //     category: "food",
+      //     memo: "hohoho",
+      //     budget: 100,
+      //   },
+      // ],
+      // "0524": [],
     },
     editId: null,
     // 只有一天的
     orderByStartRoutines: [],
   },
   reducers: {
+    setDates: (state, action) => {
+      state.dates = action.payload;
+    },
+
+    setDailyRoutinesKey: (state, action) => {
+      action.payload.map((date) => {
+        return (state.dailyRoutines[date] = []);
+      });
+    },
+
     deleteDailyRoutines: (state, action) => {
       state.dailyRoutines[state.currentDate].splice(action.payload, 1);
     },
-    // (state, action) => new state
+
     updateDailyRoutines: (state, action) => {
       const selectedId = state.orderByStartRoutines[state.editId].id;
       state.dailyRoutines[state.currentDate].map((routine, index) =>
@@ -68,6 +82,7 @@ export const schedulesReducer = createSlice({
 });
 
 export const {
+  setDailyRoutinesKey,
   updateDailyRoutines,
   addDailyRoutines,
   setEditId,
@@ -94,14 +109,13 @@ export const add = ({ location, start, end, category, budget, memo }) => (
 
 export const addFromPostIt = ({
   location,
+  category,
   start,
   end,
-  category,
   budget,
   memo,
   id: postItId,
 }) => (dispatch) => {
-  console.log("postItId: ", postItId);
   dispatch(
     addDailyRoutinesFromPostIt({
       location,

@@ -5,12 +5,16 @@ import {
 } from "../../components/ScheduleForm";
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+
 import { setEditId, update } from "../../redux/reducers/schedulesReducer";
 
 export default function ScheduleUpdateForm(props) {
   const dispatch = useDispatch();
   const editId = useSelector((store) => store.schedules.editId);
   const { editRoutine, editIndex } = props;
+  const currentDate = useSelector((store) => store.schedules.currentDate);
 
   // 編輯 detail
   const [location, setLocation] = useState("");
@@ -19,6 +23,18 @@ export default function ScheduleUpdateForm(props) {
   const [category, setCategory] = useState("");
   const [budget, setBudget] = useState("");
   const [memo, setMemo] = useState("");
+
+  useEffect(() => {
+    setStart("he");
+  }, []);
+
+  useEffect(() => {
+    setStart(currentDate);
+  }, [currentDate]);
+
+  useEffect(() => {
+    setEnd(start);
+  }, [start]);
 
   useEffect(() => {
     setLocation(editRoutine.location);
@@ -48,6 +64,8 @@ export default function ScheduleUpdateForm(props) {
     dispatch(update({ location, start, end, category, budget, memo }));
     dispatch(setEditId(null));
     clearScheduleFormState();
+    setStart(currentDate);
+    setEnd(currentDate);
   }
 
   const canSubmit = Boolean(location) && Boolean(start);
@@ -76,19 +94,27 @@ export default function ScheduleUpdateForm(props) {
       <div>
         開始時間：
         <br />
-        <input
-          placeholder={start}
-          value={start}
-          onChange={(e) => setStart(e.target.value)}
+        <DatePicker
+          selected={start}
+          onChange={(date) => setStart(date.getTime())}
+          showTimeSelect
+          showTimeSelectOnly
+          timeIntervals={30}
+          timeCaption="Time"
+          dateFormat="h:mm aa"
         />
       </div>
       <div>
         結束時間：
         <br />
-        <input
-          placeholder={end}
-          value={end}
-          onChange={(e) => setEnd(e.target.value)}
+        <DatePicker
+          selected={end}
+          onChange={(date) => setEnd(date.getTime())}
+          showTimeSelect
+          showTimeSelectOnly
+          timeIntervals={30}
+          timeCaption="Time"
+          dateFormat="h:mm aa"
         />
       </div>
       <div>

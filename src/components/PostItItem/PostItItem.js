@@ -4,6 +4,13 @@ import { Droppable, Draggable } from "react-beautiful-dnd";
 
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faUtensils,
+  faCampground,
+  faHotel,
+  faShoppingBag,
+} from "@fortawesome/free-solid-svg-icons";
 
 import {
   deletePostIt,
@@ -19,7 +26,6 @@ const PostItWrapper = styled.div`
   justify-content: start;
   box-shadow: -2px 0px 2px grey;
   padding: 20px;
-  width: 120px;
   height: 100vh;
   background: ${(props) =>
     props.isDraggingOver
@@ -33,8 +39,8 @@ const PostIt = styled.div`
   position: relative;
   margin-bottom: 5px;
   padding: 5px;
-  width: 80px;
-  height: 80px;
+  width: 90px;
+  height: 90px;
   background: ${(props) =>
     props.isDragging
       ? props.theme.secondaryColors.secondaryLighter
@@ -47,17 +53,22 @@ const PostIt = styled.div`
 
 const PostItInfo = styled.div`
   flex: 1;
+  font-size: ${(props) => props.theme.fontSizes.extraSmall};
+
+  word-break: break-all;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const PostItButtons = styled.div`
   display: flex;
   flex-direction: column;
-  position: absolute;
-  right: 0;
+  margin-left: 2px;
 `;
 
 const DeleteButton = styled.button`
   display: block;
+  padding: 0;
   border: none;
   background: transparent;
 
@@ -71,8 +82,8 @@ const UpdateButton = styled(DeleteButton)``;
 const AddPostItWrapper = styled.button`
   display: block;
   padding: 5px;
-  width: 80px;
-  height: 80px;
+  width: 90px;
+  height: 90px;
   border: dashed 1px ${(props) => props.theme.primaryColors.primary};
   background: ${(props) => props.theme.primaryColors.primaryLight};
   opacity: 0.5;
@@ -140,8 +151,6 @@ export default function PostItItem() {
   const column = columns["postIt"];
   const spotIds = column.spotsIds;
 
-  console.log("category: ", category);
-
   function handleDeletePostItClick(id, index) {
     dispatch(deletePostIt({ id, index }));
   }
@@ -206,8 +215,21 @@ export default function PostItItem() {
                     isScheduled={spots[id].isScheduled}
                   >
                     <PostItInfo>
+                      <div>
+                        {spots[id].category === "hotel" && (
+                          <FontAwesomeIcon icon={faHotel} />
+                        )}
+                        {spots[id].category === "shopping" && (
+                          <FontAwesomeIcon icon={faShoppingBag} />
+                        )}
+                        {spots[id].category === "food" && (
+                          <FontAwesomeIcon icon={faUtensils} />
+                        )}
+                        {spots[id].category === "attraction" && (
+                          <FontAwesomeIcon icon={faCampground} />
+                        )}
+                      </div>
                       <div>{spots[id].location}</div>
-                      <div>{spots[id].category}</div>
                       <div>{spots[id].memo}</div>
                     </PostItInfo>
                     <PostItButtons>
