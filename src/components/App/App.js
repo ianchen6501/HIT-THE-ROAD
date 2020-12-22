@@ -1,16 +1,17 @@
-import './App.css';
-import {
-  HashRouter as Router,
-  Switch,
-  Route,
-} from 'react-router-dom';
-import styled from 'styled-components';
+import "./App.css";
+import { HashRouter as Router, Switch, Route } from "react-router-dom";
+
+import PlanningPage from "../../pages/PlanningPages";
 
 function App() {
   return (
-    <div className="App">
-      fighting!
-    </div>
+    <Router>
+      <Switch>
+        <Route path="/planning-page">
+          <PlanningPage />
+        </Route>
+      </Switch>
+    </Router>
   );
 }
 
