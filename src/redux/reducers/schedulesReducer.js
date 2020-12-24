@@ -78,6 +78,9 @@ export const schedulesReducer = createSlice({
     setOrderByStartRoutines: (state, action) => {
       state.orderByStartRoutines = action.payload;
     },
+    saveAllDailyRoutines: (state, action) => {
+      state.dailyRoutines[action.payload.date] = action.payload.orderRoutines;
+    },
   },
 });
 
@@ -90,6 +93,7 @@ export const {
   setOrderByStartRoutines,
   addDailyRoutinesFromPostIt,
   deleteDailyRoutines,
+  saveAllDailyRoutines,
 } = schedulesReducer.actions;
 
 // thunk async logic
