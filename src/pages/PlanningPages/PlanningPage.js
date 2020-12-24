@@ -16,6 +16,7 @@ import PostItItem from "../../components/PostItItem";
 import DayLists from "./DayLists";
 import ScheduleAddForm from "./ScheduleAddForm";
 import ScheduleUpdateForm from "./ScheduleUpdateForm";
+import MapArea from "./Map";
 import {
   setEditId,
   setOrderByStartRoutines,
@@ -39,6 +40,7 @@ const PlanWrapper = styled.div`
 
 const ScheduleWrapper = styled.div`
   display: flex;
+  z-index: 1;
 `;
 
 const Schedule = styled.div`
@@ -147,11 +149,6 @@ const SchedulePlus = styled.button`
   background: none;
   color: ${(props) => props.theme.primaryColors.primary};
   font-size: ${(props) => props.theme.fontSizes.large};
-`;
-
-const MapWrapper = styled.div`
-  flex: 1;
-  z-index: -1;
 `;
 
 export default function PlanningPage() {
@@ -358,16 +355,7 @@ export default function PlanningPage() {
           <ScheduleUpdateForm editIndex={editIndex} editRoutine={editRoutine} />
         )}
 
-        <MapWrapper>
-          <iframe
-            title="test"
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d22094.645005374365!2d121.52617071979361!3d25.063810304921578!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3442a951fdd9f7f9%3A0x7a40c3880c03a171!2z6Ie65YyX5biC56uL576O6KGT6aSo!5e0!3m2!1szh-TW!2stw!4v1607933420613!5m2!1szh-TW!2stw"
-            width="100%"
-            height="100%"
-            frameBorder="0"
-            styled={{ border: 0 }}
-          ></iframe>
-        </MapWrapper>
+        <MapArea />
 
         <PostItItem />
       </PlanWrapper>

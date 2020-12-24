@@ -59,6 +59,21 @@ export const postItsReducer = createSlice({
       };
       state.columns.postIt.spotsIds.push(`spot-${id}`);
     },
+    addPostItFromMark: (state, action) => {
+      const { location, memo, currentPlaceId: placeId } = action.payload;
+      id += 1;
+      state.spots = {
+        ...state.spots,
+        [`spot-${id}`]: {
+          id: `spot-${id}`,
+          location,
+          memo,
+          placeId,
+          isScheduled: false,
+        },
+      };
+      state.columns.postIt.spotsIds.push(`spot-${id}`);
+    },
     updatePostIt: (state, action) => {
       const { updateId, location, category, memo } = action.payload;
       state.spots[updateId] = {
@@ -77,6 +92,7 @@ export const {
   setIsScheduled,
   deletePostIt,
   addPostIt,
+  addPostItFromMark,
   updatePostIt,
 } = postItsReducer.actions;
 

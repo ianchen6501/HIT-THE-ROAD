@@ -63,7 +63,6 @@ export default function DayLists() {
     dispatch(setDailyRoutinesKey(dates));
   }, [dispatch, startDate, endDate, calcDates]);
 
-  // TODO:
   function handleSaveClick() {
     const dates = calcDates();
     for (let i = 0; i < dates.length; i++) {
@@ -75,8 +74,6 @@ export default function DayLists() {
       dispatch(saveAllDailyRoutines({ date, orderRoutines }));
     }
   }
-
-  console.log("dailyRoutines: ", dailyRoutines);
 
   return (
     <DayList>
