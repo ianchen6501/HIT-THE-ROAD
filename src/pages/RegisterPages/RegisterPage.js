@@ -29,6 +29,7 @@ export default function RegisterPage() {
   const [errorMessage, setErrorMessage] = useState("")
   const dispatch = useDispatch()
   const history = useHistory()
+  const url = "http://3.140.179.67:5003"
 
   const [FBuserData, setFBuserData] = useState(null)
 
@@ -51,7 +52,7 @@ export default function RegisterPage() {
       return
     } else {
       const json = JSON.stringify({username, password, nickname, email})
-      fetch('http://localhost:5003/register/common', {
+      fetch(`${url}/register/common`, {
         method: 'POST',
         headers: {
           'content-type': 'application/json'
@@ -87,7 +88,7 @@ export default function RegisterPage() {
           fbName : name,
           fbEmail : email
         })
-        fetch('http://localhost:5003/register/fb', {
+        fetch( `${url}/register/fb`, {
           method: 'POST',
           headers: {
             'content-type': 'application/json'

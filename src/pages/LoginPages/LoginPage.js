@@ -25,6 +25,7 @@ export default function LoginPage() {
   const [errorMessage, setErrorMessage] = useState("")
   const dispatch = useDispatch()
   const history = useHistory()
+  const url = "http://3.140.179.67:5003"
 
   useEffect(() => {
     if(username) {
@@ -52,7 +53,7 @@ export default function LoginPage() {
         password
       }
       const json = JSON.stringify(body)
-      fetch('http://localhost:5003/login/common', {
+      fetch(`${url}/login/common`, {
         method: 'POST',
         headers: {
           'content-type': 'application/json'
@@ -79,7 +80,7 @@ export default function LoginPage() {
         fbEmail: res.email
       }
       const json = JSON.stringify(body)
-      fetch('http://localhost:5003/login/fb', {
+      fetch(`${url}/login/fb`, {
         method: 'POST',
         headers: {
           'content-type': 'application/json'
