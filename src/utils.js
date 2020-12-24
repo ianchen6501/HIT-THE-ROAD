@@ -50,6 +50,7 @@ export const FBstartApp = async () => {
       console.log('please sign in FB!')
       return await new Promise(resolve => {
         window.FB.login(function (response) {
+          console.log(response)
           if (response.authResponse) {
             window.FB.api('/me',{fields: 'id,name,email'}, function (response) {
               console.log(response)
@@ -59,15 +60,10 @@ export const FBstartApp = async () => {
               })
             })
           } else {
-            console.log('login fail!')
+            console.log('fblogin fail!')
             resolve({
-              ok: true,
-              //下面是假資料
-              FBUserData: {
-                id: 3,
-                name: "ian",
-                email: "aaa"
-              }
+              ok: false,
+              message: "fb login fail"
             })
           }
           //FB.login()預設只會回傳基本的授權資料

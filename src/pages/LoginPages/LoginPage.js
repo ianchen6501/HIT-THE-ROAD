@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { getAuthToken, handleFBLogin } from '../../redux/reducers/usersReducer'
+import { getAuthToken, handleFBLogin, setUserData } from '../../redux/reducers/usersReducer'
 import { useDispatch } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 import { setAuthTokenToLocalStorage, FBstartApp, FBdeleteApp  } from '../../utils'
 import { 
   FormContainer,
@@ -21,8 +22,9 @@ export default function LoginPage() {
   const [password, setPassword] = useState("")
   const [usernameErrorMessage, setUsernameErrorMessage] = useState("")
   const [passwordErrorMessage, setPasswordErrorMessage] = useState("")
-  const [FBLoginErrormessage, setFBLoingErrorMessage] = useState("")
+  const [errorMessage, setErrorMessage] = useState("")
   const dispatch = useDispatch()
+  const history = useHistory()
 
   useEffect(() => {
     if(username) {
@@ -45,29 +47,55 @@ export default function LoginPage() {
     if(!username || !password) {
       return
     } else {
-      dispatch(getAuthToken({username, password}))
-      .then(res => {
-        console.log(res)
-        if(res.ok === true) {
-          setAuthTokenToLocalStorage(res.id)
+      const body = {
+        username,
+        password
+      }
+      const json = JSON.stringify(body)
+      fetch('http://localhost:5003/login/common', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json'
+        },
+        body: json
+      }).then(response => {
+        return response.json()
+      }).then(json => {
+        if(!json.ok) {
+          setErrorMessage(json.message)
+        } else {
+          dispatch(setUserData(json.userData))
+          history.push('/')
         }
       })
     }
   }
 
   const handleOnClickFBLogin = () => {
-    const errorMessage = "there is no FB acount yet. Please register a acound."
-    FBstartApp().then(res => 
-      dispatch(handleFBLogin(res.FBUserData))
-      .then(result => {
-        console.log(result)
-        if(result.ok) {
-          setAuthTokenToLocalStorage(result.id)
+    FBstartApp().then(res => {
+      const body = {
+        fbId: res.id,
+        fbName: res.name,
+        fbEmail: res.email
+      }
+      const json = JSON.stringify(body)
+      fetch('http://localhost:5003/login/fb', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json'
+        },
+        body: json
+      }).then(response => {
+        return response.json()
+      }).then(json => {
+        if(!json.ok) {
+          setErrorMessage(json.message)
         } else {
-          setFBLoingErrorMessage(errorMessage)
+          dispatch(setUserData(json.userData))
+          history.push('/')
         }
       })
-    )
+    })
   }
 
   return (
@@ -93,6 +121,7 @@ export default function LoginPage() {
           <UserButtonText>next</UserButtonText>
           <UserButtonBackground />
         </UserButtonBorder>
+        { errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage> }
       </FormContainer>
     </Wrapper>
   )

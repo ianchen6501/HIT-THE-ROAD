@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { Result } from 'antd';
 
 export const usersReducer = createSlice({
   name: 'users',
@@ -65,53 +66,49 @@ export const getAuthToken = (loginData) => (dispatch) => {
   }
 }
 
-export const handleRegister = (registerData) => (dispatch) => {
-  dispatch(setIsLoading(true))
-  //這邊要修正為真實串 API
-  //1. 確認是否註冊
-  //2. 註冊並 setUserData 及回傳 response
-  const userData = {
-    ok: true,
-    id: 1,
-    username: registerData.username,
-    password: registerData.password,
-    nickname: registerData.nickname,
-    email: registerData.email,
-    FBName: null,
-    FBId: null,
-    FBEmail: null,
-    token: "23456"
-  }
-  dispatch(setUserData(userData))
-  dispatch(setIsLoading(false))
-  return userData
-  //缺錯誤處理
-}
+// export const handleRegister = (registerData) => (dispatch) => {
+//   dispatch(setIsLoading(true))
 
-export const handleFBRegister =(FBregisterData) => (dispatch) => {
-  console.log(FBregisterData)
-  const userData = {
-    ok: true,
-    id: 2,
-    username: null,
-    password: null,
-    nickname: null,
-    email: null,
-    FBName: FBregisterData.name,
-    FBId: FBregisterData.id,
-    FBEmail: FBregisterData.email,
-    token: "34567"
-  }
-  dispatch(setIsLoading(true))
-  //這邊要修正為真實串 API
-  //1. 確認是否註冊FB
-  //2. 註冊並回傳 response
-  //3. 回前端處理 login
-  dispatch(setIsLoading(false))
-  dispatch(setUserData(userData))
-  return new Promise(resolve => resolve(userData))
-  //缺錯誤處理
-}
+//   //webAPI
+//   const json = JSON.stringify(registerData)
+//   fetch('http://localhost:5003/register', {
+//     method: 'POST',
+//     headers: {
+//       'content-type': 'application/json'
+//     },
+//     body: json
+//   })
+//   .then(result => {return result.json()})
+//   .then(json => {
+//     console.log(json)
+//     return json
+//   })
+// }
+
+// export const handleFBRegister =(FBregisterData) => (dispatch) => {
+//   console.log(FBregisterData)
+//   const userData = {
+//     ok: true,
+//     id: 2,
+//     username: null,
+//     password: null,
+//     nickname: null,
+//     email: null,
+//     FBName: FBregisterData.name,
+//     FBId: FBregisterData.id,
+//     FBEmail: FBregisterData.email,
+//     token: "34567"
+//   }
+//   dispatch(setIsLoading(true))
+//   //這邊要修正為真實串 API
+//   //1. 確認是否註冊FB
+//   //2. 註冊並回傳 response
+//   //3. 回前端處理 login
+//   dispatch(setIsLoading(false))
+//   dispatch(setUserData(userData))
+//   return new Promise(resolve => resolve(userData))
+//   //缺錯誤處理
+// }
 
 export const handleFBLogin = (FBresponse) => (dispatch) => {
   console.log(FBresponse)

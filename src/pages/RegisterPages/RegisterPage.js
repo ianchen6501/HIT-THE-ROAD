@@ -26,7 +26,7 @@ export default function RegisterPage() {
   const [passwordErrorMessage, setPasswordErrorMessage] = useState("")
   const [nicknameErrorMessage, setNicknameErrorMessage] = useState("")
   const [emailErrorMessage, setEmailErrorMessage] = useState("")
-  const [FBRegistErerrorMessage, setFBRegistErerrorMessage] = useState("")
+  const [errorMessage, setErrorMessage] = useState("")
   const dispatch = useDispatch()
   const history = useHistory()
 
@@ -50,26 +50,61 @@ export default function RegisterPage() {
     if(!username || !password || !nickname || !email) {
       return
     } else {
-      const res = dispatch(handleRegister({username, password, nickname, email}))
-      console.log(res)
-      if(res.ok === true) {
-        setAuthTokenToLocalStorage(res.id)
-      };
+      const json = JSON.stringify({username, password, nickname, email})
+      fetch('http://localhost:5003/register/common', {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json'
+        },
+        body: json
+      })
+      .then(result => {return result.json()})
+      .then(json => {
+        console.log(json)
+        if(!json.ok) {
+          return setErrorMessage(json.message)
+        } else {
+          dispatch(setUserData(json.userData))
+          return history.push('/')
+        }
+      })
+      .catch(error => {
+        return setErrorMessage(error.toString())
+      })
     }
   }
   
   function handleOnClickFBRegister() {
-    const errorMessage = "there is something wrong with the FB system, please use the formal register method."
+    const errorMessage = "請確認並根據指示登入fb"
     FBstartApp().then(res => {
       if(!res.ok) {
-        setFBRegistErerrorMessage(errorMessage)
+        setErrorMessage(errorMessage)
         return 
+      } else {
+        const {id, name, email} = res
+        const json = JSON.stringify({
+          fbId : id, 
+          fbName : name,
+          fbEmail : email
+        })
+        fetch('http://localhost:5003/register/fb', {
+          method: 'POST',
+          headers: {
+            'content-type': 'application/json'
+          },
+          body: json
+        }).then(response => {return response.json()
+        }).then(json => {
+          console.log(json)
+          if(!json.ok) {
+            return setErrorMessage(json.message)
+          }
+          dispatch(setUserData(json.userData))
+          return history.push('/')
+        }).catch(error => {
+          return setErrorMessage(error.toString())
+        })  
       }
-      dispatch(handleFBRegister(res.FBUserData))
-      .then(data => {
-        setAuthTokenToLocalStorage(data.id)
-        console.log('register success!')
-      })
     })
   }
 
@@ -119,7 +154,7 @@ export default function RegisterPage() {
           <UserButtonText>next</UserButtonText>
           <UserButtonBackground />
         </UserButtonBorder>
-        {FBRegistErerrorMessage && <ErrorMessage>there is something wrong with the FB system, please use the formal register method.</ErrorMessage>}
+        {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
       </FormContainer>
     </Wrapper>
   )
