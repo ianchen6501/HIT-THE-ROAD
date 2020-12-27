@@ -16,6 +16,7 @@ import {
 } from '../../components/UserForm'
 import { Wrapper } from '../../components/public'
 import { FacebookOutlined } from '@ant-design/icons'
+import { SERVER_URL } from '../../static/static'
 
 export default function RegisterPage() {
   const [username, setUsername] = useState('')
@@ -29,7 +30,6 @@ export default function RegisterPage() {
   const [errorMessage, setErrorMessage] = useState("")
   const dispatch = useDispatch()
   const history = useHistory()
-  const url = "http://3.140.179.67:5003"
 
   const [FBuserData, setFBuserData] = useState(null)
 
@@ -52,7 +52,7 @@ export default function RegisterPage() {
       return
     } else {
       const json = JSON.stringify({username, password, nickname, email})
-      fetch(`${url}/register/common`, {
+      fetch(`${SERVER_URL}/register/common`, {
         method: 'POST',
         headers: {
           'content-type': 'application/json'
@@ -88,7 +88,7 @@ export default function RegisterPage() {
           fbName : name,
           fbEmail : email
         })
-        fetch( `${url}/register/fb`, {
+        fetch( `${SERVER_URL}/register/fb`, {
           method: 'POST',
           headers: {
             'content-type': 'application/json'

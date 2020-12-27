@@ -16,6 +16,7 @@ import {
 import { Wrapper } from '../../components/public'
 import { FacebookOutlined } from '@ant-design/icons'
 import { Result } from 'antd'
+import { SERVER_URL } from '../../static/static'
 
 export default function LoginPage() {
   const [username, setUsername] = useState("")
@@ -25,7 +26,6 @@ export default function LoginPage() {
   const [errorMessage, setErrorMessage] = useState("")
   const dispatch = useDispatch()
   const history = useHistory()
-  const url = "http://3.140.179.67:5003"
 
   useEffect(() => {
     if(username) {
@@ -53,7 +53,7 @@ export default function LoginPage() {
         password
       }
       const json = JSON.stringify(body)
-      fetch(`${url}/login/common`, {
+      fetch(`${SERVER_URL}/login/common`, {
         method: 'POST',
         headers: {
           'content-type': 'application/json'
@@ -80,7 +80,7 @@ export default function LoginPage() {
         fbEmail: res.email
       }
       const json = JSON.stringify(body)
-      fetch(`${url}/login/fb`, {
+      fetch(`${SERVER_URL}/login/fb`, {
         method: 'POST',
         headers: {
           'content-type': 'application/json'
