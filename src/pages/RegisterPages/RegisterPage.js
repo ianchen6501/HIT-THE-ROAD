@@ -82,7 +82,8 @@ export default function RegisterPage() {
         setErrorMessage(errorMessage)
         return 
       } else {
-        const {id, name, email} = res
+        const {id, name, email} = res.FBUserData
+        console.log("client side", id, name, email)
         const json = JSON.stringify({
           fbId : id, 
           fbName : name,

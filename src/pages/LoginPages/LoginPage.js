@@ -15,7 +15,6 @@ import {
  } from '../../components/UserForm'
 import { Wrapper } from '../../components/public'
 import { FacebookOutlined } from '@ant-design/icons'
-import { Result } from 'antd'
 import { SERVER_URL } from '../../static/static'
 
 export default function LoginPage() {
@@ -74,10 +73,14 @@ export default function LoginPage() {
 
   const handleOnClickFBLogin = () => {
     FBstartApp().then(res => {
+      console.log(res)
+      if(!res.ok) {
+        return setErrorMessage(json.message)
+      }
       const body = {
-        fbId: res.id,
-        fbName: res.name,
-        fbEmail: res.email
+        fbId: res.FBUserData.id,
+        fbName: res.FBUserData.name,
+        fbEmail: res.FBUserData.email
       }
       const json = JSON.stringify(body)
       fetch(`${SERVER_URL}/login/fb`, {
