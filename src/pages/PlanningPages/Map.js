@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import GoogleMapReact from "google-map-react";
 import "react-datepicker/dist/react-datepicker.css";
@@ -7,12 +7,12 @@ import { API_KEY } from "../../constants/key";
 
 import {
   addPostItFromMark,
-  deletePostIt,
+  deletePostItByMap,
 } from "../../redux/reducers/postItsReducer";
 
 import {
   setMapMarks,
-  deleteMapMark,
+  deleteMapMarkByLatLng,
 } from "../../redux/reducers/mapMarkReducer";
 
 const MapAreaWrapper = styled.div`
@@ -66,45 +66,6 @@ const SearchAutocomplete = styled.div`
 
 const SearchPlaceWrapper = styled.div``;
 
-const SearchPlace = styled.div`
-  width: 30px;
-  height: 30px;
-  background: red;
-  opacity: 0.5;
-  border-radius: 50%;
-  cursor: pointer;
-  transition: all 0.5s ease;
-
-  &:hover {
-    transform: scale(1.5, 1.5);
-    background: pink;
-    opacity: 1;
-  }
-
-  ${
-    "" /* & + div {
-    visibility: hidden;
-  }
-
-  &:hover + div {
-    visibility: visible;
-  } */
-  }
-`;
-
-const LocationMark = styled.div`
-  width: 20px;
-  height: 20px;
-  background: blue;
-  transform: rotate(45deg);
-  transition: all 0.5s ease;
-
-  &:hover {
-    transform: rotate(45deg) scale(1.5, 1.5);
-    background: pink;
-  }
-`;
-
 export default function MapArea() {
   const defaultProps = {
     center: {
@@ -115,10 +76,11 @@ export default function MapArea() {
   };
 
   const dispatch = useDispatch();
-  const spots = useSelector((store) => store.postIts.spots);
-  const columns = useSelector((store) => store.postIts.columns);
-  const postItColumn = columns.postIt.spotsIds;
+  // const spots = useSelector((store) => store.postIts.spots);
+  // const columns = useSelector((store) => store.postIts.columns);
+  // const postItColumn = columns.postIt.spotsIds;
   const markLocations = useSelector((store) => store.mapMarks.markLocations);
+  // const isMarkDeleted = useSelector((store) => store.mapMarks.isMarkDeleted);
 
   const [isApiLoaded, setIsApiLoaded] = useState(false);
   const [mapsApi, setMapsApi] = useState(null);
@@ -126,32 +88,10 @@ export default function MapArea() {
   const [searchText, setSearchText] = useState("");
   const [autocompleteResults, setAutocompleteResults] = useState(null);
   const [currentCenter, setCurrentCenter] = useState(null);
-  const [currentLocation, setCurrentLocation] = useState(null);
-  const [currentPlaceId, setCurrentPlaceId] = useState(null);
-  // const [markLocations, setMarkLocations] = useState([]);
-  const [isMarked, setIsMarked] = useState(false);
-
-  // TODO: 要把 tag 的變成 marker
-  function renderMarkers() {
-    const markIcon = {
-      url: "http://maps.google.com/mapfiles/kml/pushpin/red-pushpin.png",
-      scaledSize: new mapsApi.Size(40, 40), // scaled size
-    };
-    for (let i = 0; i < markLocations.length; i++) {
-      const { lat, lng } = markLocations[i];
-      const marker = new mapsApi.Marker({
-        position: { lat, lng },
-        map: mapInstance,
-        icon: markIcon,
-      });
-    }
-  }
-
-  // useEffect(() => {
-  //   if (mapInstance && mapsApi && markLocations.length > 0) {
-  //     renderMarkers(mapInstance, mapsApi);
-  //   }
-  // }, [markLocations, mapInstance, mapsApi]);
+  // const [currentLocation, setCurrentLocation] = useState(null);
+  // const [currentPlaceId, setCurrentPlaceId] = useState(null);
+  // const [isMarked, setIsMarked] = useState(false);
+  // const [statePinMarkers, setStatePinMarkers] = useState([]);
 
   function handleApiLoaded(map, maps) {
     // use map and maps objects
@@ -161,15 +101,11 @@ export default function MapArea() {
   }
 
   function handleSearchInputChange(e) {
-    setIsMarked(false);
+    // setIsMarked(false);
     setSearchText(e.target.value);
   }
 
-  useEffect(() => {
-    handleAutocomplete();
-  }, [searchText]);
-
-  function handleAutocomplete() {
+  const handleAutocomplete = useCallback(() => {
     if (isApiLoaded && searchText.length > 0) {
       const autoCompleteService = new mapsApi.places.AutocompleteService();
       autoCompleteService.getPlacePredictions(
@@ -183,7 +119,11 @@ export default function MapArea() {
     } else {
       setAutocompleteResults(null);
     }
-  }
+  }, [isApiLoaded, mapsApi, searchText]);
+
+  useEffect(() => {
+    handleAutocomplete();
+  }, [searchText, handleAutocomplete]);
 
   let markers = [];
 
@@ -200,8 +140,8 @@ export default function MapArea() {
           lat: results.geometry.location.lat(),
           lng: results.geometry.location.lng(),
         });
-        setCurrentLocation(results);
-        setCurrentPlaceId(placeId);
+        // setCurrentLocation(results);
+        // setCurrentPlaceId(placeId);
         setAutocompleteResults(null);
         setSearchText("");
 
@@ -231,44 +171,76 @@ export default function MapArea() {
           }
           markers = [];
 
-          // TODO: click 過要加到便利貼和換 pin
-          handleMarkSearchPlaceClick(results);
+          // click 過要加到便利貼和換 pin
+          handleMarkSearchPlaceClick(results, placeId);
         });
       }
     });
   }
 
   // pin 地點並新增到 post-it
-  function handleMarkSearchPlaceClick(pinLocations) {
+  function handleMarkSearchPlaceClick(pinLocations, placeId) {
     if (
       markLocations.length > 0 &&
-      markLocations.find((place) => place.placeId === currentPlaceId)
+      markLocations.find((place) => place.placeId === placeId)
     ) {
-      return setIsMarked(true);
+      return;
+      // return setIsMarked(true);
     }
 
     const lat = pinLocations.geometry.location.lat();
     const lng = pinLocations.geometry.location.lng();
     const { formatted_address: formattedAddress, name } = pinLocations;
 
-    const mapMarksInfo = { name, formattedAddress, lat, lng, currentPlaceId };
+    const mapMarksInfo = { name, formattedAddress, lat, lng, placeId };
+    // 重設 markLocations
     dispatch(setMapMarks(mapMarksInfo));
 
     const { name: location, formatted_address: memo } = pinLocations;
-    dispatch(addPostItFromMark({ location, memo, currentPlaceId }));
+    dispatch(addPostItFromMark({ location, memo, placeId }));
     setCurrentCenter(null);
-    setCurrentLocation(null);
+    // setCurrentLocation(null);
+
+    renderPinMarkers(mapMarksInfo);
   }
 
-  function handleCancelMarkClick(placeId) {
-    dispatch(deleteMapMark(placeId));
-    // 刪便利貼
-    const id = Object.keys(spots).find((key) => spots[key].placeId === placeId);
-    const index = postItColumn.indexOf(id);
-    dispatch(deletePostIt({ index, id }));
-    setCurrentCenter(null);
-    setCurrentLocation(null);
-    setIsMarked(false);
+  // 要把 pin 的變成 marker
+  let pinMarkers = [];
+  function renderPinMarkers(mapMarksInfo) {
+    const markIcon = {
+      url: "http://maps.google.com/mapfiles/kml/pushpin/red-pushpin.png",
+      scaledSize: new mapsApi.Size(40, 40), // scaled size
+    };
+
+    const { placeId, lat, lng } = mapMarksInfo;
+    const pinMarker = new mapsApi.Marker({
+      place: {
+        placeId,
+        location: { lat, lng },
+      },
+      map: mapInstance,
+      icon: markIcon,
+    });
+    pinMarkers.push(pinMarker);
+
+    pinMarkers.map((pinMarker) =>
+      pinMarker.addListener("click", (e) => {
+        const lat = e.latLng.lat();
+        const lng = e.latLng.lng();
+        // 不在畫面顯示
+        pinMarker.setMap(null);
+        pinMarkers = [];
+
+        // 刪掉 pinMarker
+        dispatch(deleteMapMarkByLatLng({ lat, lng }));
+        // 刪 store markLocations 的東東
+        const placeId = pinMarker.place.placeId;
+        dispatch(deletePostItByMap(placeId));
+        setCurrentCenter(null);
+        // setCurrentLocation(null);
+        // setIsMarked(false);
+      })
+    );
   }
 
   return (

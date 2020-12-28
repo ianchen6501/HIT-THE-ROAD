@@ -4,28 +4,37 @@ export const mapMarksReducer = createSlice({
   name: "mapMark",
   initialState: {
     markLocations: [],
+    isMarkDeleted: false,
   },
   reducers: {
     // (state, action) => new state
     setMapMarks: (state, action) => {
-      const {
-        name,
-        formattedAddress,
-        lat,
-        lng,
-        currentPlaceId: placeId,
-      } = action.payload;
+      const { name, formattedAddress, lat, lng, placeId } = action.payload;
       state.markLocations.push({ name, formattedAddress, lat, lng, placeId });
     },
-    deleteMapMark: (state, action) => {
-      state.markLocations.filter(
-        (location) => Number(location.placeId) !== Number(action.payload)
+    deleteMapMarkByLatLng: (state, action) => {
+      const { lat, lng } = action.payload;
+      state.markLocations = state.markLocations.filter(
+        (location) => location.lat !== lat && location.lng !== lng
       );
+    },
+    deleteMapMarkByPlaceId: (state, action) => {
+      state.markLocations = state.markLocations.filter(
+        (location) => location.placeId !== action.payload
+      );
+    },
+    setIsMarkDeleted: (state, action) => {
+      state.isMarkDeleted = action.payload;
     },
   },
 });
 
-export const { setMapMarks, deleteMapMark } = mapMarksReducer.actions;
+export const {
+  setMapMarks,
+  deleteMapMarkByLatLng,
+  deleteMapMarkByPlaceId,
+  setIsMarkDeleted,
+} = mapMarksReducer.actions;
 
 // thunk async logic
 export const setOriginalColumns = () => (dispatch) => {};

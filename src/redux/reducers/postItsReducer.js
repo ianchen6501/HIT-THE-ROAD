@@ -44,6 +44,14 @@ export const postItsReducer = createSlice({
       state.columns.postIt.spotsIds.splice(action.payload.index, 1);
       delete state.spots[action.payload.id];
     },
+    deletePostItByMap: (state, action) => {
+      const id = Object.keys(state.spots).find(
+        (key) => state.spots[key].placeId === action.payload
+      );
+      const index = state.columns.postIt.spotsIds.indexOf(id);
+      state.columns.postIt.spotsIds.splice(index, 1);
+      delete state.spots[id];
+    },
     addPostIt: (state, action) => {
       const { location, category, memo } = action.payload;
       id += 1;
@@ -60,7 +68,7 @@ export const postItsReducer = createSlice({
       state.columns.postIt.spotsIds.push(`spot-${id}`);
     },
     addPostItFromMark: (state, action) => {
-      const { location, memo, currentPlaceId: placeId } = action.payload;
+      const { location, memo, placeId } = action.payload;
       id += 1;
       state.spots = {
         ...state.spots,
@@ -91,6 +99,7 @@ export const {
   setFinishColumns,
   setIsScheduled,
   deletePostIt,
+  deletePostItByMap,
   addPostIt,
   addPostItFromMark,
   updatePostIt,
