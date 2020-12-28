@@ -1,4 +1,4 @@
-const TOKEN_NAME = 'id'
+const TOKEN_NAME = 'connect.sid'
 
 export const setAuthTokenToLocalStorage = (token) => {
   localStorage.setItem(TOKEN_NAME, JSON.stringify(token))

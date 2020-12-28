@@ -60,6 +60,7 @@ export const UserButtonBorder = styled.div `
   z-index: 1;
   transition: padding-right 0.2s;
   background: white;
+  cursor: pointer;
 
   &:hover {
     padding-right: 0px;

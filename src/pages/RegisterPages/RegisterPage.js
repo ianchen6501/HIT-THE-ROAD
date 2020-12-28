@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useHistory, useLocation } from 'react-router-dom'
-import { setAuthTokenToLocalStorage, FBstartApp, FBdeleteApp } from '../../utils'
-import { handleRegister, handleFBRegister, setUserData } from '../../redux/reducers/usersReducer'
+import { setAuthTokenToLocalStorage, FBstartApp } from '../../utils'
+import { setUserData } from '../../redux/reducers/usersReducer'
 import {
   FormContainer,
   UserInput,
@@ -65,6 +65,7 @@ export default function RegisterPage() {
         if(!json.ok) {
           return setErrorMessage(json.message)
         } else {
+          setAuthTokenToLocalStorage(json.token)
           dispatch(setUserData(json.userData))
           return history.push('/')
         }
@@ -101,6 +102,7 @@ export default function RegisterPage() {
           if(!json.ok) {
             return setErrorMessage(json.message)
           }
+          setAuthTokenToLocalStorage(json.token)
           dispatch(setUserData(json.userData))
           return history.push('/')
         }).catch(error => {

@@ -19,3 +19,13 @@ button {
   text-decoration: none;
   border: none;
 }
+
+a {
+  color: #355257;
+  transform: none;
+}
+
+a:hover {
+  color: #355257;
+  transform: none;
+}

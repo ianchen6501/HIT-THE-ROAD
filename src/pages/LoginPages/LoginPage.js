@@ -61,9 +61,11 @@ export default function LoginPage() {
       }).then(response => {
         return response.json()
       }).then(json => {
+        console.log(json)
         if(!json.ok) {
           setErrorMessage(json.message)
         } else {
+          setAuthTokenToLocalStorage(json.token)
           dispatch(setUserData(json.userData))
           history.push('/')
         }
@@ -95,6 +97,7 @@ export default function LoginPage() {
         if(!json.ok) {
           setErrorMessage(json.message)
         } else {
+          setAuthTokenToLocalStorage(json.token)
           dispatch(setUserData(json.userData))
           history.push('/')
         }

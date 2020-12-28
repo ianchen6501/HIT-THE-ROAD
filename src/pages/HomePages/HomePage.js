@@ -29,8 +29,8 @@ const PostsContainer = styled.div `
 `
 
 const IntroContainer = styled.div `
-  height: 320px;
-  width: 360px;
+  height: 300px;
+  width: 300px;
   display: flex;
   flex-direction: column;
   box-shadow: 0.5px 0.5px 3px -1px;

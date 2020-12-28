@@ -44,27 +44,6 @@ app.use(session({
   saveUninitialized: true,
 }))
 
-// //jwt_demo
-// const payload ={
-//   "sub" : "hittheroad",
-//   "name" : "ian",
-//   "admin" : false,
-// }
-// const secret = "12345"
-
-// app.get('/jwt', (req, res) => {
-//   const token = jwt.sign(payload, secret, { expiresIn: '1 day' })
-//   req.session.token = token
-//   return res.send('login')
-// })
-
-// app.get('/jwtverify', (req, res) => {
-//   const token = req.header('Authorization').replace('Bearer ', "")
-//   const decoded = jwt.verify(token, secret)
-//   return res.send(JSON.stringify(token))
-// })
-
-
 //users
 //register
 app.post('/register/:method', (req, res) => {
@@ -94,12 +73,14 @@ app.post('/register/:method', (req, res) => {
 
   function createUser(body, token, userData) {
     users.create(body)
-    .then(() => {
+    .then(result => {
       req.session.token = token //存 session token
+      userData['id'] = result.id
       const response = {
         ok: true,
         message: "Created",
         userData,
+        token,
       }
       const json = JSON.stringify(response)
       return res.end(json)
@@ -140,7 +121,7 @@ app.post('/register/:method', (req, res) => {
           "admin" : false,
         }
         const secret = "12345"
-        const token = jwt.sign(payload, secret, { expiresIn: '1 day' })
+        const token = jwt.sign(payload, secret, { expiresIn: '30 day' })
         const body = {
           username: username,
           password: hash,
@@ -162,7 +143,6 @@ app.post('/register/:method', (req, res) => {
       fbName,
       fbEmail,
     } = req.body
-    return res.end(fbId, fbName, fbEmail)
 
     const userData = {
       fbName,
@@ -229,15 +209,17 @@ app.post('/login/:method', (req, res) => {
           }
           return res.end(JSON.stringify(body))
         }
-        req.session.token = response.token
+        req.session.token = userData.token
         const body = {
           ok: true,
           message: "login",
           userData: {
-            username : response.username,
-            nickname : response.nickname,
-            email: response.email
-          }
+            id: userData.id,
+            username : userData.username,
+            nickname : userData.nickname,
+            email: userData.email
+          },
+          token: userData.token
         }
         const json = JSON.stringify(body)
         return res.end(json)
@@ -280,14 +262,16 @@ app.post('/login/:method', (req, res) => {
           }
           return res.end(JSON.stringify(body))
         }
-        req.session.token = response.token
+        req.session.token = userData.token
         const body = {
           ok: true,
           message: "login",
           userData: {
-            fbName : response.fbName,
-            fbEmail : response.fbEmail,
-          }
+            id: userData.id,
+            fbName : userData.fbName,
+            fbEmail : userData.fbEmail,
+          },
+          token: userData.token
         }
         const json = JSON.stringify(body)
         return res.end(json)
@@ -319,7 +303,6 @@ app.post('/login/:method', (req, res) => {
 
 //schedules
 //getAll
-const errorMessage = "there is some thing wrong"
 
 //getQuery
 app.get(`/schedules`, (req, res) => {

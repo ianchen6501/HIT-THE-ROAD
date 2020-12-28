@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, {Component, useEffect} from 'react'
 import styled from 'styled-components'
 import {
   Link,
@@ -29,6 +29,7 @@ const HeaderContainer =styled.div `
   padding: 0px, 30px;
   background: linear-gradient(${props => props.theme.primaryColors.primaryLight}, ${props => props.theme.secondaryColors.secondaryLighter});
   box-shadow: 0.2px 0.2px 0.3px;
+  z-index: 1;
 `
 
 const HeaderUpContainer = styled.div `
@@ -41,7 +42,6 @@ const HeaderUpContainer = styled.div `
 
 const Logo = styled.div `
   position: relative;
-  right: 30px;
   width: ${props => props.$atHomepage? '360px' : '210px'};
   height: ${props => props.$atHomepage? '120px' : '70px'};
   background: url(${logo});
@@ -130,6 +130,10 @@ export default function Header() {
     dispatch(setUserData(null))
   }
 
+  useEffect(() => {
+    
+  }, [])
+
   return (
     <HeaderContainer $atHomepage={location.pathname === '/'}>
       <HeaderUpContainer $atHomepage={location.pathname === '/'}>
@@ -140,16 +144,16 @@ export default function Header() {
           )}
         </LeftContainer>
         <NavbarList>
-          {!userData && <Nav to='/user/1' $active={location.pathname === '/user'}>編輯行程</Nav>}
+          {userData && <Nav to='/user/1' $active={location.pathname === '/user'}>編輯行程</Nav>}
           {!userData && <Nav to='/login' $active={location.pathname === '/login'}>登入</Nav>}
           {!userData && <Nav to='/register' $active={location.pathname === '/register'}>註冊</Nav>}
-          {userData && <Nav onClick={() => handleLogout()}>登出</Nav>}
+          {userData && <Nav to='/' onClick={() => handleLogout()}>登出</Nav>}
         </NavbarList>
       </HeaderUpContainer>
         { location.pathname === '/' && (
           <>
             <LogoSVG className="LogoSVG" stroke="#DB7290" strokeWidth="1rem" fill="#000000"></LogoSVG>
-            <Link to={'/create'}><HeaderSlogan>開始探索旅程</HeaderSlogan></Link>
+            <Link to={userData? '/create' : '/login'}><HeaderSlogan>開始探索旅程</HeaderSlogan></Link>
           </>
         )}
     </HeaderContainer>
