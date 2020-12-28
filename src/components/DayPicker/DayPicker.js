@@ -52,16 +52,16 @@ export default function Example({startDate, setStartDate, endDate, setEndDate}) 
         />
       </DatePickerContainer>
       <DatePickerContainer>
-      <DatePicker
-        dateFormat="yyyy/MM/dd"
-        selected={new Date(endDate)}
-        onChange={date => setEndDate(date.getTime())}
-        selectsEnd
-        startDate={new Date(startDate)}
-        endDate={new Date(endDate)}
-        minDate={new Date(startDate)}
-        customInput={<ExampleCustomInput />}
-      />
+        <DatePicker
+          dateFormat="yyyy/MM/dd"
+          selected={new Date(endDate)}
+          onChange={date => setEndDate(date.getTime())}
+          selectsEnd
+          startDate={new Date(startDate)}
+          endDate={new Date(endDate)}
+          minDate={new Date(startDate)}
+          customInput={<ExampleCustomInput />}
+        />
       </DatePickerContainer>
     </Container>
   );

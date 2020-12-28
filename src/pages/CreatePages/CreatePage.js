@@ -12,6 +12,8 @@ import {
   ErrorMessage
 } from '../../components/UserForm'
 import DatePicker from '../../components/DayPicker'
+import { SERVER_URL } from '../../static/static'
+import { useHistory } from 'react-router-dom'
 
 //styled-component
 const Title = styled.div `
@@ -24,6 +26,9 @@ const Title = styled.div `
 `
 
 const SubTitle = styled.div `
+  position: relative;
+  width: 100%;
+  text-align: center;
   font-size: ${props => props.theme.titles.h5};
   font-weight: 800;
 `
@@ -36,6 +41,10 @@ const Select = styled.select `
   width: 480px;
   height: 50px;
   border: 1px solid ${props => props.theme.secondaryColors.secondaryLight};
+  font-size: ${props => props.theme.fontSizes.medium};
+`
+
+const SubContainer = styled.div `
 `
 
 //style
@@ -55,45 +64,87 @@ const destinationSelects = [
 
 
 export default function CreatePage() {
-  const [destination, setDestination] = useState('台北')
-  const [startDate, setStartDate] = useState(new Date().getTime());
-  const [endDate, setEndDate] = useState(new Date().getTime());
+  const history = useHistory()
+
+  const currentDate = new Date().getDate()
+  const currentMonth = new Date().getMonth()+1
+  const currentYear = new Date().getFullYear()
+
+  const [scheduleName, setScheduleName] = useState("")
+  const [location, setLocation] = useState('台北')
+  const [startDate, setStartDate] = useState(new Date(currentYear, currentMonth, currentDate).getTime());
+  const [endDate, setEndDate] = useState(new Date(currentYear, currentMonth, currentDate).getTime());
+  const [errorMessage, setErrorMessage] = useState("")
   const [scheduleNameErrorMessage, setScheduleNameErrorMessage] = useState('')
 
-  function handleOnChange(event) {
-    setDestination(event.target.value)
-  }
+  useEffect(() => {
+    console.log(new Date().getTime())
+  })
 
   function handleSubmitSchedule() {
+    const message = 'this field can not be empty.'
 
+    if(!scheduleName) {
+      return setScheduleNameErrorMessage(message)
+    }
+
+    const json = JSON.stringify({
+      scheduleName, 
+      location, 
+      dateRange: {
+        start: startDate,
+        end: endDate
+      }
+    })
+    fetch(`${SERVER_URL}/schedules`, {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json'
+      },
+      body: json
+    })
+    .then(result => {return result.json()})
+    .then(json => {
+      console.log(json)
+      if(!json.ok) {
+        return setErrorMessage(json.message)
+      } else {
+        return history.push('/')
+      }
+    })
+    .catch(error => {
+      return setErrorMessage(error.toString())
+    })
   }
-
-  useEffect(() => {
-    console.log(startDate)
-    console.log(endDate)
-    console.log(destination)
-  })
 
   return (
     <Wrapper  $solidPlate={true}>
       <FormContainer style={FormContainerStyle}>
         <Title>來趟新的旅行吧!</Title>
-        <SubTitle>旅程名稱</SubTitle>
-          <UserInput placeholder={'請輸入旅程名稱'} style={userInputStyle}></UserInput>
+        <SubContainer>
+          <SubTitle>旅程名稱</SubTitle>
+          <UserInput value={scheduleName} onChange={(event) => setScheduleName(event.target.value)} placeholder={'請輸入旅程名稱'} style={userInputStyle}></UserInput>
           {scheduleNameErrorMessage && <ErrorMessage>{scheduleNameErrorMessage}</ErrorMessage>}
-        <SubTitle>目的地</SubTitle>
-          <Select value={destination} onChange={(event) => handleOnChange(event)}>
+        </SubContainer>
+        <SubContainer>
+          <SubTitle>目的地</SubTitle>
+          <Select value={location} onChange={(event) => setLocation(event.target.value)}>
             {destinationSelects.map(select => <option value={select} key={select}>{select}</option>)}
           </Select>
-        <SubTitle>時間</SubTitle>
-        <DatePickerContainer>
-          <DatePicker startDate={startDate} setStartDate={setStartDate} endDate={endDate} setEndDate={setEndDate}/>
-        </DatePickerContainer>
-        <UserButtonBorder style={{zIndex: '0'}}>
-          <UserButtonText onClick={handleSubmitSchedule}>next</UserButtonText>
-          <UserButtonBackground />
-        </UserButtonBorder>
-        {/* {FBRegistErerrorMessage && <ErrorMessage>there is something wrong with the FB system, please use the formal register method.</ErrorMessage>} */}
+        </SubContainer>
+        <SubContainer>
+          <SubTitle>時間</SubTitle>
+          <DatePickerContainer>
+            <DatePicker startDate={startDate} setStartDate={setStartDate} endDate={endDate} setEndDate={setEndDate}/>
+          </DatePickerContainer>
+        </SubContainer>
+        <div onClick={handleSubmitSchedule}>
+          <UserButtonBorder style={{zIndex: '0'}}>
+            <UserButtonText>next</UserButtonText>
+            <UserButtonBackground />
+          </UserButtonBorder>
+        </div>
+        {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
       </FormContainer>
     </Wrapper>
   )
