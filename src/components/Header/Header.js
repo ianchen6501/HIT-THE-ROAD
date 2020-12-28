@@ -14,8 +14,9 @@ import { deleteAuthTokenFromLocalStorage } from '../../utils'
 import { setUserData } from '../../redux/reducers/usersReducer';
 
 const HeaderContainer =styled.div `
-  position: ${props => props.$atHomepage? `relative` : `absolute`};
+  position: ${props => props.$atHomepage? `relative` : `fixed`};
   height: ${props => props.$atHomepage? props.theme.heights.homepageHeader : props.theme.heights.header};
+  width:100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -147,7 +148,7 @@ export default function Header() {
         { location.pathname === '/' && (
           <>
             <LogoSVG className="LogoSVG" stroke="#DB7290" strokeWidth="1rem" fill="#000000"></LogoSVG>
-            <Link to={'/user/1'}><HeaderSlogan>開始探索旅程</HeaderSlogan></Link>
+            <Link to={'/create'}><HeaderSlogan>開始探索旅程</HeaderSlogan></Link>
           </>
         )}
     </HeaderContainer>

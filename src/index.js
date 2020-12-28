@@ -48,8 +48,11 @@ const theme = {
   },
 
   Wrappers : {
-    maxWidth: '1200px',
-    mediumWidth: '70vw',
+    extraLargeWidth: '1080px',
+    largeWidth: '936px',
+    mediumWidth: '691px',
+    smallWidth: '540px',
+    extraSmallWidth: '432px'
   },
 
   heights : {

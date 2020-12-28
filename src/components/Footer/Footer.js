@@ -1,10 +1,10 @@
 import styled from 'styled-components'
 
-const Footer = styled.div `
+const FooterContainer = styled.div `
   position: relative;
   bottom: ${props => props.theme.heights.footer};
-  width: 100%;
   height: ${props => props.theme.heights.footer};
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -14,4 +14,8 @@ const Footer = styled.div `
   font-size: 16px;
 `
 
-export default Footer
+export default function Footer() {
+  return (
+    <FooterContainer style={{zIndex:'-1',}}>Made by ...</FooterContainer>
+  )
+}

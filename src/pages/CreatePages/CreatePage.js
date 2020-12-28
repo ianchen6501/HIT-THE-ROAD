@@ -54,15 +54,18 @@ const destinationSelects = [
 
 
 
-export default function HomePage() {
+export default function CreatePage() {
   const [destination, setDestination] = useState('台北')
   const [startDate, setStartDate] = useState(new Date().getTime());
   const [endDate, setEndDate] = useState(new Date().getTime());
-
-
+  const [scheduleNameErrorMessage, setScheduleNameErrorMessage] = useState('')
 
   function handleOnChange(event) {
     setDestination(event.target.value)
+  }
+
+  function handleSubmitSchedule() {
+
   }
 
   useEffect(() => {
@@ -77,7 +80,7 @@ export default function HomePage() {
         <Title>來趟新的旅行吧!</Title>
         <SubTitle>旅程名稱</SubTitle>
           <UserInput placeholder={'請輸入旅程名稱'} style={userInputStyle}></UserInput>
-          {/* {usernameErrorMessage && <ErrorMessage>{usernameErrorMessage}</ErrorMessage>} */}
+          {scheduleNameErrorMessage && <ErrorMessage>{scheduleNameErrorMessage}</ErrorMessage>}
         <SubTitle>目的地</SubTitle>
           <Select value={destination} onChange={(event) => handleOnChange(event)}>
             {destinationSelects.map(select => <option value={select} key={select}>{select}</option>)}
@@ -87,7 +90,7 @@ export default function HomePage() {
           <DatePicker startDate={startDate} setStartDate={setStartDate} endDate={endDate} setEndDate={setEndDate}/>
         </DatePickerContainer>
         <UserButtonBorder style={{zIndex: '0'}}>
-          <UserButtonText>next</UserButtonText>
+          <UserButtonText onClick={handleSubmitSchedule}>next</UserButtonText>
           <UserButtonBackground />
         </UserButtonBorder>
         {/* {FBRegistErerrorMessage && <ErrorMessage>there is something wrong with the FB system, please use the formal register method.</ErrorMessage>} */}

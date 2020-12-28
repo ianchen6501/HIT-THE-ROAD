@@ -10,7 +10,8 @@ import HomePage from '../../pages/HomePages';
 import LoginPage from '../../pages/LoginPages';
 import RegisterPage from '../../pages/RegisterPages';
 import ExpolorePage from '../../pages/ExplorePages';
-import UserPage from '../../pages/UserPages';
+import CreatePage from '../../pages/CreatePages';
+import UserPage from '../../pages/UserPages'
 import Footer from '../Footer'
 import Header from '../Header'
 import { getAuthTokenFromLocalStorage } from '../../utils'
@@ -39,6 +40,9 @@ function App({FBstartApp, FBdeleteApp}) {
         <Route exact path='/register'> 
           <RegisterPage FBstartApp={FBstartApp} FBdeleteApp={FBdeleteApp}/>
         </Route>
+        <Route exact path='/create'>
+          <CreatePage/>
+        </Route>
         <Route exact path='/user/:id'> 
           <UserPage/>
         </Route>
@@ -46,7 +50,7 @@ function App({FBstartApp, FBdeleteApp}) {
           <ExpolorePage/>
         </Route>
       </Switch>
-      <Footer style={{zIndex:'-1',}}>Made by ...</Footer>
+      <Footer />
     </Router>
   );
 }
