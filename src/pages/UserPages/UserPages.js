@@ -34,6 +34,7 @@ const Divider = styled.div `
 `
 
 const Title = styled.div `
+  width: 200px;
   font-size: ${props => props.theme.titles.h3};
   font-weight: 900;
   cursor: pointer;
@@ -55,19 +56,20 @@ const LeftContainer = styled.div `
 
 const RightContainer = styled.div `
   display: flex;
+  width: 60px;
   flex-direction: column;
 `
 
 const RightUpContainer = styled.div `
   height: 50%;
-  width: 80px; 
+  width: 100%; 
   display: flex;
   align-items: center;
 `
 
 const RightDownContainer = styled.div `
   height: 50%;
-  width: 50px; 
+  width: 100%; 
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
@@ -95,7 +97,7 @@ const editOutlinedStyle = {
   cursor: 'pointer',
 }
 
-function Schedule({scheduleData, handleDeleteSchedule}) {
+function Schedule({scheduleData, handleDeleteSchedule, handleOnChangeChecked}) {
   const start = scheduleData.dateRange.start
   const end = scheduleData.dateRange.end
   const startData = `
@@ -109,21 +111,6 @@ function Schedule({scheduleData, handleDeleteSchedule}) {
     ${new Date(end).getDate().toString()}
   `
 
-  function handleOnChangeChecked(event) {
-    const body = {
-      isFinished : event.target.checked
-    }
-    fetch( `${SERVER_URL}/schedules/`, {
-      method: 'PATCH',
-      headers: {
-        'content-type': 'application/json'
-      },
-      body: JSON.stringify(body)
-    }).then(response => {
-      console.log(response)
-    })
-  }
-
   return (
     <ScheduleContainer>
       <LeftContainer>
@@ -136,8 +123,8 @@ function Schedule({scheduleData, handleDeleteSchedule}) {
       </LeftContainer>
       <RightContainer>
         <RightUpContainer>
-          <CheckBox id="isFinished" type='checkbox' value='完成' onChange={(event) => handleOnChangeChecked(event)}></CheckBox>
-          <CheckBoxLabel for="isFinished">完成</CheckBoxLabel>
+          <CheckBox id={scheduleData.id} type='checkbox' value='完成' onChange={(event) => handleOnChangeChecked(event)}></CheckBox>
+          <CheckBoxLabel for={scheduleData.id}>完成</CheckBoxLabel>
         </RightUpContainer>
         <RightDownContainer>
           <Link to={`/edit/${scheduleData.id}`}>
@@ -154,6 +141,7 @@ export default function UserPage() {
   const dispatch = useDispatch()
   const [schedules, setSchedules] = useState(null)
   const [isDeleteing, setIsDeleting] = useState(false)
+  const userData = useSelector(store => store.users.userData)
 
   function handleDeleteSchedule(id) {
     setIsDeleting(true)
@@ -177,25 +165,46 @@ export default function UserPage() {
   }
 
   function GetUnfinishedSchedules() {
-    getAll(`${SERVER_URL}/schedules?isFinished=0`)
+    getAll(`${SERVER_URL}/schedules/${userData.id}?isFinished=0`)
     .then(json => {
       setSchedules(json)
     })
   }
 
   function GetFinishedSchedules() {
-    getAll(`${SERVER_URL}/schedules?isFinished=1`)
+    getAll(`${SERVER_URL}/schedules/${userData.id}?isFinished=1`)
     .then(json => {
       setSchedules(json)
     })
   }
 
-  useEffect(() => {
-    getAll(`${SERVER_URL}/schedules?isFinished=0`)
-    .then(json => {
+  function handleOnChangeChecked(event) {
+    const body = {
+      UserId: userData.id
+    }
+    const checkedStatus = event.target.checked? 0 : 1
+    fetch( `${SERVER_URL}/schedules/${event.target.id}?isFinished=${checkedStatus}`, {
+      method: 'PATCH',
+      headers: {
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    }).then(response => {
+      return response.json()
+    }).then(json => {
       console.log(json)
-      setSchedules(json)
     })
+  }
+
+  //拿 schedules
+  useEffect(() => {
+    if(userData) {
+      getAll(`${SERVER_URL}/schedules/${userData.id}?isFinished=0`)
+      .then(json => {
+        console.log(json)
+        setSchedules(json)
+      })
+    }
   }, [isDeleteing])
 
   if(!schedules) {
@@ -210,7 +219,11 @@ export default function UserPage() {
         <button onClick={GetUnfinishedSchedules}>未完成</button>
         <button onClick={GetFinishedSchedules}>已完成</button>
         {schedules.map((scheduleData, index) => (
-          <Schedule key={index} scheduleData={scheduleData} handleDeleteSchedule={handleDeleteSchedule}/>
+          <Schedule key={index} 
+            scheduleData={scheduleData} 
+            handleDeleteSchedule={handleDeleteSchedule} 
+            handleOnChangeChecked={handleOnChangeChecked}
+          />
         ))}
       </Wrapper>
     )

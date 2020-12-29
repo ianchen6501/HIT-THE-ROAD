@@ -48,7 +48,7 @@ function App({FBstartApp, FBdeleteApp}) {
         <Route exact path='/edit/:id'>
           <EditPage/>
         </Route>
-        <Route exact path='/user/:id'> 
+        <Route exact path='/user'> 
           <UserPage/>
         </Route>
         <Route exact path='/explore'> 

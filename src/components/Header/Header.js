@@ -141,7 +141,7 @@ export default function Header() {
           )}
         </LeftContainer>
         <NavbarList>
-          {userData && <Nav to='/user/1' $active={location.pathname === '/user'}>編輯行程</Nav>}
+          {userData && <Nav to='/user' $active={location.pathname === '/user'}>編輯行程</Nav>}
           {!userData && <Nav to='/login' $active={location.pathname === '/login'}>登入</Nav>}
           {!userData && <Nav to='/register' $active={location.pathname === '/register'}>註冊</Nav>}
           {userData && <Nav to='/' onClick={() => handleLogout()}>登出</Nav>}

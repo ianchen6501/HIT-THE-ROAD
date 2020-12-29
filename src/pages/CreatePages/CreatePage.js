@@ -68,7 +68,7 @@ export default function CreatePage() {
   const history = useHistory()
 
   const currentDate = new Date().getDate()
-  const currentMonth = new Date().getMonth()+1
+  const currentMonth = new Date().getMonth()
   const currentYear = new Date().getFullYear()
 
   const [scheduleName, setScheduleName] = useState("")
