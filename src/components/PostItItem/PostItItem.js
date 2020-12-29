@@ -33,6 +33,7 @@ const PostItWrapper = styled.div`
     props.isDraggingOver
       ? props.theme.basicColors.white
       : props.theme.primaryColors.primaryLighter};
+  overflow: auto;
 `;
 
 // draggable
@@ -42,7 +43,7 @@ const PostIt = styled.div`
   margin-bottom: 5px;
   padding: 5px;
   width: 90px;
-  height: 90px;
+  min-height: 90px;
   background: ${(props) =>
     props.isDragging
       ? props.theme.secondaryColors.secondaryLighter

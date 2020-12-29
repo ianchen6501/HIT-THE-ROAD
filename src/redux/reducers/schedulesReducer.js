@@ -8,8 +8,8 @@ export const schedulesReducer = createSlice({
   name: "schedules",
   initialState: {
     dateRange: {
-      startDate: 1597766400000,
-      endDate: 1598025600000,
+      startDate: 1612195200000,
+      endDate: 1612454400000,
     },
     currentDate: null,
     // dailyRoutines 包含各個天數的行程
@@ -30,6 +30,7 @@ export const schedulesReducer = createSlice({
     editId: null,
     // 只有一天的
     orderByStartRoutines: [],
+    routes: [],
   },
   reducers: {
     setDates: (state, action) => {
@@ -81,6 +82,11 @@ export const schedulesReducer = createSlice({
     saveAllDailyRoutines: (state, action) => {
       state.dailyRoutines[action.payload.date] = action.payload.orderRoutines;
     },
+    setRoute: (state, action) => {
+      console.log("route action: ", action.payload);
+      const { originId, directionSteps } = action.payload;
+      state.routes.push({ originId, directionSteps });
+    },
   },
 });
 
@@ -94,6 +100,7 @@ export const {
   addDailyRoutinesFromPostIt,
   deleteDailyRoutines,
   saveAllDailyRoutines,
+  setRoute,
 } = schedulesReducer.actions;
 
 // thunk async logic

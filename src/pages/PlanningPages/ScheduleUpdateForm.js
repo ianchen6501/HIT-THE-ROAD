@@ -25,10 +25,6 @@ export default function ScheduleUpdateForm(props) {
   const [memo, setMemo] = useState("");
 
   useEffect(() => {
-    setStart("he");
-  }, []);
-
-  useEffect(() => {
     setStart(currentDate);
   }, [currentDate]);
 

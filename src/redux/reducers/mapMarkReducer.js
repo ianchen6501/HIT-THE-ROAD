@@ -5,6 +5,10 @@ export const mapMarksReducer = createSlice({
   initialState: {
     markLocations: [],
     isMarkDeleted: false,
+    origin: "",
+    destination: "",
+    directionSteps: null,
+    originId: null,
   },
   reducers: {
     // (state, action) => new state
@@ -26,6 +30,18 @@ export const mapMarksReducer = createSlice({
     setIsMarkDeleted: (state, action) => {
       state.isMarkDeleted = action.payload;
     },
+    setOrigin: (state, action) => {
+      state.origin = action.payload;
+    },
+    setOriginId: (state, action) => {
+      state.originId = action.payload;
+    },
+    setDestination: (state, action) => {
+      state.destination = action.payload;
+    },
+    setDirectionSteps: (state, action) => {
+      state.directionSteps = action.payload;
+    },
   },
 });
 
@@ -34,6 +50,10 @@ export const {
   deleteMapMarkByLatLng,
   deleteMapMarkByPlaceId,
   setIsMarkDeleted,
+  setOrigin,
+  setOriginId,
+  setDestination,
+  setDirectionSteps,
 } = mapMarksReducer.actions;
 
 // thunk async logic
