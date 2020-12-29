@@ -1,14 +1,37 @@
+@import "~antd/dist/antd.css";
+
 * {
   box-sizing: border-box;
   font-family: "微軟正黑體", sans-serif;
 }
 
+div {
+  text-transform: uppercase;
+  color: #355257;
+}
+
+input,
+textarea,
 button {
-  outline: none;
+  margin: 0;
+  padding: 0;
+  outline: 0;
+  text-decoration: none;
+  border: none;
 }
 
 button:hover {
   cursor: pointer;
+}
+
+a {
+  color: #355257;
+  transform: none;
+}
+
+a:hover {
+  color: #355257;
+  transform: none;
 }
 
 ul {
