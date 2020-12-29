@@ -29,7 +29,7 @@ const HeaderContainer =styled.div `
   padding: 0px, 30px;
   background: linear-gradient(${props => props.theme.primaryColors.primaryLight}, ${props => props.theme.secondaryColors.secondaryLighter});
   box-shadow: 0.2px 0.2px 0.3px;
-  z-index: 1;
+  z-index: 2;
 `
 
 const HeaderUpContainer = styled.div `

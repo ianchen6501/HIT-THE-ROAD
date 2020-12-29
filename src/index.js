@@ -19,10 +19,10 @@ const theme = {
     primaryLight: "#FFC6B0",
     primary: "#ED784A",
     primaryDark: "#E98B2A",
-    primaryDarker: "#7A2F11",v
+    primaryDarker: "#7A2F11",
   },
 
-  secondaryColors : {
+  secondaryColors: {
     secondaryLighter : '#bfdbde',
     secondaryLight : '#9bb7ba',
     secondary : '#77969A',
@@ -30,7 +30,7 @@ const theme = {
     secondaryDarker : '#355257',
   },
 
-  fontSizes : {
+  fontSizes: {
     extraLarge : '30px',
     large: '26px',
     medium: '20px',
@@ -45,14 +45,6 @@ const theme = {
     h4: "1.8rem",
     h5: "1.6rem",
     h6: "1.3rem",
-  },
-
-  secondaryColors: {
-    secondaryLighter: "#BFDBDE",
-    secondaryLight: "#9BB7BA",
-    secondary: "#77969A",
-    secondaryDark: "#5C7B80",
-    secondaryDarker: "#355257",
   },
  
   Wrappers : {

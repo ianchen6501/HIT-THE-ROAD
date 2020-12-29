@@ -37,6 +37,7 @@ import {
 } from "../../redux/reducers/mapMarkReducer";
 
 const PlanWrapper = styled.div`
+  margin-top: ${props => props.theme.heights.header};
   display: flex;
   height: 100vh;
 

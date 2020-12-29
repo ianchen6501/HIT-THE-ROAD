@@ -7,17 +7,17 @@
 
 div {
   text-transform: uppercase;
-  color: #355257;
+  /* color: #355257; */
 }
 
 input,
 textarea,
 button {
   margin: 0;
-  padding: 0;
+  /* padding: 0; */
   outline: 0;
-  text-decoration: none;
-  border: none;
+  /* text-decoration: none;
+  border: none; */
 }
 
 button:hover {

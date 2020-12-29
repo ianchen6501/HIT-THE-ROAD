@@ -1,13 +1,15 @@
 import { configureStore } from "@reduxjs/toolkit";
 import schedulesReducer from "./reducers/schedulesReducer";
-import userReducer from "./reducers/userReducer";
+import usersReducer from "./reducers/usersReducer";
 import postItsReducer from "./reducers/postItsReducer";
 import mapMarksReducer from "./reducers/mapMarkReducer";
+import postsReducer from "./reducers/postsReducer";
 
 export default configureStore({
   reducer: {
+    posts: postsReducer,
     schedules: schedulesReducer,
-    users: userReducer,
+    users: usersReducer,
     postIts: postItsReducer,
     mapMarks: mapMarksReducer,
   },

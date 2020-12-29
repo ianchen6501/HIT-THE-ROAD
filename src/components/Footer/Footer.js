@@ -9,13 +9,13 @@ const FooterContainer = styled.div `
   justify-content: center;
   align-items: center;
   background: ${props => props.theme.primaryColors.primaryLighter};
-  z-index: 1;
+  z-index: 2;
   color: ${props => props.theme.secondaryColors.secondaryDarker};
   font-size: 16px;
 `
 
 export default function Footer() {
   return (
-    <FooterContainer style={{zIndex:'-1',}}>Made by ...</FooterContainer>
+    <FooterContainer>Made by ...</FooterContainer>
   )
 }
