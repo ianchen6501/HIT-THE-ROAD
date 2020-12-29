@@ -37,9 +37,11 @@ import {
 } from "../../redux/reducers/mapMarkReducer";
 
 const PlanWrapper = styled.div`
-  margin-top: ${props => props.theme.heights.header};
+  position: relative;
   display: flex;
   height: 100vh;
+  padding-top: ${(props) => props.theme.heights.header};
+  padding-bottom: ${(props) => props.theme.heights.footer};
 
   ${MEDIA_QUERY_SM} {
     flex-direction: column;
@@ -49,7 +51,7 @@ const PlanWrapper = styled.div`
 const ScheduleWrapper = styled.div`
   display: flex;
   z-index: 1;
-  height: 100vh;
+  height: 100%;
 `;
 
 const Schedule = styled.div`
@@ -143,6 +145,7 @@ const ScheduleTime = styled.div`
   width: 32px;
   text-align: center;
   font-size: ${(props) => props.theme.fontSizes.extraSmall};
+  line-height: ${(props) => props.theme.fontSizes.small};
 `;
 
 const DeleteButton = styled.button`

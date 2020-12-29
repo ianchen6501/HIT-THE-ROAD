@@ -28,7 +28,7 @@ const PostItWrapper = styled.div`
   justify-content: start;
   box-shadow: -2px 0px 2px grey;
   padding: 20px;
-  height: 100vh;
+  height: 100%;
   background: ${(props) =>
     props.isDraggingOver
       ? props.theme.basicColors.white
@@ -76,7 +76,7 @@ const DeleteButton = styled.button`
   background: transparent;
 
   &:hover {
-    color: pink;
+    color: ${(props) => props.theme.primaryColors.primaryDark};
   }
 `;
 
@@ -122,7 +122,7 @@ const PostItForm = styled.form`
   background: ${(props) => props.theme.secondaryColors.secondaryDarker};
   box-shadow: 1px 3px 5px gray;
   border-radius: 5px;
-  color: white;
+  color: ${(props) => props.theme.basicColors.white};
   font-size: ${(props) => props.theme.fontSizes.small};
 
   & input {
@@ -130,6 +130,7 @@ const PostItForm = styled.form`
     padding: 2px;
     outline: none;
     border: none;
+    color: ${(props) => props.theme.secondaryColors.secondaryDark};
 
     &:focus {
       background: ${(props) => props.theme.primaryColors.primaryLighter};
@@ -137,7 +138,13 @@ const PostItForm = styled.form`
   }
 
   & select {
+    width: 100%;
     outline: none;
+    color: ${(props) => props.theme.secondaryColors.secondaryDark};
+  }
+
+  & textarea {
+    color: ${(props) => props.theme.secondaryColors.secondaryDark};
   }
 `;
 
