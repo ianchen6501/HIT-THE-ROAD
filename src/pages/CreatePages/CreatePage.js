@@ -1,11 +1,9 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState} from 'react'
 import styled from 'styled-components'
 import { Wrapper } from '../../components/public'
 import { 
   FormContainer,
   UserInput,
-  UserButton,
-  UserInputContainer,
   UserButtonBorder,
   UserButtonBackground,
   UserButtonText,
@@ -111,7 +109,7 @@ export default function CreatePage() {
       if(!json.ok) {
         return setErrorMessage(json.message)
       } else {
-        return history.push('/')
+        return history.push('/user')
       }
     })
     .catch(error => {
@@ -137,7 +135,7 @@ export default function CreatePage() {
         <SubContainer>
           <SubTitle>時間</SubTitle>
           <DatePickerContainer>
-            <DatePicker startDate={startDate} setStartDate={setStartDate} endDate={endDate} setEndDate={setEndDate}/>
+            <DatePicker style={{zIndex:'4'}} startDate={startDate} setStartDate={setStartDate} endDate={endDate} setEndDate={setEndDate}/>
           </DatePickerContainer>
         </SubContainer>
         <div onClick={handleSubmitSchedule}>

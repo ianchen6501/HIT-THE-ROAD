@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import './App.css';
 import { createContext, useContext, useEffect } from 'react'
 import {
@@ -23,11 +24,9 @@ import { useDispatch } from 'react-redux';
 function App({FBstartApp, FBdeleteApp}) {
   const dispatch = useDispatch()
 
-  useEffect(() => {
-    const token = getAuthTokenFromLocalStorage()
-    if(token) {
-      dispatch(handleLoginByToken(token))
-    }
+  useEffect(async () => {
+    const token = await getAuthTokenFromLocalStorage()
+    dispatch(handleLoginByToken(token))
   }, [])
 
   return (

@@ -78,7 +78,7 @@ export default function HomePage() {
 
   useEffect(() => {
     dispatch(getPosts())
-  }, [])
+  }, [dispatch])
 
   return (
     <>
@@ -93,12 +93,12 @@ export default function HomePage() {
           <IntroContainer>
             <IntroImage></IntroImage>
             <IntroTitle>Post-it</IntroTitle>
-            <IntroContent>可以與朋友、家人及網路上的每一個人分享你精彩的旅程。</IntroContent>
+            <IntroContent>輕鬆的用 Google map 工具來建立便利貼，快速規劃您的行程。</IntroContent>
           </IntroContainer>
           <IntroContainer>
             <IntroImage></IntroImage>
             <IntroTitle>albumn</IntroTitle>
-            <IntroContent>可以與朋友、家人及網路上的每一個人分享你精彩的旅程。</IntroContent>
+            <IntroContent>與朋友、家人及網路上的每一個人分享你精彩的旅程。</IntroContent>
           </IntroContainer>
         </BannerContainer>
         <Heading>探索別人的旅程</Heading>

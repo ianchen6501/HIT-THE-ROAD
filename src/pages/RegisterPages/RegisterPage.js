@@ -1,12 +1,11 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { useHistory, useLocation } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import { setAuthTokenToLocalStorage, FBstartApp } from '../../utils'
 import { setUserData } from '../../redux/reducers/usersReducer'
 import {
   FormContainer,
   UserInput,
-  UserButton,
   Title,
   UserInputContainer,
   UserButtonBorder,
@@ -30,8 +29,6 @@ export default function RegisterPage() {
   const [errorMessage, setErrorMessage] = useState("")
   const dispatch = useDispatch()
   const history = useHistory()
-
-  const [FBuserData, setFBuserData] = useState(null)
 
   function handleOnClickRegister() {
     const errorMessage = 'this field can not be empty.'
@@ -143,7 +140,7 @@ export default function RegisterPage() {
           {usernameErrorMessage && <ErrorMessage>{usernameErrorMessage}</ErrorMessage>}
         </UserInputContainer>
         <UserInputContainer>
-          <UserInput placeholder={'PASSWORD'} onChange={(event) => setPassword(event.target.value)} value={password}></UserInput>
+          <UserInput placeholder={'PASSWORD'} onChange={(event) => setPassword(event.target.value)} value={password} type='password'></UserInput>
           {passwordErrorMessage && <ErrorMessage>{passwordErrorMessage}</ErrorMessage>}
         </UserInputContainer>
         <UserInputContainer>

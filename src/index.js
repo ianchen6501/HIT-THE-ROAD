@@ -1,11 +1,10 @@
-import React, { createContext } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './components/App/App';
 import { ThemeProvider } from 'styled-components';
 import store from './redux/store';
 import { Provider } from 'react-redux'
-import Example from './components/DayPicker'
 
 
 const theme = {
@@ -58,7 +57,7 @@ const theme = {
   heights : {
     header: '80px',
     homepageHeader: '400px',
-    footer: '70px',
+    footer: '50px',
   }
 }
 

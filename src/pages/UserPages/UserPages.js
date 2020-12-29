@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { getAll } from '../../webAPI'
-import { Wrapper } from '../../components/public'
+import { Wrapper, LoadingPage } from '../../components/public'
 import { SERVER_URL } from '../../static/static'
-import { EditOutlined, DeleteOutlined } from '@ant-design/icons'
-import { Link, useHistory, useLocation } from 'react-router-dom'
+import { EditOutlined, DeleteOutlined} from '@ant-design/icons'
+import { Link, useHistory } from 'react-router-dom'
 
 
 const ScheduleContainer = styled.div `
@@ -25,17 +25,17 @@ const ScheduleContainer = styled.div `
   }
 `
 
-const Divider = styled.div `
-  height: 100%;
-  width: 2px;
-  background: ${props => props.theme.secondaryColors.secondaryDarker};
-  margin-left: 20px;
-  margin-right: 20px;
-`
+// const Divider = styled.div `
+//   height: 100%;
+//   width: 2px;
+//   background: ${props => props.theme.secondaryColors.secondaryDarker};
+//   margin-left: 20px;
+//   margin-right: 20px;
+// `
 
 const Title = styled.div `
-  width: 200px;
-  font-size: ${props => props.theme.titles.h3};
+  border-bottom: solid 2px ${props => props.theme.secondaryColors.secondaryDarker};
+  font-size: ${props => props.theme.titles.h4};
   font-weight: 900;
   cursor: pointer;
   
@@ -45,13 +45,22 @@ const Title = styled.div `
 `
 
 const SubSitile = styled.div `
-  font-size: ${props => props.theme.titles.h4};
+  font-size: ${props => props.theme.titles.h6};
   font-weight: 900;
+
+  &:nth-child(1) {
+    margin-right: 20px;
+  }
 `
 
 const LeftContainer = styled.div `
   display: flex;
   height: 100%;
+  flex-direction: column;
+`
+
+const LeftDownContainer = styled.div `
+  display: flex;
 `
 
 const RightContainer = styled.div `
@@ -87,6 +96,7 @@ const CheckBoxLabel = styled.label `
   font-weight: 900;
 `
 
+
 const deleteOutlinedStyle = {
   transform: 'scale(2)',
   cursor: 'pointer',
@@ -97,7 +107,12 @@ const editOutlinedStyle = {
   cursor: 'pointer',
 }
 
-function Schedule({scheduleData, handleDeleteSchedule, handleOnChangeChecked}) {
+function Schedule({
+  scheduleData,
+  handleDeleteSchedule,
+  handleOnChangeChecked,
+  handleOnClickPlanning
+}) {
   const start = scheduleData.dateRange.start
   const end = scheduleData.dateRange.end
   const startData = `
@@ -114,12 +129,11 @@ function Schedule({scheduleData, handleDeleteSchedule, handleOnChangeChecked}) {
   return (
     <ScheduleContainer>
       <LeftContainer>
-        <Title>{scheduleData.scheduleName}</Title>
-        <Divider />
-        <div>
-          <SubSitile>{startData}-{endData}</SubSitile>
+        <Title onClick={() => handleOnClickPlanning(scheduleData.id)}>{scheduleData.scheduleName}</Title>
+        <LeftDownContainer>
           <SubSitile>{scheduleData.location}</SubSitile>
-        </div>
+          <SubSitile>{startData}-{endData}</SubSitile>
+        </LeftDownContainer>
       </LeftContainer>
       <RightContainer>
         <RightUpContainer>
@@ -138,10 +152,10 @@ function Schedule({scheduleData, handleDeleteSchedule, handleOnChangeChecked}) {
 }
 
 export default function UserPage() {
-  const dispatch = useDispatch()
   const [schedules, setSchedules] = useState(null)
   const [isDeleteing, setIsDeleting] = useState(false)
   const userData = useSelector(store => store.users.userData)
+  const history = useHistory()
 
   function handleDeleteSchedule(id) {
     setIsDeleting(true)
@@ -196,6 +210,12 @@ export default function UserPage() {
     })
   }
 
+  function handleOnClickPlanning(scheduleId) {
+    const userId = userData.id
+    
+    history.push('/Planning-page')
+  }
+
   //拿 schedules
   useEffect(() => {
     if(userData) {
@@ -205,11 +225,11 @@ export default function UserPage() {
         setSchedules(json)
       })
     }
-  }, [isDeleteing])
+  }, [userData, isDeleteing])
 
   if(!schedules) {
     return (
-      <div>loading!</div>
+      <LoadingPage />
     )
   }
 
@@ -223,6 +243,7 @@ export default function UserPage() {
             scheduleData={scheduleData} 
             handleDeleteSchedule={handleDeleteSchedule} 
             handleOnChangeChecked={handleOnChangeChecked}
+            handleOnClickPlanning={handleOnClickPlanning}
           />
         ))}
       </Wrapper>

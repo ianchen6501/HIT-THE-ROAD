@@ -4,8 +4,6 @@ import { Wrapper } from '../../components/public'
 import { 
   FormContainer,
   UserInput,
-  UserButton,
-  UserInputContainer,
   UserButtonBorder,
   UserButtonBackground,
   UserButtonText,
@@ -14,7 +12,6 @@ import {
 import DatePicker from '../../components/DayPicker'
 import { SERVER_URL } from '../../static/static'
 import { useHistory, useLocation } from 'react-router-dom'
-import { postsReducer } from '../../redux/reducers/postsReducer'
 import { updateSchedule } from '../../webAPI'
 
 //styled-component
@@ -91,7 +88,7 @@ export default function CreatePage() {
       return setScheduleNameErrorMessage(message)
     }
 
-    const json = JSON.stringify({
+    const json = JSON.stringify({ //FIXME:
       scheduleName, 
       location: destination,
       dateRange: {

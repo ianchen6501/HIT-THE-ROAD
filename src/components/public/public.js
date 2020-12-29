@@ -28,5 +28,21 @@ export const Wrapper = styled.div `
   @media only screen and (min-width: 1200px) {
     width: ${props => props.theme.Wrappers.extraLargeWidth};
   }
-
 `
+
+const LoadingContainer = styled.div `
+  text-align: center;
+  line-height: 648px;
+  font-size: ${props => props.theme.titles.h3};
+  color: ${props => props.theme.secondaryColors.secondaryDarker};
+`
+
+export function LoadingPage() {
+  return (
+    <Wrapper>
+      <LoadingContainer>
+        loading!
+      </LoadingContainer>
+    </Wrapper>
+  )
+}
