@@ -13,6 +13,7 @@ import ExpolorePage from '../../pages/ExplorePages';
 import CreatePage from '../../pages/CreatePages';
 import UserPage from '../../pages/UserPages'
 import EditPage from '../../pages/EditPages'
+import PlanningPage from "../../pages/PlanningPages";
 import Footer from '../Footer'
 import Header from '../Header'
 import { getAuthTokenFromLocalStorage } from '../../utils'
@@ -53,6 +54,9 @@ function App({FBstartApp, FBdeleteApp}) {
         </Route>
         <Route exact path='/explore'> 
           <ExpolorePage/>
+        </Route>
+        <Route path="/planning-page">
+          <PlanningPage />
         </Route>
       </Switch>
       <Footer />

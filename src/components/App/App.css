@@ -20,6 +20,10 @@ button {
   border: none;
 }
 
+button:hover {
+  cursor: pointer;
+}
+
 a {
   color: #355257;
   transform: none;
@@ -28,4 +32,9 @@ a {
 a:hover {
   color: #355257;
   transform: none;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
 }

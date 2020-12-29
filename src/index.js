@@ -15,11 +15,11 @@ const theme = {
   },
 
   primaryColors : {
-    primaryLighter : '#F8DFC2',
-    primaryLight : '#FFC6B0',
-    primary : '#ED784A',
-    primaryDark : '"#E98B2A',
-    primaryDarker : '#7a2f11',
+    primaryLighter: "#f8dfc2",
+    primaryLight: "#FFC6B0",
+    primary: "#ED784A",
+    primaryDark: "#E98B2A",
+    primaryDarker: "#7A2F11",v
   },
 
   secondaryColors : {
@@ -37,16 +37,24 @@ const theme = {
     small: '16px',
     extraSmall: '12px',
   },
-
-  titles : {
-    h1 : '4.5rem',
-    h2 : '3.5rem',
-    h3 : '2.3rem',
-    h4 : '1.8rem',
-    h5 : '1.6rem',
-    h6 : '1.3rem',
+  
+  titles: {
+    h1: "4.5rem",
+    h2: "3.5rem",
+    h3: "2.3rem",
+    h4: "1.8rem",
+    h5: "1.6rem",
+    h6: "1.3rem",
   },
 
+  secondaryColors: {
+    secondaryLighter: "#BFDBDE",
+    secondaryLight: "#9BB7BA",
+    secondary: "#77969A",
+    secondaryDark: "#5C7B80",
+    secondaryDarker: "#355257",
+  },
+ 
   Wrappers : {
     extraLargeWidth: '1080px',
     largeWidth: '936px',
@@ -112,5 +120,4 @@ function startApp() {
     document.getElementById('root')
   );
 }
-
 
