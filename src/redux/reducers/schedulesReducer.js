@@ -86,6 +86,16 @@ export const schedulesReducer = createSlice({
       const { originId, directionSteps } = action.payload;
       state.routes.push({ originId, directionSteps });
     },
+    updateRoute: (state, action) => {
+      const { originId, directionSteps } = action.payload;
+      state.routes.map((route) => {
+        if (route.originId === originId) {
+          return (route.directionSteps = directionSteps);
+        } else {
+          return route.directionSteps;
+        }
+      });
+    },
     deleteRouteByOriginId: (state, action) => {
       state.routes = state.routes.filter(
         (route) => route.originId !== action.payload
@@ -105,6 +115,7 @@ export const {
   deleteDailyRoutines,
   saveAllDailyRoutines,
   setRoute,
+  updateRoute,
   deleteRouteByOriginId,
 } = schedulesReducer.actions;
 

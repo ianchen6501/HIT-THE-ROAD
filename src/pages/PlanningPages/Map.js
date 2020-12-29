@@ -12,7 +12,7 @@ import {
   deletePostItByPlaceId,
 } from "../../redux/reducers/postItsReducer";
 
-import { setRoute } from "../../redux/reducers/schedulesReducer";
+import { setRoute, updateRoute } from "../../redux/reducers/schedulesReducer";
 
 import {
   setOrigin,
@@ -182,7 +182,6 @@ const MarkAlert = styled.div`
   }
 `;
 
-// TODO:
 const LocationMark = styled.div`
   transform: translate(-50%, -50%);
   z-index: 2;
@@ -221,8 +220,9 @@ export default function MapArea() {
 
   const [isMapDragged, setIsMapDragged] = useState(false);
   const [currentDirectionsDisplay, setCurrentDirectionsDisplay] = useState();
-  //TODO:
   const markLocations = useSelector((store) => store.mapMarks.markLocations);
+  // TODO:
+  const routes = useSelector((store) => store.schedules.routes);
 
   if (mapsApi) {
     mapsApi.event.addListener(mapInstance, "dragstart", function () {
@@ -316,7 +316,6 @@ export default function MapArea() {
   }
 
   // pin 地點並新增到 post-it
-  // TODO:
   function handleMarkSearchPlaceClick(pinLocations, placeId) {
     if (
       markLocations.length > 0 &&
@@ -399,8 +398,14 @@ export default function MapArea() {
     });
   }
 
+  // TODO: 如果有重複
   function handleResultButtonClick() {
-    dispatch(setRoute({ originId, directionSteps }));
+    const route = routes.find((route) => route.originId === originId);
+    if (route) {
+      dispatch(updateRoute({ originId, directionSteps }));
+    } else {
+      dispatch(setRoute({ originId, directionSteps }));
+    }
     dispatch(setOrigin(""));
     dispatch(setDestination(""));
     currentDirectionsDisplay.setMap(null);
