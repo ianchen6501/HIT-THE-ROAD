@@ -5,7 +5,6 @@ import { getAll } from '../../webAPI'
 import { Wrapper } from '../../components/public'
 import { SERVER_URL } from '../../static/static'
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons'
-import { getAuthToken } from '../../redux/reducers/usersReducer'
 import { Link, useHistory, useLocation } from 'react-router-dom'
 
 
@@ -55,11 +54,35 @@ const LeftContainer = styled.div `
 `
 
 const RightContainer = styled.div `
-  height: 100%;
+  display: flex;
+  flex-direction: column;
+`
+
+const RightUpContainer = styled.div `
+  height: 50%;
+  width: 80px; 
+  display: flex;
+  align-items: center;
+`
+
+const RightDownContainer = styled.div `
+  height: 50%;
   width: 50px; 
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
+`
+
+const CheckBox = styled.input `
+  width: 20px;
+  height: 20px;
+  border-radius: 0;
+  margin-right: 5px;
+`
+
+const CheckBoxLabel = styled.label `
+  font-size: ${props => props.theme.fontSizes.small};
+  font-weight: 900;
 `
 
 const deleteOutlinedStyle = {
@@ -73,21 +96,55 @@ const editOutlinedStyle = {
 }
 
 function Schedule({scheduleData, handleDeleteSchedule}) {
+  const start = scheduleData.dateRange.start
+  const end = scheduleData.dateRange.end
+  const startData = `
+    ${new Date(start).getFullYear().toString()}, 
+    ${(new Date(start).getMonth()+1).toString()}, 
+    ${new Date(start).getDate().toString()}
+  `
+  const endData = `
+    ${new Date(end).getFullYear().toString()}, 
+    ${(new Date(end).getMonth()+1).toString()}, 
+    ${new Date(end).getDate().toString()}
+  `
+
+  function handleOnChangeChecked(event) {
+    const body = {
+      isFinished : event.target.checked
+    }
+    fetch( `${SERVER_URL}/schedules/`, {
+      method: 'PATCH',
+      headers: {
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    }).then(response => {
+      console.log(response)
+    })
+  }
+
   return (
     <ScheduleContainer>
       <LeftContainer>
         <Title>{scheduleData.scheduleName}</Title>
         <Divider />
         <div>
-          <SubSitile>{scheduleData.dateRange.start}-{scheduleData.dateRange.end}</SubSitile>
+          <SubSitile>{startData}-{endData}</SubSitile>
           <SubSitile>{scheduleData.location}</SubSitile>
         </div>
       </LeftContainer>
       <RightContainer>
-        <Link to={`/edit/${scheduleData.id}`}>
-          <EditOutlined style={editOutlinedStyle}/>
-        </ Link>
-        <DeleteOutlined onClick={() => handleDeleteSchedule(scheduleData.id)} style={deleteOutlinedStyle}/>
+        <RightUpContainer>
+          <CheckBox id="isFinished" type='checkbox' value='完成' onChange={(event) => handleOnChangeChecked(event)}></CheckBox>
+          <CheckBoxLabel for="isFinished">完成</CheckBoxLabel>
+        </RightUpContainer>
+        <RightDownContainer>
+          <Link to={`/edit/${scheduleData.id}`}>
+            <EditOutlined style={editOutlinedStyle}/>
+          </ Link>
+          <DeleteOutlined onClick={() => handleDeleteSchedule(scheduleData.id)} style={deleteOutlinedStyle}/>
+        </RightDownContainer>
       </RightContainer>
     </ScheduleContainer>
   )
@@ -95,10 +152,8 @@ function Schedule({scheduleData, handleDeleteSchedule}) {
 
 export default function UserPage() {
   const dispatch = useDispatch()
-  const [unfinishedSchedules, setUnfinishedSchedules] = useState(null)
-  const [finishedSchedules, setFinishedSchedules] = useState(null)
+  const [schedules, setSchedules] = useState(null)
   const [isDeleteing, setIsDeleting] = useState(false)
-  const location = useLocation
 
   function handleDeleteSchedule(id) {
     setIsDeleting(true)
@@ -121,24 +176,40 @@ export default function UserPage() {
     })
   }
 
+  function GetUnfinishedSchedules() {
+    getAll(`${SERVER_URL}/schedules?isFinished=0`)
+    .then(json => {
+      setSchedules(json)
+    })
+  }
+
+  function GetFinishedSchedules() {
+    getAll(`${SERVER_URL}/schedules?isFinished=1`)
+    .then(json => {
+      setSchedules(json)
+    })
+  }
+
   useEffect(() => {
     getAll(`${SERVER_URL}/schedules?isFinished=0`)
     .then(json => {
       console.log(json)
-      setUnfinishedSchedules(json)
+      setSchedules(json)
     })
   }, [isDeleteing])
 
-  if(!unfinishedSchedules) {
+  if(!schedules) {
     return (
       <div>loading!</div>
     )
   }
 
-  if(unfinishedSchedules) {
+  if(schedules) {
     return (
       <Wrapper>
-        {unfinishedSchedules.map((scheduleData, index) => (
+        <button onClick={GetUnfinishedSchedules}>未完成</button>
+        <button onClick={GetFinishedSchedules}>已完成</button>
+        {schedules.map((scheduleData, index) => (
           <Schedule key={index} scheduleData={scheduleData} handleDeleteSchedule={handleDeleteSchedule}/>
         ))}
       </Wrapper>

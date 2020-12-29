@@ -16,15 +16,16 @@ import EditPage from '../../pages/EditPages'
 import Footer from '../Footer'
 import Header from '../Header'
 import { getAuthTokenFromLocalStorage } from '../../utils'
-import { handleSetUserData } from '../../redux/reducers/usersReducer'
+import { handleLoginByToken } from '../../redux/reducers/usersReducer'
 import { useDispatch } from 'react-redux';
 
 function App({FBstartApp, FBdeleteApp}) {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    if(getAuthTokenFromLocalStorage()) {
-      dispatch(handleSetUserData())
+    const token = getAuthTokenFromLocalStorage()
+    if(token) {
+      dispatch(handleLoginByToken(token))
     }
   }, [])
 

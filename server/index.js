@@ -47,30 +47,6 @@ app.use(session({
 //users
 //register
 app.post('/register/:method', (req, res) => {
-  function checkIsUserExist(userData) {
-    users.findOne({//驗證已註冊否
-      where: {
-        [Op.or]: [{username: userData}, {fbName: userData}]
-      }
-    }).then(response => {
-      if(response) { 
-        const response = {
-          ok: false,
-          message: "user exist"
-        }
-        const json = JSON.stringify(response)
-        return res.end(json)
-      }
-    }).catch(error => {
-      const response = {
-        ok: false,
-        message: error.toString()
-      }
-      const json = JSON.stringify(response)
-      return res.end(json)
-    })
-  }
-
   function createUser(body, token, userData) {
     users.create(body)
     .then(result => {
@@ -107,7 +83,20 @@ app.post('/register/:method', (req, res) => {
       nickname,
       email
     }
-    await checkIsUserExist(username)
+
+    const user = await users.findOne({//驗證已註冊否
+      where: {
+        username,
+      }
+    })
+    if(user) {
+      const response = {
+        ok: false,
+        message: "user exist"
+      }
+      const json = JSON.stringify(response)
+      return res.send(json)
+    }
 
     //創建新使用者
     const saltRounds = 10
@@ -148,7 +137,20 @@ app.post('/register/:method', (req, res) => {
       fbName,
       fbEmail,
     }
-    await checkIsUserExist(fbName)
+
+    const user = await users.findOne({//驗證已註冊否
+      where: {
+        fbName,
+      }
+    })
+    if(user) {
+      const response = {
+        ok: false,
+        message: "user exist"
+      }
+      const json = JSON.stringify(response)
+      return res.send(json)
+    }
 
     //創建新使用者
     const saltRounds = 10
@@ -491,7 +493,50 @@ app.put('/schedules/:id', (req, res) => {
     .then(() => {
       const body = {
         ok: true,
-        message: "update success"
+        message: "put success"
+      }
+      return res.end(JSON.stringify(body))
+    }).catch(error => {
+      const body = {
+        ok: false,
+        message: error.toString()
+      }
+      return res.end(JSON.stringify(body))
+    })
+  }).catch(error => {
+    const body = {
+      ok: false,
+      message: error.toString()
+    }
+    return res.end(JSON.stringify(body))
+  })
+})
+
+//update_patch
+app.patch('/schedules/isFinished/:id', (req, res) => {
+  const { UserId, isFinished } = req.body
+  if(!UserId) {
+    const body = {
+      ok: false;
+      message: "wrong authority"
+    }
+  }
+
+  const body = {
+    isFinished
+  }
+
+  schedules.findOne({
+    where : {
+      id : req.params.id,
+      UserId,
+    }
+  }).then(schedule => {
+    schedule.update(body)
+    .then(() => {
+      const body = {
+        ok: true,
+        message: "patch success"
       }
       return res.end(JSON.stringify(body))
     }).catch(error => {

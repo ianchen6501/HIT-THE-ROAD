@@ -130,9 +130,6 @@ export default function Header() {
     dispatch(setUserData(null))
   }
 
-  useEffect(() => {
-    
-  }, [])
 
   return (
     <HeaderContainer $atHomepage={location.pathname === '/'}>

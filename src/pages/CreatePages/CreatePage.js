@@ -14,6 +14,7 @@ import {
 import DatePicker from '../../components/DayPicker'
 import { SERVER_URL } from '../../static/static'
 import { useHistory } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
 //styled-component
 const Title = styled.div `
@@ -76,10 +77,7 @@ export default function CreatePage() {
   const [endDate, setEndDate] = useState(new Date(currentYear, currentMonth, currentDate).getTime());
   const [errorMessage, setErrorMessage] = useState("")
   const [scheduleNameErrorMessage, setScheduleNameErrorMessage] = useState('')
-
-  useEffect(() => {
-    console.log(new Date().getTime())
-  })
+  const userData = useSelector(store => store.users.userData)
 
   function handleSubmitSchedule() {
     const message = 'this field can not be empty.'
@@ -88,14 +86,18 @@ export default function CreatePage() {
       return setScheduleNameErrorMessage(message)
     }
 
+    console.log(userData.id)
+
     const json = JSON.stringify({
       scheduleName, 
       location, 
       dateRange: {
         start: startDate,
         end: endDate
-      }
+      },
+      UserId: userData.id
     })
+
     fetch(`${SERVER_URL}/schedules`, {
       method: 'POST',
       headers: {

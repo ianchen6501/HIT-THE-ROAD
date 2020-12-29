@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { Result } from 'antd';
+import { SERVER_URL } from '../../static/static'
 
 export const usersReducer = createSlice({
   name: 'users',
@@ -27,44 +27,44 @@ export const {
   setUserData
 } = usersReducer.actions;
 
-export const getAuthToken = (loginData) => (dispatch) => {
-  dispatch(setIsLoading(true))
-  const userData = {
-    ok: true,
-    id: 3,
-    username: null,
-    password: null,
-    nickname: null,
-    email: null,
-    FBName: null,
-    FBId: null,
-    FBEmail: null,
-    token: "34567"
-  }
-  //這邊要修正為真實串 API
-  if(loginData.username === 'hittheroad' && loginData.password === 'hittheroad') {
-    const response = {
-      ok: true,
-      id: 11
-    }
-    setAuthTokenResponse(response)
-    dispatch(setIsLoading(false))
-    dispatch(setUserData(userData))
-    return new Promise(resolve => {
-      resolve(response)
-    })
-  } else {
-    const response = {
-      ok: false,
-      message: "wrong logindata"
-    }
-    setAuthTokenResponse(response)
-    dispatch(setIsLoading(false))
-    return new Promise(resolve => {
-      resolve(response)
-    })
-  }
-}
+// export const getAuthToken = (loginData) => (dispatch) => {
+//   dispatch(setIsLoading(true))
+//   const userData = {
+//     ok: true,
+//     id: 3,
+//     username: null,
+//     password: null,
+//     nickname: null,
+//     email: null,
+//     FBName: null,
+//     FBId: null,
+//     FBEmail: null,
+//     token: "34567"
+//   }
+//   //這邊要修正為真實串 API
+//   if(loginData.username === 'hittheroad' && loginData.password === 'hittheroad') {
+//     const response = {
+//       ok: true,
+//       id: 11
+//     }
+//     setAuthTokenResponse(response)
+//     dispatch(setIsLoading(false))
+//     dispatch(setUserData(userData))
+//     return new Promise(resolve => {
+//       resolve(response)
+//     })
+//   } else {
+//     const response = {
+//       ok: false,
+//       message: "wrong logindata"
+//     }
+//     setAuthTokenResponse(response)
+//     dispatch(setIsLoading(false))
+//     return new Promise(resolve => {
+//       resolve(response)
+//     })
+//   }
+// }
 
 // export const handleRegister = (registerData) => (dispatch) => {
 //   dispatch(setIsLoading(true))
@@ -110,54 +110,55 @@ export const getAuthToken = (loginData) => (dispatch) => {
 //   //缺錯誤處理
 // }
 
-export const handleFBLogin = (FBresponse) => (dispatch) => {
-  console.log(FBresponse)
-  const userData = {
-    ok: true,
-    id: 1,
-    username: null,
-    password: null,
-    nickname: null,
-    email: null,
-    FBName: null,
-    FBId: null,
-    FBEmail: null,
-    token: "34567"
-  }
-  dispatch(setIsLoading(true))
-  // 拿資料庫資料，這邊先用假資料確認傳進來資料
-  if(FBresponse.id === 3 && FBresponse.name === "ian" && FBresponse.email === "aaa") {
-    const response = {
-      ok: true,
-      id: 12
-    }
-    dispatch(setUserData(userData))
-    return new Promise(resolve => resolve(response))
-  } else {
-    const response = {
-      ok: false
-    }
-    return new Promise(resolve => resolve(response))
-  }
+// export const handleFBLogin = (FBresponse) => (dispatch) => {
+//   console.log(FBresponse)
+//   const userData = {
+//     ok: true,
+//     id: 1,
+//     username: null,
+//     password: null,
+//     nickname: null,
+//     email: null,
+//     FBName: null,
+//     FBId: null,
+//     FBEmail: null,
+//     token: "34567"
+//   }
+//   dispatch(setIsLoading(true))
+//   // 拿資料庫資料，這邊先用假資料確認傳進來資料
+//   if(FBresponse.id === 3 && FBresponse.name === "ian" && FBresponse.email === "aaa") {
+//     const response = {
+//       ok: true,
+//       id: 12
+//     }
+//     dispatch(setUserData(userData))
+//     return new Promise(resolve => resolve(response))
+//   } else {
+//     const response = {
+//       ok: false
+//     }
+//     return new Promise(resolve => resolve(response))
+//   }
 
 
-}
+// }
 
-export const handleSetUserData = (id) => (dispatch) => {
-  const userData = {
-    ok: true,
-    id: id,
-    username: null,
-    password: null,
-    nickname: null,
-    email: null,
-    FBName: null,
-    FBId: null,
-    FBEmail: null,
-    token: "34567"
-  }
+export const handleLoginByToken = (token) => (dispatch) => {
+  const body = {token}
+
+  fetch(`${SERVER_URL}/users`, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json'
+    },
+    body: JSON.stringify(body)
+  })
+  .then(response => response.json())
+  .then(json => {
+    dispatch(setUserData(json.userData))
+  })
   // 去資料庫拿資料並存入 userData state，這邊先假存 id
-  dispatch(setUserData(userData))
+  // dispatch(setUserData(userData))
 }
 
 export default usersReducer.reducer; 
