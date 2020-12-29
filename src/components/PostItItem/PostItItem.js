@@ -18,6 +18,8 @@ import {
   updatePostIt,
 } from "../../redux/reducers/postItsReducer";
 
+import { deleteMapMarkByPlaceId } from "../../redux/reducers/mapMarkReducer";
+
 // droppable
 const PostItWrapper = styled.div`
   position: relative;
@@ -31,6 +33,7 @@ const PostItWrapper = styled.div`
     props.isDraggingOver
       ? props.theme.basicColors.white
       : props.theme.primaryColors.primaryLighter};
+  overflow: auto;
 `;
 
 // draggable
@@ -40,7 +43,7 @@ const PostIt = styled.div`
   margin-bottom: 5px;
   padding: 5px;
   width: 90px;
-  height: 90px;
+  min-height: 90px;
   background: ${(props) =>
     props.isDragging
       ? props.theme.secondaryColors.secondaryLighter
@@ -152,7 +155,11 @@ export default function PostItItem() {
   const spotIds = column.spotsIds;
 
   function handleDeletePostItClick(id, index) {
+    const placeId = spots[id].placeId;
     dispatch(deletePostIt({ id, index }));
+    // TODO: 要刪掉相對應的 marker
+    dispatch(deleteMapMarkByPlaceId(placeId));
+    // dispatch(setIsMarkDeleted(placeId));
   }
 
   function handleAddPostItClick() {
