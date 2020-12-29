@@ -452,13 +452,18 @@ export default function PlanningPage() {
                           </DeleteButton>
                         </ScheduleItemWrapper>
 
-                        {/* {TODO:} */}
                         {routes &&
                           routes.map(
                             (route) =>
                               route.originId === routine.id && (
                                 <TrafficInfoWrapper key={route.originId}>
                                   <TrafficDuration>
+                                    {route.directionSteps.travelMode ===
+                                      "WALKING" && "走路 "}
+                                    {route.directionSteps.travelMode ===
+                                      "DRIVING" && "開車 "}
+                                    {route.directionSteps.travelMode ===
+                                      "BICYCLING" && "腳踏車 "}
                                     {route.directionSteps.duration.text}
                                   </TrafficDuration>
                                   <TransitLines>

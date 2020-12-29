@@ -44,12 +44,13 @@ export const postItsReducer = createSlice({
       state.columns.postIt.spotsIds.splice(action.payload.index, 1);
       delete state.spots[action.payload.id];
     },
-    deletePostItByMap: (state, action) => {
+    deletePostItByPlaceId: (state, action) => {
       const id = Object.keys(state.spots).find(
         (key) => state.spots[key].placeId === action.payload
       );
-      const index = state.columns.postIt.spotsIds.indexOf(id);
-      state.columns.postIt.spotsIds.splice(index, 1);
+      state.columns.postIt.spotsIds = state.columns.postIt.spotsIds.filter(
+        (spotId) => spotId !== id
+      );
       delete state.spots[id];
     },
     addPostIt: (state, action) => {
@@ -99,10 +100,10 @@ export const {
   setFinishColumns,
   setIsScheduled,
   deletePostIt,
-  deletePostItByMap,
   addPostIt,
   addPostItFromMark,
   updatePostIt,
+  deletePostItByPlaceId,
 } = postItsReducer.actions;
 
 // thunk async logic

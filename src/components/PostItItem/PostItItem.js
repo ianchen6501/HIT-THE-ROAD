@@ -18,7 +18,7 @@ import {
   updatePostIt,
 } from "../../redux/reducers/postItsReducer";
 
-// import { deleteMapMarkByPlaceId } from "../../redux/reducers/mapMarkReducer";
+import { deleteMapMarkByPlaceId } from "../../redux/reducers/mapMarkReducer";
 
 // droppable
 const PostItWrapper = styled.div`
@@ -155,10 +155,10 @@ export default function PostItItem() {
   const spotIds = column.spotsIds;
 
   function handleDeletePostItClick(id, index) {
-    // const placeId = spots[id].placeId;
+    const placeId = spots[id].placeId;
     dispatch(deletePostIt({ id, index }));
     // TODO: 要刪掉相對應的 marker
-    // dispatch(deleteMapMarkByPlaceId(placeId));
+    dispatch(deleteMapMarkByPlaceId(placeId));
     // dispatch(setIsMarkDeleted(placeId));
   }
 

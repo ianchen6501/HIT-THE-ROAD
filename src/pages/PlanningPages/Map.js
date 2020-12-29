@@ -9,18 +9,18 @@ import "react-datepicker/dist/react-datepicker.css";
 
 import {
   addPostItFromMark,
-  deletePostItByMap,
+  deletePostItByPlaceId,
 } from "../../redux/reducers/postItsReducer";
 
 import { setRoute } from "../../redux/reducers/schedulesReducer";
 
 import {
-  setMapMarks,
-  deleteMapMarkByLatLng,
   setOrigin,
   setOriginId,
   setDestination,
   setDirectionSteps,
+  setMarkLocations,
+  deleteMarkLocation,
 } from "../../redux/reducers/mapMarkReducer";
 
 const MapAreaWrapper = styled.div`
@@ -182,6 +182,22 @@ const MarkAlert = styled.div`
   }
 `;
 
+// TODO:
+const LocationMark = styled.div`
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  width: 30px;
+  height: 30px;
+  background: ${(props) => props.theme.primaryColors.primary};
+  border-radius: 50%;
+  cursor: pointer;
+  opacity: 0.8;
+
+  &:hover {
+    background: ${(props) => props.theme.secondaryColors.secondary};
+  }
+`;
+
 export default function MapArea() {
   const defaultProps = {
     center: {
@@ -192,7 +208,7 @@ export default function MapArea() {
   };
 
   const dispatch = useDispatch();
-  const markLocations = useSelector((store) => store.mapMarks.markLocations);
+  // const markLocations = useSelector((store) => store.mapMarks.markLocations);
 
   const [isApiLoaded, setIsApiLoaded] = useState(false);
   const [mapsApi, setMapsApi] = useState(null);
@@ -200,11 +216,13 @@ export default function MapArea() {
   const [searchText, setSearchText] = useState("");
   const [autocompleteResults, setAutocompleteResults] = useState(null);
   const [currentCenter, setCurrentCenter] = useState(null);
-  // TODO: isMarked
   const [isMarked, setIsMarked] = useState(false);
+  const [isRouteAlertShow, setIsRouteAlertShow] = useState(false);
 
   const [isMapDragged, setIsMapDragged] = useState(false);
   const [currentDirectionsDisplay, setCurrentDirectionsDisplay] = useState();
+  //TODO:
+  const markLocations = useSelector((store) => store.mapMarks.markLocations);
 
   if (mapsApi) {
     mapsApi.event.addListener(mapInstance, "dragstart", function () {
@@ -298,6 +316,7 @@ export default function MapArea() {
   }
 
   // pin 地點並新增到 post-it
+  // TODO:
   function handleMarkSearchPlaceClick(pinLocations, placeId) {
     if (
       markLocations.length > 0 &&
@@ -312,54 +331,21 @@ export default function MapArea() {
 
     const mapMarksInfo = { name, formattedAddress, lat, lng, placeId };
     // 重設 markLocations
-    dispatch(setMapMarks(mapMarksInfo));
+    dispatch(setMarkLocations(mapMarksInfo));
 
     const { name: location, formatted_address: memo } = pinLocations;
     dispatch(addPostItFromMark({ location, memo, placeId }));
     setCurrentCenter(null);
-
-    renderPinMarkers(mapMarksInfo);
   }
 
-  // 要把 pin 的變成 marker
-  let pinMarkers = [];
-  function renderPinMarkers(mapMarksInfo) {
-    const markIcon = {
-      url: "http://maps.google.com/mapfiles/kml/pushpin/red-pushpin.png",
-      scaledSize: new mapsApi.Size(40, 40), // scaled size
-    };
-
-    const { placeId, lat, lng } = mapMarksInfo;
-    const pinMarker = new mapsApi.Marker({
-      place: {
-        placeId,
-        location: { lat, lng },
-      },
-      map: mapInstance,
-      icon: markIcon,
-    });
-    pinMarkers.push(pinMarker);
-
-    pinMarkers.map((pinMarker) =>
-      pinMarker.addListener("click", (e) => {
-        const lat = e.latLng.lat();
-        const lng = e.latLng.lng();
-        // 不在畫面顯示
-        pinMarker.setMap(null);
-        pinMarkers = [];
-
-        // 刪掉 pinMarker
-        dispatch(deleteMapMarkByLatLng({ lat, lng }));
-        // 刪 store markLocations 的東東
-        const placeId = pinMarker.place.placeId;
-        dispatch(deletePostItByMap(placeId));
-        setCurrentCenter(null);
-        setIsMarked(false);
-      })
-    );
+  // 取消 pin 和相對應的便利貼
+  function handleMarkCancelClick(placeId) {
+    dispatch(deleteMarkLocation(placeId));
+    dispatch(deletePostItByPlaceId(placeId));
+    setCurrentCenter(null);
+    setIsMarked(false);
   }
 
-  // TODO:
   const origin = useSelector((store) => store.mapMarks.origin);
   const originId = useSelector((store) => store.mapMarks.originId);
   const destination = useSelector((store) => store.mapMarks.destination);
@@ -374,7 +360,6 @@ export default function MapArea() {
     setStart(currentDate);
   }, [currentDate]);
 
-  // TODO:
   function handleDirectionSubmit(e) {
     e.preventDefault();
 
@@ -409,8 +394,7 @@ export default function MapArea() {
         const { duration, steps } = result.routes[0].legs[0];
         dispatch(setDirectionSteps({ duration, steps, travelMode }));
       } else {
-        // TODO: 待改
-        window.alert("Directions request failed due to " + status);
+        setIsRouteAlertShow(true);
       }
     });
   }
@@ -522,6 +506,13 @@ export default function MapArea() {
         </MarkAlert>
       )}
 
+      {isRouteAlertShow && (
+        <MarkAlert>
+          <div>路線系統有些問題QQ</div>
+          <button onClick={() => setIsRouteAlertShow(false)}>確定</button>
+        </MarkAlert>
+      )}
+
       <MapWrapper>
         <GoogleMapReact
           bootstrapURLKeys={{ key: API_KEY, libraries: ["places"] }}
@@ -530,7 +521,17 @@ export default function MapArea() {
           defaultZoom={defaultProps.zoom}
           yesIWantToUseGoogleMapApiInternals
           onGoogleApiLoaded={({ map, maps }) => handleApiLoaded(map, maps)}
-        ></GoogleMapReact>
+        >
+          {markLocations &&
+            markLocations.map((place) => (
+              <LocationMark
+                key={place.placeId}
+                lat={place.lat}
+                lng={place.lng}
+                onClick={() => handleMarkCancelClick(place.placeId)}
+              />
+            ))}
+        </GoogleMapReact>
       </MapWrapper>
     </MapAreaWrapper>
   );
