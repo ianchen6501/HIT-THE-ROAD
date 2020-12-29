@@ -83,9 +83,13 @@ export const schedulesReducer = createSlice({
       state.dailyRoutines[action.payload.date] = action.payload.orderRoutines;
     },
     setRoute: (state, action) => {
-      console.log("route action: ", action.payload);
       const { originId, directionSteps } = action.payload;
       state.routes.push({ originId, directionSteps });
+    },
+    deleteRouteByOriginId: (state, action) => {
+      state.routes = state.routes.filter(
+        (route) => route.originId !== action.payload
+      );
     },
   },
 });
@@ -101,6 +105,7 @@ export const {
   deleteDailyRoutines,
   saveAllDailyRoutines,
   setRoute,
+  deleteRouteByOriginId,
 } = schedulesReducer.actions;
 
 // thunk async logic

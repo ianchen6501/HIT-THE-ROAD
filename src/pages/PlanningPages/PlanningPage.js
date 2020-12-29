@@ -22,6 +22,7 @@ import {
   setOrderByStartRoutines,
   addFromPostIt,
   deleteSpot,
+  deleteRouteByOriginId,
 } from "../../redux/reducers/schedulesReducer";
 import {
   setOriginalColumns,
@@ -185,16 +186,29 @@ const SettingButton = styled.button`
 `;
 
 const TrafficInfoWrapper = styled.div`
+  position: relative;
   display: flex;
-  justify-content: center;
-  margin: 10px 30px;
+  justify-content: space-between;
+  margin: 10px auto;
+  width: 160px;
   font-size: ${(props) => props.theme.fontSizes.extraSmall};
 `;
 
+const TrafficInfoDeleteButton = styled.button`
+  margin-top: 5px;
+  padding: 0;
+  background: none;
+  border: none;
+  border-radius: 2px;
+  background: ${(props) => props.theme.primaryColors.primaryDarker};
+  color: ${(props) => props.theme.primaryColors.primaryLighter};
+`;
+
 const TrafficDuration = styled.div`
-  margin-right: 5px;
-  padding-right: 5px;
-  border-right: 1px dashed ${(props) => props.theme.primaryColors.primaryDarker};
+  display: flex;
+  justify-content: space-between;
+  padding-left: 5px;
+  border-left: 1px dashed ${(props) => props.theme.primaryColors.primaryDarker};
   writing-mode: vertical-rl;
   text-orientation: upright;
   color: ${(props) => props.theme.primaryColors.primaryDarker};
@@ -345,7 +359,6 @@ export default function PlanningPage() {
     );
   }
 
-  // TODO:
   function handleSetOriginClick(routine) {
     dispatch(setOrigin(routine.location));
     // setOriginId(routine.id);
@@ -363,6 +376,11 @@ export default function PlanningPage() {
 
   function handleSetDestinationClick(routine) {
     dispatch(setDestination(routine.location));
+  }
+
+  // TODO:
+  function handleDeleteRouteClick(originId) {
+    dispatch(deleteRouteByOriginId(originId));
   }
 
   return (
@@ -457,15 +475,6 @@ export default function PlanningPage() {
                             (route) =>
                               route.originId === routine.id && (
                                 <TrafficInfoWrapper key={route.originId}>
-                                  <TrafficDuration>
-                                    {route.directionSteps.travelMode ===
-                                      "WALKING" && "走路 "}
-                                    {route.directionSteps.travelMode ===
-                                      "DRIVING" && "開車 "}
-                                    {route.directionSteps.travelMode ===
-                                      "BICYCLING" && "腳踏車 "}
-                                    {route.directionSteps.duration.text}
-                                  </TrafficDuration>
                                   <TransitLines>
                                     {route.directionSteps.travelMode ===
                                       "TRANSIT" &&
@@ -508,6 +517,26 @@ export default function PlanningPage() {
                                         )
                                       )}
                                   </TransitLines>
+                                  <TrafficDuration>
+                                    <div>
+                                      {route.directionSteps.travelMode ===
+                                        "WALKING" && "走路 "}
+                                      {route.directionSteps.travelMode ===
+                                        "DRIVING" && "開車 "}
+                                      {route.directionSteps.travelMode ===
+                                        "BICYCLING" && "腳踏車 "}
+                                      {route.directionSteps.duration.text}
+                                    </div>
+
+                                    {/* TODO: */}
+                                    <TrafficInfoDeleteButton
+                                      onClick={() =>
+                                        handleDeleteRouteClick(route.originId)
+                                      }
+                                    >
+                                      ✖
+                                    </TrafficInfoDeleteButton>
+                                  </TrafficDuration>
                                 </TrafficInfoWrapper>
                               )
                           )}
