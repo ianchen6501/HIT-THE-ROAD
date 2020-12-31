@@ -10,6 +10,7 @@ import CreatePage from "../../pages/CreatePages";
 import UserPage from "../../pages/UserPages";
 import EditPage from "../../pages/EditPages";
 import PlanningPage from "../../pages/PlanningPages";
+import FinishPlanPage from "../../pages/FinishPlanPages";
 import Footer from "../Footer";
 import Header from "../Header";
 import { getAuthTokenFromLocalStorage } from "../../utils";
@@ -51,6 +52,9 @@ function App({ FBstartApp, FBdeleteApp }) {
         </Route>
         <Route path="/planning-page">
           <PlanningPage />
+        </Route>
+        <Route path="/finish-plan-page/:scheduleId">
+          <FinishPlanPage />
         </Route>
       </Switch>
       <Footer />
