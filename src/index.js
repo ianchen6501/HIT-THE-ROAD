@@ -1,4 +1,4 @@
-import React from "react";
+import React, { createContext } from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./components/App/App";
@@ -54,9 +54,9 @@ const theme = {
   },
 
   heights: {
-    header: "80px",
+    header: "60px",
     homepageHeader: "400px",
-    footer: "50px",
+    footer: "30px",
   },
 };
 

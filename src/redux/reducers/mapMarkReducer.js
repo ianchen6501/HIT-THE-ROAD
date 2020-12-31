@@ -1,5 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+import { getScheduleContent, saveMarkersAPI } from "../../webAPI";
+
 export const mapMarksReducer = createSlice({
   name: "mapMark",
   initialState: {
@@ -11,6 +13,9 @@ export const mapMarksReducer = createSlice({
     originId: null,
   },
   reducers: {
+    setMarker: (state, action) => {
+      state.markLocations = action.payload;
+    },
     setMarkLocations: (state, action) => {
       const { name, formattedAddress, lat, lng, placeId } = action.payload;
       state.markLocations.push({
@@ -50,6 +55,7 @@ export const mapMarksReducer = createSlice({
 });
 
 export const {
+  setMarker,
   setMarkLocations,
   deleteMapMarkByPlaceId,
   setIsMarkDeleted,
@@ -61,6 +67,18 @@ export const {
 } = mapMarksReducer.actions;
 
 // thunk async logic
-export const setOriginalColumns = () => (dispatch) => {};
+export const initMarkers = (userId, scheduleId) => (dispatch) => {
+  getScheduleContent(userId, scheduleId).then((res) => {
+    res.markers === null
+      ? dispatch(setMarker([]))
+      : dispatch(setMarker(res.markers));
+  });
+};
+
+export const saveMarkers = (markers, userId, scheduleId) => (dispatch) => {
+  saveMarkersAPI(markers, userId, scheduleId).then((res) =>
+    console.log("res: ", res)
+  );
+};
 
 export default mapMarksReducer.reducer;

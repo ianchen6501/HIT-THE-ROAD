@@ -23,23 +23,30 @@ import {
   addFromPostIt,
   deleteSpot,
   deleteRouteByOriginId,
+  initSchedules,
 } from "../../redux/reducers/schedulesReducer";
+
 import {
   setOriginalColumns,
   setDestinationColumn,
   setIsScheduled,
+  initPostIts,
 } from "../../redux/reducers/postItsReducer";
+
 import {
   setOrigin,
   setOriginId,
   setDestination,
   setDirectionSteps,
+  initMarkers,
 } from "../../redux/reducers/mapMarkReducer";
 
 const PlanWrapper = styled.div`
-  margin-top: ${props => props.theme.heights.header};
+  position: relative;
   display: flex;
   height: 100vh;
+  padding-top: ${(props) => props.theme.heights.header};
+  padding-bottom: ${(props) => props.theme.heights.footer};
 
   ${MEDIA_QUERY_SM} {
     flex-direction: column;
@@ -49,7 +56,7 @@ const PlanWrapper = styled.div`
 const ScheduleWrapper = styled.div`
   display: flex;
   z-index: 1;
-  height: 100vh;
+  height: 100%;
 `;
 
 const Schedule = styled.div`
@@ -143,6 +150,7 @@ const ScheduleTime = styled.div`
   width: 32px;
   text-align: center;
   font-size: ${(props) => props.theme.fontSizes.extraSmall};
+  line-height: ${(props) => props.theme.fontSizes.small};
 `;
 
 const DeleteButton = styled.button`
@@ -255,7 +263,6 @@ export default function PlanningPage() {
   const columns = useSelector((store) => store.postIts.columns);
   const spots = useSelector((store) => store.postIts.spots);
 
-  // TODO:
   // 用來判斷存取的路線要顯示在誰後面（暫定都存在 origin 後面）
   const originId = useSelector((store) => store.mapMarks.originId);
 
@@ -268,7 +275,10 @@ export default function PlanningPage() {
 
   useEffect(() => {
     // 根據 start 排列
-    if (currentDate && dailyRoutines) {
+    if (dailyRoutines && currentDate) {
+      // TODO: 有時 dailyRoutines[currentDate] 會是 [] 空陣列
+      // console.log("daily: ", dailyRoutines);
+      // console.log("currentDate: ", currentDate);
       const orderRoutines = dailyRoutines[currentDate].slice();
       orderRoutines.sort(function (a, b) {
         return a.start - b.start;
@@ -289,6 +299,7 @@ export default function PlanningPage() {
   }
 
   // 刪除
+  // TODO: 讓便利貼的 isSchedule 調回去
   function handleDeleteClick(id) {
     const index = dailyRoutines[currentDate].findIndex(
       (routine) => routine.id === id
@@ -362,7 +373,6 @@ export default function PlanningPage() {
 
   function handleSetOriginClick(routine) {
     dispatch(setOrigin(routine.location));
-    // setOriginId(routine.id);
     if (originId) {
       originId !== routine.id
         ? dispatch(setOriginId(routine.id))
@@ -379,10 +389,16 @@ export default function PlanningPage() {
     dispatch(setDestination(routine.location));
   }
 
-  // TODO:
   function handleDeleteRouteClick(originId) {
     dispatch(deleteRouteByOriginId(originId));
   }
+
+  // TODO: 測試拿 API
+  useEffect(() => {
+    dispatch(initSchedules(1, 1));
+    dispatch(initMarkers(1, 1));
+    dispatch(initPostIts(1, 1));
+  }, []);
 
   return (
     //  DropDragContext
@@ -529,7 +545,6 @@ export default function PlanningPage() {
                                       {route.directionSteps.duration.text}
                                     </div>
 
-                                    {/* TODO: */}
                                     <TrafficInfoDeleteButton
                                       onClick={() =>
                                         handleDeleteRouteClick(route.originId)

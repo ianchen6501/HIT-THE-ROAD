@@ -30,7 +30,7 @@ const MapAreaWrapper = styled.div`
 
 const MapWrapper = styled.div`
   width: 100%;
-  height: 100vh;
+  height: 100%;
 `;
 
 const SearchBoxWrapper = styled.div`
@@ -82,7 +82,10 @@ const DirectionsWrapper = styled.div`
   z-index: 2;
   padding: 20px;
   max-width: 240px;
-  max-height: 100vh;
+  height: calc(
+    100vh - ${(props) => props.theme.heights.header} -
+      ${(props) => props.theme.heights.footer}
+  );
   border-radius: 10px;
   background: none;
   font-size: 10px;
@@ -398,7 +401,8 @@ export default function MapArea() {
     });
   }
 
-  // TODO: 如果有重複
+  // 如果有重複
+  // TODO:
   function handleResultButtonClick() {
     const route = routes.find((route) => route.originId === originId);
     if (route) {
@@ -417,7 +421,9 @@ export default function MapArea() {
     dispatch(setOrigin(""));
     dispatch(setDestination(""));
     dispatch(setOriginId(null));
-    currentDirectionsDisplay.setMap(null);
+    if (currentDirectionsDisplay) {
+      currentDirectionsDisplay.setMap(null);
+    }
   }
 
   return (
