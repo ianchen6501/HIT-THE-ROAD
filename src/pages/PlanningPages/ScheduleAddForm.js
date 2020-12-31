@@ -41,7 +41,8 @@ export default function ScheduleAddForm() {
     setEnd(currentDate);
   }
 
-  const canSubmit = Boolean(location) && Boolean(start);
+  const canSubmit =
+    Boolean(location) && Boolean(start) && Number.isInteger(Number(budget));
 
   function clearScheduleFormState() {
     setLocation("");

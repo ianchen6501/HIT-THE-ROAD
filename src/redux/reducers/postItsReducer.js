@@ -1,23 +1,26 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-let id = 1;
+import { getScheduleContent, savePostItsAPI } from "../../webAPI";
+
+// let id = 1;
 
 export const postItsReducer = createSlice({
   name: "postIt",
   initialState: {
+    postItId: null, // TODO:
     spots: {
-      [`spot-${id}`]: {
-        id: "spot-1",
-        location: "台北101",
-        category: "food",
-        memo: "hohoho",
-        isScheduled: false,
-      },
+      // [`spot-${id}`]: {
+      //   id: "spot-1",
+      //   location: "台北101",
+      //   category: "food",
+      //   memo: "hohoho",
+      //   isScheduled: false,
+      // },
     },
     columns: {
       postIt: {
         id: "postIt",
-        spotsIds: ["spot-1"],
+        spotsIds: [],
       },
       dailyRoutine: {
         id: "dailyRoutine",
@@ -27,7 +30,15 @@ export const postItsReducer = createSlice({
     columnsOrder: ["postIt", "dailyRoutine"],
   },
   reducers: {
-    // (state, action) => new state
+    setSpots: (state, action) => {
+      state.spots = action.payload;
+    },
+    setPostItId: (state, action) => {
+      state.postItId = action.payload;
+    },
+    setSpotsIds: (state, action) => {
+      state.columns.postIt.spotsIds = action.payload;
+    },
     setStartColumns: (state, action) => {
       state.columns[action.payload.sourceId].spotsIds =
         action.payload.newStart.spotsIds;
@@ -55,33 +66,33 @@ export const postItsReducer = createSlice({
     },
     addPostIt: (state, action) => {
       const { location, category, memo } = action.payload;
-      id += 1;
+      state.postItId += 1;
       state.spots = {
         ...state.spots,
-        [`spot-${id}`]: {
-          id: `spot-${id}`,
+        [`spot-${state.postItId}`]: {
+          id: `spot-${state.postItId}`,
           location,
           category,
           memo,
           isScheduled: false,
         },
       };
-      state.columns.postIt.spotsIds.push(`spot-${id}`);
+      state.columns.postIt.spotsIds.push(`spot-${state.postItId}`);
     },
     addPostItFromMark: (state, action) => {
       const { location, memo, placeId } = action.payload;
-      id += 1;
+      state.postItId += 1;
       state.spots = {
         ...state.spots,
-        [`spot-${id}`]: {
-          id: `spot-${id}`,
+        [`spot-${state.postItId}`]: {
+          id: `spot-${state.postItId}`,
           location,
           memo,
           placeId,
           isScheduled: false,
         },
       };
-      state.columns.postIt.spotsIds.push(`spot-${id}`);
+      state.columns.postIt.spotsIds.push(`spot-${state.postItId}`);
     },
     updatePostIt: (state, action) => {
       const { updateId, location, category, memo } = action.payload;
@@ -104,6 +115,9 @@ export const {
   addPostItFromMark,
   updatePostIt,
   deletePostItByPlaceId,
+  setSpots,
+  setSpotsIds,
+  setPostItId,
 } = postItsReducer.actions;
 
 // thunk async logic
@@ -128,6 +142,27 @@ export const setDestinationColumn = (
 ) => (dispatch) => {
   dispatch(setFinishColumns({ destinationId, newFinish }));
   dispatch(setIsScheduled(draggingSpot.id));
+};
+
+export const initPostIts = (userId, scheduleId) => (dispatch) => {
+  getScheduleContent(userId, scheduleId).then((res) => {
+    res.spots === null ? dispatch(setSpots({})) : dispatch(setSpots(res.spots));
+  });
+  getScheduleContent(userId, scheduleId).then((res) => {
+    res.spotsIds === null
+      ? dispatch(setSpotsIds([]))
+      : dispatch(setSpotsIds(res.spotsIds));
+  });
+  getScheduleContent(userId, scheduleId).then((res) => {
+    dispatch(setPostItId(res.postItId));
+  });
+};
+
+// TODO:
+export const savePostIts = (spots, spotsIds, postItId, userId, scheduleId) => (
+  dispatch
+) => {
+  savePostItsAPI(spots, spotsIds, postItId, userId, scheduleId);
 };
 
 export default postItsReducer.reducer;

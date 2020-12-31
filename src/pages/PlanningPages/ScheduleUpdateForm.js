@@ -64,7 +64,8 @@ export default function ScheduleUpdateForm(props) {
     setEnd(currentDate);
   }
 
-  const canSubmit = Boolean(location) && Boolean(start);
+  const canSubmit =
+    Boolean(location) && Boolean(start) && Number.isInteger(Number(budget));
 
   return (
     <ScheduleDetailForm
