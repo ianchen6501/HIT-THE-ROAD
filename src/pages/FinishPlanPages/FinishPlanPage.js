@@ -1,5 +1,16 @@
 import styled from "styled-components";
 import { MEDIA_QUERY_SM } from "../../constants/break_point";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getFinishPlan } from "../../redux/reducers/finishPlanReducer";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faUtensils,
+  faCampground,
+  faHotel,
+  faShoppingBag,
+} from "@fortawesome/free-solid-svg-icons";
 
 const Wrapper = styled.div`
   margin: 0px auto;
@@ -42,7 +53,7 @@ const PlanTitle = styled.div`
 
 const PlanWrapper = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   flex-wrap: wrap;
 
   ${MEDIA_QUERY_SM} {
@@ -51,9 +62,10 @@ const PlanWrapper = styled.div`
 `;
 
 const PlanColumn = styled.div`
+  width: 420px;
+  margin: 10px;
   border: 1px solid wheat;
-  width: 260px;
-  margin-top: 10px;
+  border-radius: 5px;
 
   ${MEDIA_QUERY_SM} {
     width: 100%;
@@ -61,10 +73,14 @@ const PlanColumn = styled.div`
 `;
 
 const RoutineTitle = styled.div`
-  padding: 2px 5px;
+  padding: 2px 10px;
   font-size: ${(props) => props.theme.fontSizes.mudium};
   font-style: italic;
   background: wheat;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const RoutineWrapper = styled.div`
@@ -89,7 +105,9 @@ const SpotInfo = styled.div`
   border: 1px solid lightgray;
 `;
 
-const SpotName = styled.div``;
+const SpotName = styled.div`
+  padding: 0 2px;
+`;
 
 const TimeWrapper = styled.div`
   width: 100px;
@@ -98,114 +116,97 @@ const TimeWrapper = styled.div`
   text-align: center;
 `;
 
-const SpotCategory = styled.div``;
+const SpotCategory = styled.div`
+  margin-left: 5px;
+  width: 32px;
+`;
 
 const SpotMemo = styled.div`
+  padding: 5px 0;
   word-break: break-all;
 `;
 
 export default function FinishPlanPage() {
+  const dispatch = useDispatch();
+  const scheduleName = useSelector((store) => store.finishPlans.scheduleName);
+  const dailyRoutines = useSelector((store) => store.finishPlans.dailyRoutines);
+  const location = useSelector((store) => store.finishPlans.location);
+  const [dates, setDates] = useState([]);
+
+  useEffect(() => {
+    const datesTest = [];
+    if (dailyRoutines) {
+      Object.keys(dailyRoutines).map((key) => datesTest.push(key));
+    }
+    setDates(datesTest);
+  }, [dailyRoutines, dispatch]);
+
+  useEffect(() => {
+    const userId = sessionStorage.getItem("userId");
+    const scheduleId = sessionStorage.getItem("scheduleId");
+    // dispatch(getFinishPlan(userId, scheduleId));
+    dispatch(getFinishPlan(1, 1));
+  }, [dispatch]);
+
   return (
     <Wrapper>
-      <PlanHeader>
-        <PlanLocation>台北</PlanLocation>
-        <PlanTitle>plan title</PlanTitle>
-      </PlanHeader>
-      <PlanWrapper>
-        <PlanColumn>
-          <RoutineTitle>date</RoutineTitle>
-          <RoutineWrapper></RoutineWrapper>
-        </PlanColumn>
-        <PlanColumn>
-          <RoutineTitle>date</RoutineTitle>
-          <RoutineWrapper>
-            <Spot>
-              <SpotInfo>
-                <SpotName>台北 101</SpotName>
-                <TimeWrapper> 0900 ~ 1200</TimeWrapper>
-              </SpotInfo>
-              <SpotCategory>hoho</SpotCategory>
-              <SpotMemo>
-                gooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooood
-              </SpotMemo>
-            </Spot>
-            <Spot>
-              <SpotInfo>
-                <SpotName>微風南山</SpotName>
-                <TimeWrapper> 1200 ~ 1800</TimeWrapper>
-              </SpotInfo>
-            </Spot>
-            <Spot>
-              <SpotInfo>
-                <SpotName>台北 101</SpotName>
-                <TimeWrapper> 0900 ~ 1200</TimeWrapper>
-              </SpotInfo>
-              <SpotCategory>hoho</SpotCategory>
-              <SpotMemo>
-                gooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooood
-              </SpotMemo>
-            </Spot>
-            <Spot>
-              <SpotInfo>
-                <SpotName>台北 101</SpotName>
-                <TimeWrapper> 0900 ~ 1200</TimeWrapper>
-              </SpotInfo>
-              <SpotCategory>hoho</SpotCategory>
-              <SpotMemo>
-                gooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooood
-              </SpotMemo>
-            </Spot>
-            <Spot>
-              <SpotInfo>
-                <SpotName>台北 101</SpotName>
-                <TimeWrapper> 0900 ~ 1200</TimeWrapper>
-              </SpotInfo>
-              <SpotCategory>hoho</SpotCategory>
-              <SpotMemo>
-                gooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooood
-              </SpotMemo>
-            </Spot>
-            <Spot>
-              <SpotInfo>
-                <SpotName>台北 101</SpotName>
-                <TimeWrapper> 0900 ~ 1200</TimeWrapper>
-              </SpotInfo>
-              <SpotCategory>hoho</SpotCategory>
-              <SpotMemo>
-                gooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooood
-              </SpotMemo>
-            </Spot>
-            <Spot>
-              <SpotInfo>
-                <SpotName>台北 101</SpotName>
-                <TimeWrapper> 0900 ~ 1200</TimeWrapper>
-              </SpotInfo>
-              <SpotCategory>hoho</SpotCategory>
-              <SpotMemo>
-                gooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooood
-              </SpotMemo>
-            </Spot>
-            <Spot>
-              <SpotInfo>
-                <SpotName>台北 101</SpotName>
-                <TimeWrapper> 0900 ~ 1200</TimeWrapper>
-              </SpotInfo>
-              <SpotCategory>hoho</SpotCategory>
-              <SpotMemo>
-                gooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooood
-              </SpotMemo>
-            </Spot>
-          </RoutineWrapper>
-        </PlanColumn>
-        <PlanColumn>
-          <RoutineTitle>date</RoutineTitle>
-          <RoutineWrapper></RoutineWrapper>
-        </PlanColumn>
-        <PlanColumn>
-          <RoutineTitle>date</RoutineTitle>
-          <RoutineWrapper></RoutineWrapper>
-        </PlanColumn>
-      </PlanWrapper>
+      {scheduleName && dailyRoutines && location && (
+        <div>
+          <PlanHeader>
+            <PlanLocation>{location}</PlanLocation>
+            <PlanTitle>{scheduleName}</PlanTitle>
+          </PlanHeader>
+          <PlanWrapper>
+            {dates &&
+              dates.map((date) => (
+                <PlanColumn key={date}>
+                  <RoutineTitle>
+                    {new Date(Number(date)).toLocaleString([], {
+                      month: "2-digit",
+                      day: "2-digit",
+                    })}
+                  </RoutineTitle>
+                  <RoutineWrapper>
+                    {dailyRoutines[date].map((routine) => (
+                      <Spot key={routine.id}>
+                        <SpotInfo>
+                          <SpotCategory>
+                            {routine.category === "hotel" && (
+                              <FontAwesomeIcon icon={faHotel} />
+                            )}
+                            {routine.category === "shopping" && (
+                              <FontAwesomeIcon icon={faShoppingBag} />
+                            )}
+                            {routine.category === "food" && (
+                              <FontAwesomeIcon icon={faUtensils} />
+                            )}
+                            {routine.category === "attraction" && (
+                              <FontAwesomeIcon icon={faCampground} />
+                            )}
+                          </SpotCategory>
+                          <SpotName>{routine.location}</SpotName>
+                          <TimeWrapper>
+                            {" "}
+                            {new Date(routine.start).toLocaleTimeString([], {
+                              timeStyle: "short",
+                              hour12: false,
+                            })}{" "}
+                            ~{" "}
+                            {new Date(routine.end).toLocaleTimeString([], {
+                              timeStyle: "short",
+                              hour12: false,
+                            })}
+                          </TimeWrapper>
+                        </SpotInfo>
+                        <SpotMemo>{routine.memo}</SpotMemo>
+                      </Spot>
+                    ))}
+                  </RoutineWrapper>
+                </PlanColumn>
+              ))}
+          </PlanWrapper>
+        </div>
+      )}
     </Wrapper>
   );
 }

@@ -4,6 +4,7 @@ import usersReducer from "./reducers/usersReducer";
 import postItsReducer from "./reducers/postItsReducer";
 import mapMarksReducer from "./reducers/mapMarkReducer";
 import postsReducer from "./reducers/postsReducer";
+import finishPlanReducer from "./reducers/finishPlanReducer";
 
 export default configureStore({
   reducer: {
@@ -12,5 +13,6 @@ export default configureStore({
     users: usersReducer,
     postIts: postItsReducer,
     mapMarks: mapMarksReducer,
+    finishPlans: finishPlanReducer,
   },
 });
