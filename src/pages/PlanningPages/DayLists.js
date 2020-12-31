@@ -81,11 +81,11 @@ export default function DayLists() {
 
   // TODO: 看是不是要搬到按下的時候(create page??)
   useEffect(() => {
-    dispatch(setCurrentDate(startDate));
-    const dates = calcDates();
-    if (dailyRoutines === null) {
-      dispatch(initDailyRoutinesKey(dates, 1, 1));
-    }
+    // dispatch(setCurrentDate(startDate));
+    // const dates = calcDates();
+    // if (dailyRoutines === null) {
+    //   dispatch(initDailyRoutinesKey(dates, 1, 1));
+    // }
   }, [dispatch, startDate, endDate, calcDates]);
 
   // TODO: 存 schdule、post-it、marker

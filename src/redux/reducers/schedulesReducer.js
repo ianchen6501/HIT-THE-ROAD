@@ -183,22 +183,26 @@ export const deleteSpot = (index) => (dispatch) => {
 };
 
 export const initSchedules = (userId, scheduleId) => (dispatch) => {
-  getScheduleContent(userId, scheduleId).then((res) =>
-    dispatch(setDateRange(res.dateRange))
-  );
-  getScheduleContent(userId, scheduleId).then((res) =>
+  getScheduleContent(userId, scheduleId).then((res) => {
+    dispatch(setDateRange(res.dateRange));
     res.routes === null
       ? dispatch(setRoutes([]))
-      : dispatch(setRoutes(res.routes))
-  );
-  // TODO: 邏輯有問題
-  getScheduleContent(userId, scheduleId).then((res) =>
-    // dispatch(setDailyRoutines(res.dailyRoutines))
-    dispatch(setDailyRoutines(res.dailyRoutines))
-  );
-  getScheduleContent(userId, scheduleId).then((res) =>
-    dispatch(setSpotId(res.spotId))
-  );
+      : dispatch(setRoutes(res.routes));
+    dispatch(setSpotId(res.spotId));
+  });
+  // getScheduleContent(userId, scheduleId).then((res) =>
+  //   res.routes === null
+  //     ? dispatch(setRoutes([]))
+  //     : dispatch(setRoutes(res.routes))
+  // );
+  // // TODO: 邏輯有問題
+  // getScheduleContent(userId, scheduleId).then((res) =>
+  //   // dispatch(setDailyRoutines(res.dailyRoutines))
+  //   dispatch(setDailyRoutines(res.dailyRoutines))
+  // );
+  // getScheduleContent(userId, scheduleId).then((res) =>
+  //   dispatch(setSpotId(res.spotId))
+  // );
 };
 
 // TODO:
