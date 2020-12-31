@@ -66,7 +66,6 @@ export const saveRoutesAPI = (routes, userId, scheduleId) => {
   }).then((res) => res.json());
 };
 
-// TODO:
 export const saveDailyRoutinesAPI = (
   dailyRoutines,
   spotId,
@@ -97,4 +96,9 @@ export const saveDailyRoutinesKeyAPI = (dailyRoutines, userId, scheduleId) => {
       UserId: userId,
     }),
   }).then((res) => res.json());
+};
+
+// TODO:
+export const getFinishPlanAPI = (userId, scheduleId) => {
+  return fetch(`${BASE_URL}/${userId}/${scheduleId}`).then((res) => res.json());
 };
