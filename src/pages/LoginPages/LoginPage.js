@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { getAuthToken, handleFBLogin, setUserData } from '../../redux/reducers/usersReducer'
+import { setUserData } from '../../redux/reducers/usersReducer'
 import { useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
-import { setAuthTokenToLocalStorage, FBstartApp, FBdeleteApp  } from '../../utils'
+import { setAuthTokenToLocalStorage, FBstartApp } from '../../utils'
 import { 
   FormContainer,
   UserInput,
@@ -77,7 +77,7 @@ export default function LoginPage() {
     FBstartApp().then(res => {
       console.log(res)
       if(!res.ok) {
-        return setErrorMessage(json.message)
+        return setErrorMessage(res.message)
       }
       const body = {
         fbId: res.FBUserData.id,
@@ -121,7 +121,7 @@ export default function LoginPage() {
             {usernameErrorMessage && <ErrorMessage>{usernameErrorMessage}</ErrorMessage>}
           </UserInputContainer>
           <UserInputContainer>
-            <UserInput placeholder={'PASSWORD'} onChange={(event) => setPassword(event.target.value)} value={password}></UserInput>
+            <UserInput placeholder={'PASSWORD'} onChange={(event) => setPassword(event.target.value)} value={password} type='password'></UserInput>
             {passwordErrorMessage && <ErrorMessage>{passwordErrorMessage}</ErrorMessage>}
           </UserInputContainer>
         <UserButtonBorder onClick={handleOnClickLogin}>

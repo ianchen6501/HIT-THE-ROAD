@@ -1,12 +1,9 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { useDispatch } from "react-redux";
-import styled from "styled-components";
-import { Wrapper } from "../../components/public";
-import {
+import React, {useState} from 'react'
+import styled from 'styled-components'
+import { Wrapper } from '../../components/public'
+import { 
   FormContainer,
   UserInput,
-  UserButton,
-  UserInputContainer,
   UserButtonBorder,
   UserButtonBackground,
   UserButtonText,
@@ -125,7 +122,19 @@ export default function CreatePage() {
       headers: {
         "content-type": "application/json",
       },
-      body: json,
+      body: json
+    })
+    .then(result => {return result.json()})
+    .then(json => {
+      console.log(json)
+      if(!json.ok) {
+        return setErrorMessage(json.message)
+      } else {
+        return history.push('/user')
+      }
+    })
+    .catch(error => {
+      return setErrorMessage(error.toString())
     })
       .then((result) => {
         return result.json();
@@ -175,12 +184,7 @@ export default function CreatePage() {
         <SubContainer>
           <SubTitle>時間</SubTitle>
           <DatePickerContainer>
-            <DatePicker
-              startDate={startDate}
-              setStartDate={setStartDate}
-              endDate={endDate}
-              setEndDate={setEndDate}
-            />
+            <DatePicker style={{zIndex:'4'}} startDate={startDate} setStartDate={setStartDate} endDate={endDate} setEndDate={setEndDate}/>
           </DatePickerContainer>
         </SubContainer>
         <div onClick={handleSubmitSchedule}>

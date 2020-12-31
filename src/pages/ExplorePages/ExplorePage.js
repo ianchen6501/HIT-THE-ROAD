@@ -64,7 +64,7 @@ export default function ExplorePage() {
 
   useEffect(() => {
     dispatch(getPosts())
-  }, [])
+  }, [dispatch])
 
   return (
     <Wrapper>

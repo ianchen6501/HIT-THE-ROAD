@@ -1,4 +1,4 @@
-import React, {Component, useEffect} from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import {
   Link,
@@ -7,9 +7,7 @@ import {
 import logo from '../../static/logo.svg'
 import {ReactComponent as LogoSVG} from '../../static/logo.svg'
 import "./Header.css"
-import { FBdeleteApp } from '../../utils';
 import { useDispatch, useSelector } from 'react-redux';
-import store from '../../redux/store';
 import { deleteAuthTokenFromLocalStorage } from '../../utils'
 import { setUserData } from '../../redux/reducers/usersReducer';
 
@@ -141,6 +139,7 @@ export default function Header() {
           )}
         </LeftContainer>
         <NavbarList>
+          {userData && <Nav to='/create' $active={location.pathname === '/user'}>新增行程</Nav>}
           {userData && <Nav to='/user' $active={location.pathname === '/user'}>編輯行程</Nav>}
           {!userData && <Nav to='/login' $active={location.pathname === '/login'}>登入</Nav>}
           {!userData && <Nav to='/register' $active={location.pathname === '/register'}>註冊</Nav>}

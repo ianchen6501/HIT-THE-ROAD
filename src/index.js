@@ -5,7 +5,6 @@ import App from "./components/App/App";
 import { ThemeProvider } from "styled-components";
 import store from "./redux/store";
 import { Provider } from "react-redux";
-import Example from "./components/DayPicker";
 
 const theme = {
   basicColors: {
@@ -92,15 +91,6 @@ function initFacebookSdk() {
 }
 
 initFacebookSdk().then(() => startApp());
-
-const birthdayStyle = `.DayPicker-Day--highlighted {
-  background-color: orange;
-  color: white;
-}`;
-
-const modifiers = {
-  highlighted: new Date(2020, 12, 19),
-};
 
 function startApp() {
   ReactDOM.render(
