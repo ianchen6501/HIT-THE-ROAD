@@ -144,8 +144,7 @@ export default function FinishPlanPage() {
   useEffect(() => {
     const userId = sessionStorage.getItem("userId");
     const scheduleId = sessionStorage.getItem("scheduleId");
-    // dispatch(getFinishPlan(userId, scheduleId));
-    dispatch(getFinishPlan(1, 1));
+    dispatch(getFinishPlan(userId, scheduleId));
   }, [dispatch]);
 
   return (
