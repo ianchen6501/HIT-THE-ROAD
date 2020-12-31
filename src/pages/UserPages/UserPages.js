@@ -9,6 +9,10 @@ import {
   getUnfinishedSchedules,
   getFinishedSchedules,
 } from "../../redux/reducers/usersReducer";
+import {
+  setCurrentDate,
+  setDailyRoutines,
+} from "../../redux/reducers/schedulesReducer";
 
 const ScheduleContainer = styled.div`
   width: 100%;
@@ -131,7 +135,7 @@ function Schedule({
   return (
     <ScheduleContainer>
       <LeftContainer>
-        <Title onClick={() => handleScheduleTitleOnClick(scheduleData.id)}>
+        <Title onClick={() => handleScheduleTitleOnClick(scheduleData)}>
           {scheduleData.scheduleName}
         </Title>
         <LeftDownContainer>
@@ -177,8 +181,16 @@ export default function UserPage() {
 
   function handleDeleteOutlinedOnClick(id) {
     setIsDeleting(true);
+    const UserId = userData.id;
+    const json = JSON.stringify({
+      UserId,
+    });
     fetch(`${SERVER_URL}/schedules/${id}`, {
       method: "DELETE",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: json,
     })
       .then((result) => {
         return result.json();
@@ -235,10 +247,12 @@ export default function UserPage() {
     setIsChangingIsFinished(false);
   }
 
-  function handleScheduleTitleOnClick(scheduleId) {
-    const userId = userData.id;
-    sessionStorage.setItem("userId", userId);
-    sessionStorage.setItem("scheduleId", scheduleId);
+  function handleScheduleTitleOnClick(scheduleData) {
+    console.log(scheduleData);
+    dispatch(setCurrentDate(scheduleData.dateRange.start));
+    dispatch(setDailyRoutines(scheduleData.dailyRoutines));
+    sessionStorage.setItem("userId", userData.id);
+    sessionStorage.setItem("scheduleId", scheduleData.id);
     history.push("/Planning-page");
   }
 

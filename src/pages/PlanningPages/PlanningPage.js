@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 
@@ -40,6 +40,8 @@ import {
   setDirectionSteps,
   initMarkers,
 } from "../../redux/reducers/mapMarkReducer";
+
+import { getAuthTokenFromSessionStorage } from "../../utils";
 
 const PlanWrapper = styled.div`
   position: relative;
@@ -273,12 +275,25 @@ export default function PlanningPage() {
     dispatch(setEditId(null));
   }, [currentDate, dispatch]);
 
+  // TODO: 測試拿 API
+  useEffect(() => {
+    const userId = getAuthTokenFromSessionStorage("userId");
+    const scheduleId = getAuthTokenFromSessionStorage("scheduleId");
+    console.log(userId, scheduleId);
+    const init = async function () {
+      await dispatch(initSchedules(userId, scheduleId));
+      await dispatch(initMarkers(userId, scheduleId));
+      await dispatch(initPostIts(userId, scheduleId));
+    };
+    init();
+  }, []);
+
   useEffect(() => {
     // 根據 start 排列
+    // console.log("daily: ", dailyRoutines);
+    // console.log("currentDate: ", currentDate);
     if (dailyRoutines && currentDate) {
       // TODO: 有時 dailyRoutines[currentDate] 會是 [] 空陣列
-      // console.log("daily: ", dailyRoutines);
-      // console.log("currentDate: ", currentDate);
       const orderRoutines = dailyRoutines[currentDate].slice();
       orderRoutines.sort(function (a, b) {
         return a.start - b.start;
@@ -392,13 +407,6 @@ export default function PlanningPage() {
   function handleDeleteRouteClick(originId) {
     dispatch(deleteRouteByOriginId(originId));
   }
-
-  // TODO: 測試拿 API
-  useEffect(() => {
-    dispatch(initSchedules(1, 1));
-    dispatch(initMarkers(1, 1));
-    dispatch(initPostIts(1, 1));
-  }, []);
 
   return (
     //  DropDragContext

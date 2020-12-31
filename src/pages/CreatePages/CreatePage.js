@@ -1,7 +1,7 @@
-import React, {useState} from 'react'
-import styled from 'styled-components'
-import { Wrapper } from '../../components/public'
-import { 
+import React, { useState } from "react";
+import styled from "styled-components";
+import { Wrapper } from "../../components/public";
+import {
   FormContainer,
   UserInput,
   UserButtonBorder,
@@ -105,7 +105,19 @@ export default function CreatePage() {
       return setScheduleNameErrorMessage(message);
     }
 
-    console.log(userData.id);
+    //算每一天的起始時間
+    function calcDates() {
+      const dates = {};
+      const range = (endDate - startDate) / 86400000;
+      for (let i = 0; i <= range; i++) {
+        const date = new Date(startDate)
+          .setDate(new Date(startDate).getDate() + i)
+          .toString();
+        dates[date] = [];
+      }
+      return dates;
+    }
+    const dates = calcDates();
 
     const json = JSON.stringify({
       scheduleName,
@@ -114,6 +126,7 @@ export default function CreatePage() {
         start: startDate,
         end: endDate,
       },
+      dailyRoutines: dates,
       UserId: userData.id,
     });
 
@@ -122,20 +135,22 @@ export default function CreatePage() {
       headers: {
         "content-type": "application/json",
       },
-      body: json
+      body: json,
     })
-    .then(result => {return result.json()})
-    .then(json => {
-      console.log(json)
-      if(!json.ok) {
-        return setErrorMessage(json.message)
-      } else {
-        return history.push('/user')
-      }
-    })
-    .catch(error => {
-      return setErrorMessage(error.toString())
-    })
+      .then((result) => {
+        return result.json();
+      })
+      .then((json) => {
+        console.log(json);
+        if (!json.ok) {
+          return setErrorMessage(json.message);
+        } else {
+          return history.push("/user");
+        }
+      })
+      .catch((error) => {
+        return setErrorMessage(error.toString());
+      })
       .then((result) => {
         return result.json();
       })
@@ -184,7 +199,13 @@ export default function CreatePage() {
         <SubContainer>
           <SubTitle>時間</SubTitle>
           <DatePickerContainer>
-            <DatePicker style={{zIndex:'4'}} startDate={startDate} setStartDate={setStartDate} endDate={endDate} setEndDate={setEndDate}/>
+            <DatePicker
+              style={{ zIndex: "4" }}
+              startDate={startDate}
+              setStartDate={setStartDate}
+              endDate={endDate}
+              setEndDate={setEndDate}
+            />
           </DatePickerContainer>
         </SubContainer>
         <div onClick={handleSubmitSchedule}>
