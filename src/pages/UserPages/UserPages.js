@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { getAll } from "../../webAPI";
 import { Wrapper, LoadingPage } from "../../components/public";
 import { SERVER_URL } from "../../static/static";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { Link, useHistory } from "react-router-dom";
+import {
+  getUnfinishedSchedules,
+  getFinishedSchedules,
+} from "../../redux/reducers/usersReducer";
 
 const ScheduleContainer = styled.div`
   width: 100%;
@@ -108,9 +111,9 @@ const editOutlinedStyle = {
 
 function Schedule({
   scheduleData,
-  handleDeleteSchedule,
-  handleOnChangeChecked,
-  handleOnClickPlanning,
+  handleDeleteOutlinedOnClick,
+  handleCheckboxOnChange,
+  handleScheduleTitleOnClick,
 }) {
   const start = scheduleData.dateRange.start;
   const end = scheduleData.dateRange.end;
@@ -128,7 +131,7 @@ function Schedule({
   return (
     <ScheduleContainer>
       <LeftContainer>
-        <Title onClick={() => handleOnClickPlanning(scheduleData.id)}>
+        <Title onClick={() => handleScheduleTitleOnClick(scheduleData.id)}>
           {scheduleData.scheduleName}
         </Title>
         <LeftDownContainer>
@@ -144,7 +147,8 @@ function Schedule({
             id={scheduleData.id}
             type="checkbox"
             value="完成"
-            onChange={(event) => handleOnChangeChecked(event)}
+            onChange={(event) => handleCheckboxOnChange(event)}
+            checked={scheduleData.isFinished}
           ></CheckBox>
           <CheckBoxLabel for={scheduleData.id}>完成</CheckBoxLabel>
         </RightUpContainer>
@@ -153,7 +157,7 @@ function Schedule({
             <EditOutlined style={editOutlinedStyle} />
           </Link>
           <DeleteOutlined
-            onClick={() => handleDeleteSchedule(scheduleData.id)}
+            onClick={() => handleDeleteOutlinedOnClick(scheduleData.id)}
             style={deleteOutlinedStyle}
           />
         </RightDownContainer>
@@ -163,12 +167,15 @@ function Schedule({
 }
 
 export default function UserPage() {
-  const [schedules, setSchedules] = useState(null);
+  // const [schedules, setSchedules] = useState(null);
   const [isDeleteing, setIsDeleting] = useState(false);
+  const [isChangingIsFinished, setIsChangingIsFinished] = useState(false);
   const userData = useSelector((store) => store.users.userData);
+  const schedules = useSelector((store) => store.users.schedules);
   const history = useHistory();
+  const dispatch = useDispatch();
 
-  function handleDeleteSchedule(id) {
+  function handleDeleteOutlinedOnClick(id) {
     setIsDeleting(true);
     fetch(`${SERVER_URL}/schedules/${id}`, {
       method: "DELETE",
@@ -191,29 +198,25 @@ export default function UserPage() {
       });
   }
 
-  function GetUnfinishedSchedules() {
-    getAll(`${SERVER_URL}/schedules/${userData.id}?isFinished=0`).then(
-      (json) => {
-        setSchedules(json);
-      }
-    );
-  }
-
-  function GetFinishedSchedules() {
-    getAll(`${SERVER_URL}/schedules/${userData.id}?isFinished=1`).then(
-      (json) => {
-        setSchedules(json);
-      }
-    );
-  }
-
-  function handleOnChangeChecked(event) {
+  async function handleCheckboxOnChange(event) {
+    const UserId = userData.id;
+    const scheduleId = event.target.id;
+    //更新 schedules isFinished state
+    setIsChangingIsFinished(true);
+    // const newSchedules = schedules.map(schedule => {
+    //   if(schedule.id == scheduleId) {
+    //     schedule.isFinished = !schedule.isFinished
+    //   }
+    //   return schedule
+    // })
+    // setSchedules(newSchedules)
+    //更新 db isFinished state
     const body = {
-      UserId: userData.id,
+      UserId,
     };
-    const checkedStatus = event.target.checked ? 0 : 1;
-    fetch(
-      `${SERVER_URL}/schedules/${event.target.id}?isFinished=${checkedStatus}`,
+    const checkedStatus = event.target.checked ? 1 : 0;
+    await fetch(
+      `${SERVER_URL}/schedules/${scheduleId}?isFinished=${checkedStatus}`,
       {
         method: "PATCH",
         headers: {
@@ -226,43 +229,46 @@ export default function UserPage() {
         return response.json();
       })
       .then((json) => {
+        // FIXME:
         console.log(json);
       });
+    setIsChangingIsFinished(false);
   }
 
-  function handleOnClickPlanning(scheduleId) {
+  function handleScheduleTitleOnClick(scheduleId) {
     const userId = userData.id;
+    sessionStorage.setItem("userId", userId);
+    sessionStorage.setItem("scheduleId", scheduleId);
     history.push("/Planning-page");
   }
 
   //拿 schedules
   useEffect(() => {
     if (userData) {
-      getAll(`${SERVER_URL}/schedules/${userData.id}?isFinished=0`).then(
-        (json) => {
-          console.log(json);
-          setSchedules(json);
-        }
-      );
+      dispatch(getUnfinishedSchedules(userData.id));
     }
-  }, [userData, isDeleteing]);
+  }, [dispatch, userData, isDeleteing, isChangingIsFinished]);
 
-  if (!schedules) {
+  if (!userData || !schedules || isDeleteing || isChangingIsFinished) {
     return <LoadingPage />;
   }
 
   if (schedules) {
     return (
       <Wrapper>
-        <button onClick={GetUnfinishedSchedules}>未完成</button>
-        <button onClick={GetFinishedSchedules}>已完成</button>
+        <button onClick={() => dispatch(getUnfinishedSchedules(userData.id))}>
+          未完成
+        </button>
+        <button onClick={() => dispatch(getFinishedSchedules(userData.id))}>
+          已完成
+        </button>
         {schedules.map((scheduleData, index) => (
           <Schedule
             key={index}
             scheduleData={scheduleData}
-            handleDeleteSchedule={handleDeleteSchedule}
-            handleOnChangeChecked={handleOnChangeChecked}
-            handleOnClickPlanning={handleOnClickPlanning}
+            handleDeleteOutlinedOnClick={handleDeleteOutlinedOnClick}
+            handleCheckboxOnChange={handleCheckboxOnChange}
+            handleScheduleTitleOnClick={handleScheduleTitleOnClick}
           />
         ))}
       </Wrapper>
