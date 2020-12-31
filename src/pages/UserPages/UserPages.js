@@ -253,7 +253,12 @@ export default function UserPage() {
     dispatch(setDailyRoutines(scheduleData.dailyRoutines));
     sessionStorage.setItem("userId", userData.id);
     sessionStorage.setItem("scheduleId", scheduleData.id);
-    history.push("/Planning-page");
+
+    if (scheduleData.isFinished) {
+      history.push("/finish-plan-page");
+    } else {
+      history.push("/Planning-page");
+    }
   }
 
   //拿 schedules

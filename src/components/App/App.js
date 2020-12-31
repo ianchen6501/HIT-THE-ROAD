@@ -53,7 +53,7 @@ function App({ FBstartApp, FBdeleteApp }) {
         <Route path="/planning-page">
           <PlanningPage />
         </Route>
-        <Route path="/finish-plan-page/:scheduleId">
+        <Route path="/finish-plan-page">
           <FinishPlanPage />
         </Route>
       </Switch>
