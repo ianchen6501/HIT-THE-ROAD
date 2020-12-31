@@ -164,7 +164,7 @@ export default function PostItItem() {
   function handleDeletePostItClick(id, index) {
     const placeId = spots[id].placeId;
     dispatch(deletePostIt({ id, index }));
-    // TODO: 要刪掉相對應的 marker
+    // 要刪掉相對應的 marker
     dispatch(deleteMapMarkByPlaceId(placeId));
     // dispatch(setIsMarkDeleted(placeId));
   }
@@ -213,55 +213,57 @@ export default function PostItItem() {
             {...provided.droppableProps}
             isDraggingOver={snapshot.isDraggingOver}
           >
-            {spotIds.map((id, index) => (
-              <Draggable
-                draggableId={id}
-                index={index}
-                key={id}
-                isDragDisabled={spots[id].isScheduled}
-              >
-                {(provided, snapshot) => (
-                  <PostIt
-                    ref={provided.innerRef}
-                    {...provided.draggableProps}
-                    {...provided.dragHandleProps}
-                    isDragging={snapshot.isDragging}
-                    isScheduled={spots[id].isScheduled}
-                  >
-                    <PostItInfo>
-                      <div>
-                        {spots[id].category === "hotel" && (
-                          <FontAwesomeIcon icon={faHotel} />
-                        )}
-                        {spots[id].category === "shopping" && (
-                          <FontAwesomeIcon icon={faShoppingBag} />
-                        )}
-                        {spots[id].category === "food" && (
-                          <FontAwesomeIcon icon={faUtensils} />
-                        )}
-                        {spots[id].category === "attraction" && (
-                          <FontAwesomeIcon icon={faCampground} />
-                        )}
-                      </div>
-                      <div>{spots[id].location}</div>
-                      <div>{spots[id].memo}</div>
-                    </PostItInfo>
-                    <PostItButtons>
-                      <DeleteButton
-                        onClick={() => handleDeletePostItClick(id, index)}
-                      >
-                        ✖
-                      </DeleteButton>
-                      <UpdateButton
-                        onClick={() => handleUpdatePostItClick(id, index)}
-                      >
-                        &#9998;
-                      </UpdateButton>
-                    </PostItButtons>
-                  </PostIt>
-                )}
-              </Draggable>
-            ))}
+            {Object.keys(spots).length > 0 &&
+              spotIds &&
+              spotIds.map((id, index) => (
+                <Draggable
+                  draggableId={id}
+                  index={index}
+                  key={id}
+                  isDragDisabled={spots[id].isScheduled}
+                >
+                  {(provided, snapshot) => (
+                    <PostIt
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                      isDragging={snapshot.isDragging}
+                      isScheduled={spots[id].isScheduled}
+                    >
+                      <PostItInfo>
+                        <div>
+                          {spots[id].category === "hotel" && (
+                            <FontAwesomeIcon icon={faHotel} />
+                          )}
+                          {spots[id].category === "shopping" && (
+                            <FontAwesomeIcon icon={faShoppingBag} />
+                          )}
+                          {spots[id].category === "food" && (
+                            <FontAwesomeIcon icon={faUtensils} />
+                          )}
+                          {spots[id].category === "attraction" && (
+                            <FontAwesomeIcon icon={faCampground} />
+                          )}
+                        </div>
+                        <div>{spots[id].location}</div>
+                        <div>{spots[id].memo}</div>
+                      </PostItInfo>
+                      <PostItButtons>
+                        <DeleteButton
+                          onClick={() => handleDeletePostItClick(id, index)}
+                        >
+                          ✖
+                        </DeleteButton>
+                        <UpdateButton
+                          onClick={() => handleUpdatePostItClick(id, index)}
+                        >
+                          &#9998;
+                        </UpdateButton>
+                      </PostItButtons>
+                    </PostIt>
+                  )}
+                </Draggable>
+              ))}
             <AddPostItWrapper onClick={handleAddPostItClick}>
               <AddPostIt>{isAddClick ? "-" : "+"}</AddPostIt>
             </AddPostItWrapper>

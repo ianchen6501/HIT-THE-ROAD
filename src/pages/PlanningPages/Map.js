@@ -401,7 +401,8 @@ export default function MapArea() {
     });
   }
 
-  // TODO: 如果有重複
+  // 如果有重複
+  // TODO:
   function handleResultButtonClick() {
     const route = routes.find((route) => route.originId === originId);
     if (route) {
@@ -420,7 +421,9 @@ export default function MapArea() {
     dispatch(setOrigin(""));
     dispatch(setDestination(""));
     dispatch(setOriginId(null));
-    currentDirectionsDisplay.setMap(null);
+    if (currentDirectionsDisplay) {
+      currentDirectionsDisplay.setMap(null);
+    }
   }
 
   return (
