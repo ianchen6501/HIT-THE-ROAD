@@ -3,8 +3,11 @@ import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { Wrapper, LoadingPage } from "../../components/public";
 import { SERVER_URL } from "../../static/static";
-import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+// import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { Link, useHistory } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEdit, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+
 import {
   getUnfinishedSchedules,
   getFinishedSchedules,
@@ -15,35 +18,30 @@ import {
 } from "../../redux/reducers/schedulesReducer";
 
 const ScheduleContainer = styled.div`
-  width: 100%;
   position: relative;
   display: flex;
   justify-content: space-between;
-  height: 120px;
   margin-top: 20px;
   margin-bottom: 20px;
   padding: 20px;
-  box-shadow: 0.5px 0.5px 3px -1px;
-  transition: background 0.2s;
+  width: 100%;
+  height: 96px;
+  background: ${(props) => props.theme.basicColors.white};
+  border-radius: 10px;
+  box-shadow: 0.5px 0.5px 3px -1px gray;
+  transition: all 0.5s ease;
 
   &:hover {
-    background: ${(props) => props.theme.basicColors.white};
+    box-shadow: 0px 2px 6px gray;
   }
 `;
 
-// const Divider = styled.div `
-//   height: 100%;
-//   width: 2px;
-//   background: ${props => props.theme.secondaryColors.secondaryDarker};
-//   margin-left: 20px;
-//   margin-right: 20px;
-// `
-
 const Title = styled.div`
   border-bottom: solid 2px
-    ${(props) => props.theme.secondaryColors.secondaryDarker};
-  font-size: ${(props) => props.theme.titles.h4};
+    ${(props) => props.theme.primaryColors.primaryLighter};
+  font-size: ${(props) => props.theme.titles.h6};
   font-weight: 900;
+  color: ${(props) => props.theme.primaryColors.primaryDark};
   cursor: pointer;
 
   &:hover {
@@ -52,8 +50,9 @@ const Title = styled.div`
 `;
 
 const SubSitile = styled.div`
-  font-size: ${(props) => props.theme.titles.h6};
+  font-size: ${(props) => props.theme.fontSizes.small};
   font-weight: 900;
+  color: ${(props) => props.theme.primaryColors.primaryDark};
 
   &:nth-child(1) {
     margin-right: 20px;
@@ -81,6 +80,7 @@ const RightUpContainer = styled.div`
   width: 100%;
   display: flex;
   align-items: center;
+  color: ${(props) => props.theme.primaryColors.primaryDarker};
 `;
 
 const RightDownContainer = styled.div`
@@ -89,6 +89,16 @@ const RightDownContainer = styled.div`
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
+
+  color: ${(props) => props.theme.primaryColors.primaryDarker};
+  font-size: ${(props) => props.theme.fontSizes.medium};
+  line-height: ${(props) => props.theme.fontSizes.medium};
+`;
+
+const IconLink = styled(Link)`
+  color: ${(props) => props.theme.primaryColors.primaryDarker};
+  font-size: ${(props) => props.theme.fontSizes.medium};
+  line-height: ${(props) => props.theme.fontSizes.medium};
 `;
 
 const CheckBox = styled.input`
@@ -103,15 +113,52 @@ const CheckBoxLabel = styled.label`
   font-weight: 900;
 `;
 
-const deleteOutlinedStyle = {
-  transform: "scale(2)",
-  cursor: "pointer",
-};
+// TODO:
+const Container = styled.div`
+  display: flex;
+  padding-top: ${(props) => props.theme.heights.header};
+  padding-bottom: ${(props) => props.theme.heights.footer};
+  height: 100vh;
 
-const editOutlinedStyle = {
-  transform: "scale(2)",
-  cursor: "pointer",
-};
+  background: ${(props) => props.theme.primaryColors.primaryLighter};
+`;
+
+const SideList = styled.div`
+  display: flex;
+  flex-direction: column;
+  background: ${(props) => props.theme.basicColors.black};
+`;
+
+const SideButton = styled.button`
+  margin-left: 5px;
+  background: ${(props) => props.theme.primaryColors.primaryLight};
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  border: none;
+  border-right: 0.5px solid black;
+  border-bottom: 1px solid black;
+  height: 36px;
+  color: ${(props) => props.theme.primaryColors.primaryDarker};
+
+  ${(props) =>
+    props.$active &&
+    `
+    border-right: none;
+    background: ${props.theme.primaryColors.primaryLighter};
+  `}
+`;
+
+// TODO: END
+
+// const deleteOutlinedStyle = {
+//   transform: "scale(2)",
+//   cursor: "pointer",
+// };
+
+// const editOutlinedStyle = {
+//   transform: "scale(2)",
+//   cursor: "pointer",
+// };
 
 function Schedule({
   scheduleData,
@@ -154,16 +201,23 @@ function Schedule({
             onChange={(event) => handleCheckboxOnChange(event)}
             checked={scheduleData.isFinished}
           ></CheckBox>
-          <CheckBoxLabel for={scheduleData.id}>完成</CheckBoxLabel>
+          <CheckBoxLabel htmlfor={scheduleData.id}>完成</CheckBoxLabel>
         </RightUpContainer>
         <RightDownContainer>
-          <Link to={`/edit/${scheduleData.id}`}>
-            <EditOutlined style={editOutlinedStyle} />
-          </Link>
-          <DeleteOutlined
+          {/* TODO: 應該是會到 googleMap 那裡或者根本不用放？ */}
+          <IconLink to={`/edit/${scheduleData.id}`}>
+            <FontAwesomeIcon icon={faEdit} />
+            {/* <EditOutlined style={editOutlinedStyle} /> */}
+          </IconLink>
+          <FontAwesomeIcon
+            onClick={() => handleDeleteOutlinedOnClick(scheduleData.id)}
+            icon={faTrashAlt}
+          />
+
+          {/* <DeleteOutlined
             onClick={() => handleDeleteOutlinedOnClick(scheduleData.id)}
             style={deleteOutlinedStyle}
-          />
+          /> */}
         </RightDownContainer>
       </RightContainer>
     </ScheduleContainer>
@@ -178,6 +232,9 @@ export default function UserPage() {
   const schedules = useSelector((store) => store.users.schedules);
   const history = useHistory();
   const dispatch = useDispatch();
+
+  // TODO: 設定按鈕的 $active
+  const [buttonActive, setButtonActive] = useState("unfinish");
 
   function handleDeleteOutlinedOnClick(id) {
     setIsDeleting(true);
@@ -274,23 +331,49 @@ export default function UserPage() {
 
   if (schedules) {
     return (
-      <Wrapper>
-        <button onClick={() => dispatch(getUnfinishedSchedules(userData.id))}>
-          未完成
-        </button>
-        <button onClick={() => dispatch(getFinishedSchedules(userData.id))}>
-          已完成
-        </button>
-        {schedules.map((scheduleData, index) => (
-          <Schedule
-            key={index}
-            scheduleData={scheduleData}
-            handleDeleteOutlinedOnClick={handleDeleteOutlinedOnClick}
-            handleCheckboxOnChange={handleCheckboxOnChange}
-            handleScheduleTitleOnClick={handleScheduleTitleOnClick}
-          />
-        ))}
-      </Wrapper>
+      // TODO: 設旁邊
+      <Container>
+        <SideList>
+          <SideButton
+            onClick={() => {
+              setButtonActive("unfinish");
+              dispatch(getUnfinishedSchedules(userData.id));
+            }}
+            $active={buttonActive === "unfinish"}
+          >
+            未完成
+          </SideButton>
+          <SideButton
+            onClick={() => {
+              setButtonActive("finish");
+              dispatch(getFinishedSchedules(userData.id));
+            }}
+            $active={buttonActive === "finish"}
+          >
+            已完成
+          </SideButton>
+          <SideButton
+            onClick={() => {
+              setButtonActive("add");
+              history.push("/create");
+            }}
+            $active={buttonActive === "add"}
+          >
+            新增
+          </SideButton>
+        </SideList>
+        <Wrapper>
+          {schedules.map((scheduleData, index) => (
+            <Schedule
+              key={index}
+              scheduleData={scheduleData}
+              handleDeleteOutlinedOnClick={handleDeleteOutlinedOnClick}
+              handleCheckboxOnChange={handleCheckboxOnChange}
+              handleScheduleTitleOnClick={handleScheduleTitleOnClick}
+            />
+          ))}
+        </Wrapper>
+      </Container>
     );
   }
 }
