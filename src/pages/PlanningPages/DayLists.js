@@ -57,16 +57,8 @@ export default function DayLists() {
   const spots = useSelector((store) => store.postIts.spots);
   const spotsId = useSelector((store) => store.postIts.columns.postIt.spotsIds);
   const markers = useSelector((store) => store.mapMarks.markLocations);
-  const userData = useSelector((store) => store.users.userData);
   const spotId = useSelector((store) => store.schedules.spotId);
   const postItId = useSelector((store) => store.postIts.postItId);
-
-  const [userId, setUserId] = useState("");
-  useEffect(() => {
-    if (userData) {
-      setUserId(userData.id);
-    }
-  }, [userData]);
 
   const calcDates = useCallback(() => {
     const dates = [];
@@ -91,10 +83,14 @@ export default function DayLists() {
   // TODO: 存 schdule、post-it、marker
   function handleSaveClick() {
     const dates = calcDates();
-    dispatch(saveDailyRoutines(dates, dailyRoutines, spotId, userId, 1));
-    dispatch(saveRoutes(routes, userId, 1));
-    dispatch(saveMarkers(markers, userId, 1));
-    dispatch(savePostIts(spots, spotsId, postItId, userId, 1));
+    const userId = sessionStorage.getItem("userId");
+    const scheduleId = sessionStorage.getItem("scheduleId");
+    dispatch(
+      saveDailyRoutines(dates, dailyRoutines, spotId, userId, scheduleId)
+    );
+    dispatch(saveRoutes(routes, userId, scheduleId));
+    dispatch(saveMarkers(markers, userId, scheduleId));
+    dispatch(savePostIts(spots, spotsId, postItId, userId, scheduleId));
   }
 
   return (
