@@ -36,7 +36,7 @@ export const getPosts = () => (dispatch) => {
 };
 
 export const getPost = (id, userId) => (dispatch) => {
-  console.log(id, userId);
+  //FIXME: 待確定拿資料方式
   dispatch(setIsLoading(true));
 
   fetch(`${SERVER_URL}/schedules/${userId}/${id}`)
@@ -44,6 +44,25 @@ export const getPost = (id, userId) => (dispatch) => {
       return response.json();
     })
     .then((json) => dispatch(setPost(json)))
+    .catch((error) => console.log(error));
+
+  dispatch(setIsLoading(false));
+};
+
+export const getFilteredPosts = (keyword) => (dispatch) => {
+  dispatch(setIsLoading(true));
+  if (keyword === "全部") {
+    return dispatch(getPosts());
+  }
+
+  fetch(`${SERVER_URL}/posts?filter=${keyword}`)
+    .then((response) => {
+      return response.json();
+    })
+    .then((json) => {
+      console.log(json);
+      dispatch(setPosts(json));
+    })
     .catch((error) => console.log(error));
 
   dispatch(setIsLoading(false));

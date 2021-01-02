@@ -1,49 +1,24 @@
-import React, { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import styled from 'styled-components'
-import { Wrapper } from '../../components/public'
-import Post from '../../components/Post'
-import { getPosts } from '../../redux/reducers/postsReducer'
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import styled from "styled-components";
+import { Wrapper } from "../../components/public";
+import Post from "../../components/Post";
+import { getPosts, getFilteredPosts } from "../../redux/reducers/postsReducer";
 
-const SearchContainer = styled.div `
-  display: flex;
-  margin: 30px 0px;
-  box-shadow: 0.5px 0.5px 3px -1px;
-`
-
-const SearchInput = styled.input `
-  position: relative;
-  width: 80%;
-  height: 50px;
-  padding-left: 5px;
-  border: none;
-  font-size: ${props => props.theme.fontSizes.medium};
-`
-
-const SearchButton = styled.button `
-  width: 20%;
-  height: 50px;
-  background: ${props => props.theme.primaryColors.primaryLighter};
-  transition: background 0.2s;
-
-  :hover {
-    background: ${props => props.theme.primaryColors.primaryLight};
-  }
-`
-
-const FilterContainer = styled.div `
-  display: flex;
-  justify-content: center;
+const FilterContainer = styled.div`
+  margin-top: 30px;
   margin-bottom: 30px;
-`
+`;
 
-const KeywordFilter = styled.div `
-  border: solid 1px ${props => props.theme.primaryColors.primaryLight};
+const KeywordFilter = styled.div`
+  display: inline-block;
+  margin-bottom: 10px;
   margin-left: 20px;
+  border: solid 1px ${(props) => props.theme.primaryColors.primaryLight};
   border-radius: 13px;
   padding: 4px 8px;
-  color: ${props => props.theme.primaryColors.dark};
-  font-size: ${props => props.theme.fontSizes.medium};
+  color: ${(props) => props.theme.primaryColors.dark};
+  font-size: ${(props) => props.theme.fontSizes.medium};
   transition: transform 0.1s ease-out;
   cursor: pointer;
 
@@ -54,30 +29,61 @@ const KeywordFilter = styled.div `
   &:visited {
     background: black;
   }
-`
+
+  ${(props) =>
+    props.$active && `background: ${props.theme.primaryColors.primaryLighter};`}
+`;
 
 export default function ExplorePage() {
-  const dispatch = useDispatch()
-  const postsData = useSelector(store => store.posts.posts)
+  const dispatch = useDispatch();
+  const postsData = useSelector((store) => store.posts.posts);
+  const [filter, setFilter] = useState("全部");
   //假的 filter 資料，之後從資料庫拿
-  const keywords = ['東部', '西部', '北部', '南部', '中部']
+  const keywords = [
+    "全部",
+    "台北",
+    "新北",
+    "桃園",
+    "新竹",
+    "苗栗",
+    "台中",
+    "彰化",
+    "雲林",
+    "嘉義",
+    "台南",
+    "高雄",
+    "屏東",
+    "台東",
+    "花蓮",
+    "宜蘭",
+    "南投",
+  ];
 
   useEffect(() => {
-    dispatch(getPosts())
-  }, [dispatch])
+    dispatch(getPosts());
+  }, [dispatch]);
 
+  function handleFilterOnClick(keyword) {
+    setFilter(keyword);
+    dispatch(getFilteredPosts(keyword));
+  }
+  //TODO: paginator
   return (
     <Wrapper>
-      <SearchContainer>
-        <SearchInput placeholder={"關鍵字搜尋"}/>
-        <SearchButton>search</SearchButton>
-      </SearchContainer>
       <FilterContainer>
-        {keywords.map(keyword => <KeywordFilter>{keyword}</KeywordFilter>)}
+        {keywords.map((keyword) => (
+          <KeywordFilter
+            $active={filter === keyword}
+            onClick={() => handleFilterOnClick(keyword)}
+          >
+            {keyword}
+          </KeywordFilter>
+        ))}
       </FilterContainer>
-      {postsData && 
-        postsData.map((post, index) => <Post postData={post} key={index}></Post>)
-      }
+      {postsData &&
+        postsData.map((post, index) => (
+          <Post postData={post} key={index}></Post>
+        ))}
     </Wrapper>
-  )
+  );
 }
