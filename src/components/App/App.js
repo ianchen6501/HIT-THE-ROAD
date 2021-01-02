@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import "./App.css";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { HashRouter as Router, Switch, Route } from "react-router-dom";
 import HomePage from "../../pages/HomePages";
 import LoginPage from "../../pages/LoginPages";
@@ -13,21 +13,20 @@ import PlanningPage from "../../pages/PlanningPages";
 import FinishPlanPage from "../../pages/FinishPlanPages";
 import Footer from "../Footer";
 import Header from "../Header";
-import { getAuthTokenFromLocalStorage } from "../../utils";
-import { handleLoginByToken } from "../../redux/reducers/usersReducer";
-import { useDispatch } from "react-redux";
+import { checkIsLogin } from "../../redux/reducers/usersReducer";
+import { useDispatch, useSelector } from "react-redux";
 
 function App({ FBstartApp, FBdeleteApp }) {
   const dispatch = useDispatch();
+  const [isCheckedLogin, setIsCheckedLogin] = useState(false);
 
-  useEffect(async () => {
-    const token = await getAuthTokenFromLocalStorage();
-    dispatch(handleLoginByToken(token));
+  useEffect(() => {
+    dispatch(checkIsLogin()).then(() => setIsCheckedLogin(true));
   }, []);
 
   return (
     <Router>
-      <Header />
+      <Header isCheckedLogin={isCheckedLogin} />
       <Switch>
         <Route exact path="/">
           <HomePage />
