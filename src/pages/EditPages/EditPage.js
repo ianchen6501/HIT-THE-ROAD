@@ -157,17 +157,6 @@ export default function CreatePage() {
             ))}
           </Select>
         </SubContainer>
-        <SubContainer>
-          <SubTitle>時間</SubTitle>
-          <DatePickerContainer>
-            <DatePicker
-              startDate={startDate}
-              setStartDate={setStartDate}
-              endDate={endDate}
-              setEndDate={setEndDate}
-            />
-          </DatePickerContainer>
-        </SubContainer>
         <div onClick={handleSubmitSchedule}>
           <UserButtonBorder style={{ zIndex: "0" }}>
             <UserButtonText>next</UserButtonText>
