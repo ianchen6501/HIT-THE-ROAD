@@ -9,7 +9,7 @@ import {
   UserButtonText,
   ErrorMessage,
 } from "../../components/UserForm";
-import DatePicker from "../../components/DayPicker";
+
 import { SERVER_URL } from "../../static/static";
 import { useHistory, useLocation } from "react-router-dom";
 import { updateSchedule } from "../../webAPI";
@@ -31,10 +31,6 @@ const SubTitle = styled.div`
   text-align: center;
   font-size: ${(props) => props.theme.titles.h5};
   font-weight: 800;
-`;
-
-const DatePickerContainer = styled.div`
-  width: 480px;
 `;
 
 const Select = styled.select`
@@ -79,18 +75,18 @@ export default function CreatePage() {
   const history = useHistory();
   const location = useLocation();
 
-  const currentDate = new Date().getDate();
-  const currentMonth = new Date().getMonth() + 1;
-  const currentYear = new Date().getFullYear();
+  // const currentDate = new Date().getDate();
+  // const currentMonth = new Date().getMonth() + 1;
+  // const currentYear = new Date().getFullYear();
 
   const [scheduleName, setScheduleName] = useState("");
   const [destination, setDestination] = useState("台北");
-  const [startDate, setStartDate] = useState(
-    new Date(currentYear, currentMonth, currentDate).getTime()
-  );
-  const [endDate, setEndDate] = useState(
-    new Date(currentYear, currentMonth, currentDate).getTime()
-  );
+  // const [startDate, setStartDate] = useState(
+  //   new Date(currentYear, currentMonth, currentDate).getTime()
+  // );
+  // const [endDate, setEndDate] = useState(
+  //   new Date(currentYear, currentMonth, currentDate).getTime()
+  // );
   const [errorMessage, setErrorMessage] = useState("");
   const [scheduleNameErrorMessage, setScheduleNameErrorMessage] = useState("");
 
