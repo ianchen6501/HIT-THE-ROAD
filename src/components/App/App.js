@@ -15,7 +15,7 @@ import ExploreSinglePage from "../../pages/ExploreSinglePages";
 import Footer from "../Footer";
 import Header from "../Header";
 import { checkIsLogin } from "../../redux/reducers/usersReducer";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 function App({ FBstartApp, FBdeleteApp }) {
   const dispatch = useDispatch();

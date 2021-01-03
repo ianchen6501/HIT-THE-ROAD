@@ -9,10 +9,7 @@ import {
   UserButtonText,
   ErrorMessage,
 } from "../../components/UserForm";
-import {
-  setCurrentDate,
-  setDailyRoutinesKey,
-} from "../../redux/reducers/schedulesReducer";
+
 import DatePicker from "../../components/DayPicker";
 import { SERVER_URL } from "../../static/static";
 import { useHistory } from "react-router-dom";

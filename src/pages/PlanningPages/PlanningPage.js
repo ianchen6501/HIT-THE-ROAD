@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 
@@ -286,7 +286,7 @@ export default function PlanningPage() {
       await dispatch(initPostIts(userId, scheduleId));
     };
     init();
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     // 根據 start 排列

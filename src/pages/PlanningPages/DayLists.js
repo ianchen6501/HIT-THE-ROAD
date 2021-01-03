@@ -1,14 +1,11 @@
 import styled from "styled-components";
-import { useEffect, useCallback, useState } from "react";
+import { useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import {
   setCurrentDate,
-  setDailyRoutinesKey,
-  saveAllDailyRoutines,
   saveDailyRoutines,
   saveRoutes,
-  initDailyRoutinesKey,
 } from "../../redux/reducers/schedulesReducer";
 
 import { saveMarkers } from "../../redux/reducers/mapMarkReducer";
