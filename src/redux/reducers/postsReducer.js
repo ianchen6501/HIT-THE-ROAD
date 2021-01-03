@@ -15,7 +15,7 @@ export const postsReducer = createSlice({
     setPosts: (state, action) => {
       state.posts = action.payload;
     },
-    setPost: (state, action) => {
+    setSinglePost: (state, action) => {
       const { User, scheduleName, location, dailyRoutines } = action.payload;
       state.singlePost.user = User;
       state.singlePost.scheduleName = scheduleName;
@@ -25,7 +25,7 @@ export const postsReducer = createSlice({
   },
 });
 
-export const { setIsLoading, setPosts, setPost } = postsReducer.actions;
+export const { setIsLoading, setPosts, setSinglePost } = postsReducer.actions;
 
 export const getPosts = () => (dispatch) => {
   console.log("getPosts");
@@ -56,7 +56,7 @@ export const getPosts = () => (dispatch) => {
 };
 
 export const getSinglePost = (scheduleId) => (dispatch) => {
-  getSinglePostAPI(scheduleId).then((res) => dispatch(setPost(res)));
+  getSinglePostAPI(scheduleId).then((res) => dispatch(setSinglePost(res)));
 };
 
 export default postsReducer.reducer;
