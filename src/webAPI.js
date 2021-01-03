@@ -1,4 +1,4 @@
-const BASE_URL = "https://hit-the-road.mings.tw/schedules";
+const BASE_URL = "https://hit-the-road.mings.tw";
 
 export function getAll(url) {
   return fetch(url).then((response) => response.json());
@@ -20,7 +20,7 @@ export const getScheduleContent = (userId, scheduleId) => {
 };
 
 export const saveMarkersAPI = (markers, userId, scheduleId) => {
-  return fetch(`${BASE_URL}/${scheduleId}`, {
+  return fetch(`${BASE_URL}/schedules/${scheduleId}`, {
     method: "PUT",
     headers: {
       "content-type": "application/json",
@@ -39,7 +39,7 @@ export const savePostItsAPI = (
   userId,
   scheduleId
 ) => {
-  return fetch(`${BASE_URL}/${scheduleId}`, {
+  return fetch(`${BASE_URL}/schedules/${scheduleId}`, {
     method: "PUT",
     headers: {
       "content-type": "application/json",
@@ -54,7 +54,7 @@ export const savePostItsAPI = (
 };
 
 export const saveRoutesAPI = (routes, userId, scheduleId) => {
-  return fetch(`${BASE_URL}/${scheduleId}`, {
+  return fetch(`${BASE_URL}/schedules/${scheduleId}`, {
     method: "PUT",
     headers: {
       "content-type": "application/json",
@@ -72,7 +72,7 @@ export const saveDailyRoutinesAPI = (
   userId,
   scheduleId
 ) => {
-  return fetch(`${BASE_URL}/${scheduleId}`, {
+  return fetch(`${BASE_URL}/schedules/${scheduleId}`, {
     method: "PUT",
     headers: {
       "content-type": "application/json",
@@ -86,7 +86,7 @@ export const saveDailyRoutinesAPI = (
 };
 
 export const saveDailyRoutinesKeyAPI = (dailyRoutines, userId, scheduleId) => {
-  return fetch(`${BASE_URL}/${scheduleId}`, {
+  return fetch(`${BASE_URL}/schedules/${scheduleId}`, {
     method: "PUT",
     headers: {
       "content-type": "application/json",
@@ -100,5 +100,11 @@ export const saveDailyRoutinesKeyAPI = (dailyRoutines, userId, scheduleId) => {
 
 // TODO:
 export const getFinishPlanAPI = (userId, scheduleId) => {
-  return fetch(`${BASE_URL}/${userId}/${scheduleId}`).then((res) => res.json());
+  return fetch(`${BASE_URL}/schedules/${userId}/${scheduleId}`).then((res) =>
+    res.json()
+  );
+};
+
+export const getSinglePostAPI = (scheduleId) => {
+  return fetch(`${BASE_URL}/posts/${scheduleId}`).then((res) => res.json());
 };
