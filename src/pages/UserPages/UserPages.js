@@ -148,6 +148,22 @@ const SideButton = styled.button`
   `}
 `;
 
+const Reminder = styled.div`
+  position: absolute;
+  display: inline-block;
+  width: 200px;
+  height: 50px;
+  left: 50%;
+  top: 50%;
+  border-radius: 10px;
+  transform: translate(-50%, -50%);
+  background: ${(props) => props.theme.basicColors.white};
+  line-height: 50px;
+  text-align: center;
+  color: ${(props) => props.theme.secondaryColors.secondaryDarker};
+  font-weight: bold;
+`;
+
 // TODO: END
 
 // const deleteOutlinedStyle = {
@@ -225,7 +241,6 @@ function Schedule({
 }
 
 export default function UserPage() {
-  // const [schedules, setSchedules] = useState(null);
   const [isDeleteing, setIsDeleting] = useState(false);
   const [isChangingIsFinished, setIsChangingIsFinished] = useState(false);
   const userData = useSelector((store) => store.users.userData);
@@ -272,13 +287,6 @@ export default function UserPage() {
     const scheduleId = event.target.id;
     //更新 schedules isFinished state
     setIsChangingIsFinished(true);
-    // const newSchedules = schedules.map(schedule => {
-    //   if(schedule.id == scheduleId) {
-    //     schedule.isFinished = !schedule.isFinished
-    //   }
-    //   return schedule
-    // })
-    // setSchedules(newSchedules)
     //更新 db isFinished state
     const body = {
       UserId,
@@ -298,7 +306,7 @@ export default function UserPage() {
         return response.json();
       })
       .then((json) => {
-        // FIXME:
+        //FIXME: 修正為
         console.log(json);
       });
     setIsChangingIsFinished(false);
@@ -363,15 +371,19 @@ export default function UserPage() {
           </SideButton>
         </SideList>
         <Wrapper>
-          {schedules.map((scheduleData, index) => (
-            <Schedule
-              key={index}
-              scheduleData={scheduleData}
-              handleDeleteOutlinedOnClick={handleDeleteOutlinedOnClick}
-              handleCheckboxOnChange={handleCheckboxOnChange}
-              handleScheduleTitleOnClick={handleScheduleTitleOnClick}
-            />
-          ))}
+          {schedules.length ? (
+            schedules.map((scheduleData, index) => (
+              <Schedule
+                key={index}
+                scheduleData={scheduleData}
+                handleDeleteOutlinedOnClick={handleDeleteOutlinedOnClick}
+                handleCheckboxOnChange={handleCheckboxOnChange}
+                handleScheduleTitleOnClick={handleScheduleTitleOnClick}
+              />
+            ))
+          ) : (
+            <Reminder>目前沒有行程喔!</Reminder>
+          )}
         </Wrapper>
       </Container>
     );

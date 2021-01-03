@@ -1,11 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
-
 import { getSinglePostAPI } from "../../webAPI";
+import { SERVER_URL } from "../../static/static";
 
 export const postsReducer = createSlice({
   name: "schedules",
   initialState: {
     posts: null,
+    post: null,
     singlePost: {},
   },
   reducers: {
@@ -22,41 +23,62 @@ export const postsReducer = createSlice({
       state.singlePost.location = location;
       state.singlePost.dailyRoutines = dailyRoutines;
     },
+    setPost: (state, action) => {
+      state.post = action.payload;
+    },
   },
 });
 
-export const { setIsLoading, setPosts, setSinglePost } = postsReducer.actions;
-
-export const getPosts = () => (dispatch) => {
-  console.log("getPosts");
-  //這邊要修正為真實串 API
-  dispatch(setIsLoading(true));
-  const postsData = [
-    {
-      title: "釜山",
-      content:
-        "韓國的第二大城市釜山，是韓國人夏日重要的玩水度假聖地，擁有多座海水浴場、在地人情味的傳統市集、海鮮市場，還有深受電影人重視的釜山影展，近幾年崛起的釜山新建築美學，也是旅人朝聖的一大亮點！不同於首爾的快步調，初來乍到釜山的旅人，可以感受到這裡多了一份閑適與自在愜意，想來趟不一樣的韓國之旅，港都釜山絕對是首選",
-      arthur: "ian",
-      date: "20200101-20210101",
-    },
-    {
-      title: "釜山",
-      content:
-        "韓國的第二大城市釜山，是韓國人夏日重要的玩水度假聖地，擁有多座海水浴場、在地人情味的傳統市集、海鮮市場，還有深受電影人重視的釜山影展，近幾年崛起的釜山新建築美學，也是旅人朝聖的一大亮點！不同於首爾的快步調，初來乍到釜山的旅人，可以感受到這裡多了一份閑適與自在愜意，想來趟不一樣的韓國之旅，港都釜山絕對是首選",
-      arthur: "ian",
-      date: "20200101-20210101",
-    },
-  ];
-  const response = {
-    ok: true,
-  };
-  dispatch(setPosts(postsData));
-  dispatch(setIsLoading(false));
-  return response;
-};
+export const { setIsLoading, setPosts, setPost, setSinglePost } = postsReducer.actions;
 
 export const getSinglePost = (scheduleId) => (dispatch) => {
   getSinglePostAPI(scheduleId).then((res) => dispatch(setSinglePost(res)));
+};
+
+export const getPosts = () => (dispatch) => {
+  dispatch(setIsLoading(true));
+
+  fetch(`${SERVER_URL}/posts?isFinished=1`)
+    .then((response) => {
+      return response.json();
+    })
+    .then((json) => dispatch(setPosts(json)))
+    .catch((error) => console.log(error));
+
+  dispatch(setIsLoading(false));
+};
+
+export const getPost = (id, userId) => (dispatch) => {
+  //FIXME: 待確定拿資料方式
+  dispatch(setIsLoading(true));
+
+  fetch(`${SERVER_URL}/schedules/${userId}/${id}`)
+    .then((response) => {
+      return response.json();
+    })
+    .then((json) => dispatch(setPost(json)))
+    .catch((error) => console.log(error));
+
+  dispatch(setIsLoading(false));
+};
+
+export const getFilteredPosts = (keyword) => (dispatch) => {
+  dispatch(setIsLoading(true));
+  if (keyword === "全部") {
+    return dispatch(getPosts());
+  }
+
+  fetch(`${SERVER_URL}/posts?filter=${keyword}`)
+    .then((response) => {
+      return response.json();
+    })
+    .then((json) => {
+      console.log(json);
+      dispatch(setPosts(json));
+    })
+    .catch((error) => console.log(error));
+
+  dispatch(setIsLoading(false));
 };
 
 export default postsReducer.reducer;

@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { SERVER_URL } from "../../static/static";
 import { getAll } from "../../webAPI";
+import { getAuthTokenFromLocalStorage } from "../../utils";
 
 export const usersReducer = createSlice({
   name: "users",
@@ -45,22 +46,24 @@ export const getFinishedSchedules = (id) => (dispatch) => {
   });
 };
 
-export const handleLoginByToken = (token) => (dispatch) => {
-  const body = { token };
-
-  fetch(`${SERVER_URL}/users`, {
-    method: "POST",
-    headers: {
-      "content-type": "application/json",
-    },
-    body: JSON.stringify(body),
-  })
-    .then((response) => response.json())
-    .then((json) => {
-      dispatch(setUserData(json.userData));
-    });
-  // 去資料庫拿資料並存入 userData state，這邊先假存 id
-  // dispatch(setUserData(userData))
+export const checkIsLogin = () => async (dispatch) => {
+  dispatch(setIsLoading(true));
+  const token = await getAuthTokenFromLocalStorage();
+  if (token) {
+    const body = { token };
+    await fetch(`${SERVER_URL}/users`, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(body),
+    })
+      .then((response) => response.json())
+      .then((json) => {
+        dispatch(setUserData(json.userData));
+      });
+  }
+  dispatch(setIsLoading(false));
 };
 
 export default usersReducer.reducer;
