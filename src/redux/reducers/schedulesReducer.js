@@ -11,7 +11,9 @@ import {
 export const schedulesReducer = createSlice({
   name: "schedules",
   initialState: {
-    spotId: null, // TODO:
+    isRouteSaved: false,
+    isRoutineSaved: false,
+    spotId: null,
     dateRange: {
       // startDate: 1612195200000,
       // endDate: 1612454400000,
@@ -39,9 +41,12 @@ export const schedulesReducer = createSlice({
     routes: [],
   },
   reducers: {
-    // setDates: (state, action) => {
-    //   state.dates = action.payload;
-    // },
+    setIsRouteSaved: (state, action) => {
+      state.action = action.payload;
+    },
+    setIsRoutineSaved: (state, action) => {
+      state.action = action.payload;
+    },
     setSpotId: (state, action) => {
       state.spotId = action.payload;
     },
@@ -51,12 +56,6 @@ export const schedulesReducer = createSlice({
     setDateRange: (state, action) => {
       state.dateRange = action.payload;
     },
-    // 和 setDailyRoutines 打架
-    // setDailyRoutinesKey: (state, action) => {
-    //   action.payload.map((date) => {
-    //     return (state.dailyRoutines[date] = []);
-    //   });
-    // },
     deleteDailyRoutines: (state, action) => {
       state.dailyRoutines[state.currentDate].splice(action.payload, 1);
     },
@@ -76,19 +75,18 @@ export const schedulesReducer = createSlice({
         ...action.payload,
         id: (state.spotId += 1),
       });
-      // state.spotId + 1;
     },
     addDailyRoutinesFromPostIt: (state, action) => {
       state.dailyRoutines[state.currentDate].push({
         ...action.payload,
         id: (state.spotId += 1),
       });
-      // state.spotId += 1;
     },
     setEditId: (state, action) => {
       state.editId = action.payload;
     },
     setCurrentDate: (state, action) => {
+      console.log("setcurrentdate");
       state.currentDate = action.payload;
     },
     setOrderByStartRoutines: (state, action) => {
@@ -139,6 +137,8 @@ export const {
   setRoutes,
   setDailyRoutines,
   setSpotId,
+  setIsRouteSaved,
+  setIsRoutineSaved,
 } = schedulesReducer.actions;
 
 // thunk async logic
@@ -190,22 +190,19 @@ export const initSchedules = (userId, scheduleId) => (dispatch) => {
       : dispatch(setRoutes(res.routes));
     dispatch(setSpotId(res.spotId));
   });
-  // getScheduleContent(userId, scheduleId).then((res) =>
-  //   res.routes === null
-  //     ? dispatch(setRoutes([]))
-  //     : dispatch(setRoutes(res.routes))
-  // );
-  // // TODO: 邏輯有問題
-  // getScheduleContent(userId, scheduleId).then((res) =>
-  //   // dispatch(setDailyRoutines(res.dailyRoutines))
-  //   dispatch(setDailyRoutines(res.dailyRoutines))
-  // );
-  // getScheduleContent(userId, scheduleId).then((res) =>
-  //   dispatch(setSpotId(res.spotId))
-  // );
 };
 
-// TODO:
+// TODO: 進到 planning-page 時 call API 拿資料
+export const initDailyRoutines = (userId, scheduleId) => (dispatch) => {
+  getScheduleContent(userId, scheduleId).then((res) =>
+    dispatch(setDailyRoutines(res.dailyRoutines))
+  );
+  getScheduleContent(userId, scheduleId).then((res) =>
+    dispatch(setCurrentDate(res.dateRange.start))
+  );
+};
+
+// 新增行程時使用
 export const initDailyRoutinesKey = (dates, userId, scheduleId) => (
   dispatch
 ) => {
@@ -215,7 +212,13 @@ export const initDailyRoutinesKey = (dates, userId, scheduleId) => (
 };
 
 export const saveRoutes = (routes, userId, scheduleId) => (dispatch) => {
-  saveRoutesAPI(routes, userId, scheduleId);
+  saveRoutesAPI(routes, userId, scheduleId).then((res) => {
+    if (res.ok === true) {
+      dispatch(setIsRouteSaved(true));
+    } else {
+      dispatch(setIsRouteSaved(false));
+    }
+  });
 };
 
 // TODO:
@@ -236,7 +239,13 @@ export const saveDailyRoutines = (
     dispatch(saveAllDailyRoutines({ date, orderRoutines }));
     saveRoutines[date] = orderRoutines;
   }
-  saveDailyRoutinesAPI(saveRoutines, spotId, userId, scheduleId);
+  saveDailyRoutinesAPI(saveRoutines, spotId, userId, scheduleId).then((res) => {
+    if (res.ok === true) {
+      dispatch(setIsRoutineSaved(true));
+    } else {
+      dispatch(setIsRoutineSaved(false));
+    }
+  });
 };
 
 export default schedulesReducer.reducer;

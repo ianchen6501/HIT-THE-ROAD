@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 
@@ -24,6 +24,8 @@ import {
   deleteSpot,
   deleteRouteByOriginId,
   initSchedules,
+  initDailyRoutines,
+  setCurrentDate,
 } from "../../redux/reducers/schedulesReducer";
 
 import {
@@ -267,7 +269,6 @@ export default function PlanningPage() {
 
   // 用來判斷存取的路線要顯示在誰後面（暫定都存在 origin 後面）
   const originId = useSelector((store) => store.mapMarks.originId);
-
   let directionSteps = useSelector((store) => store.mapMarks.directionSteps);
   const routes = useSelector((store) => store.schedules.routes);
 
@@ -275,32 +276,33 @@ export default function PlanningPage() {
     dispatch(setEditId(null));
   }, [currentDate, dispatch]);
 
-  // TODO: 測試拿 API
+  // 進入此頁第一件要做的事
+  // 利用 userId 和 scheduleId 拿資料
   useEffect(() => {
     const userId = getAuthTokenFromSessionStorage("userId");
     const scheduleId = getAuthTokenFromSessionStorage("scheduleId");
-    console.log(userId, scheduleId);
-    const init = async function () {
-      await dispatch(initSchedules(userId, scheduleId));
-      await dispatch(initMarkers(userId, scheduleId));
-      await dispatch(initPostIts(userId, scheduleId));
-    };
-    init();
+    // dailyRoutines、currentDate
+    dispatch(initDailyRoutines(userId, scheduleId));
+    // routes、dateRange、spotId
+    dispatch(initSchedules(userId, scheduleId));
+    dispatch(initMarkers(userId, scheduleId));
+    dispatch(initPostIts(userId, scheduleId));
   }, [dispatch]);
 
   useEffect(() => {
-    // 根據 start 排列
-    // console.log("daily: ", dailyRoutines);
-    // console.log("currentDate: ", currentDate);
-    if (dailyRoutines && currentDate) {
-      // TODO: 有時 dailyRoutines[currentDate] 會是 [] 空陣列
-      const orderRoutines = dailyRoutines[currentDate].slice();
-      orderRoutines.sort(function (a, b) {
-        return a.start - b.start;
-      });
-      dispatch(setOrderByStartRoutines(orderRoutines));
+    if (Object.keys(dailyRoutines).length > 0 && currentDate) {
+      const isCurrentDateExist = Object.keys(dailyRoutines).find(
+        (key) => Number(key) === currentDate
+      );
+      if (isCurrentDateExist) {
+        const orderRoutines = dailyRoutines[currentDate].slice();
+        orderRoutines.sort(function (a, b) {
+          return a.start - b.start;
+        });
+        dispatch(setOrderByStartRoutines(orderRoutines));
+      }
     }
-  }, [dailyRoutines, currentDate, dispatch]);
+  }, [dispatch, dailyRoutines, currentDate]);
 
   function handleScheduleItemClick(index, routine) {
     setEditRoutine(routine);
@@ -314,7 +316,6 @@ export default function PlanningPage() {
   }
 
   // 刪除
-  // TODO: 讓便利貼的 isSchedule 調回去
   function handleDeleteClick(id) {
     const index = dailyRoutines[currentDate].findIndex(
       (routine) => routine.id === id
@@ -412,8 +413,8 @@ export default function PlanningPage() {
     //  DropDragContext
     <DragDropContext onDragEnd={onDragEnd}>
       <PlanWrapper>
-        {!dailyRoutines && <div>loading</div>}
-        {dailyRoutines && (
+        {!orderByStartRoutines && <div>loading</div>}
+        {orderByStartRoutines && (
           <ScheduleWrapper>
             <DayLists />
             <Droppable droppableId={"dailyRoutine"}>

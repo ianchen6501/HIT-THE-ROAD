@@ -11,8 +11,12 @@ export const mapMarksReducer = createSlice({
     destination: "",
     directionSteps: null,
     originId: null,
+    isMarkerSaved: false,
   },
   reducers: {
+    setIsMarkerSaved: (state, action) => {
+      state.isMarkerSaved = action.payload;
+    },
     setMarker: (state, action) => {
       state.markLocations = action.payload;
     },
@@ -64,6 +68,7 @@ export const {
   setDestination,
   setDirectionSteps,
   deleteMarkLocation,
+  setIsMarkerSaved,
 } = mapMarksReducer.actions;
 
 // thunk async logic
@@ -76,9 +81,13 @@ export const initMarkers = (userId, scheduleId) => (dispatch) => {
 };
 
 export const saveMarkers = (markers, userId, scheduleId) => (dispatch) => {
-  saveMarkersAPI(markers, userId, scheduleId).then((res) =>
-    console.log("res: ", res)
-  );
+  saveMarkersAPI(markers, userId, scheduleId).then((res) => {
+    if (res.ok === true) {
+      dispatch(setIsMarkerSaved(true));
+    } else {
+      dispatch(setIsMarkerSaved(false));
+    }
+  });
 };
 
 export default mapMarksReducer.reducer;

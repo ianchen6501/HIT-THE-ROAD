@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useEffect, useCallback } from "react";
+import { useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import {
@@ -8,9 +8,14 @@ import {
   saveRoutes,
 } from "../../redux/reducers/schedulesReducer";
 
-import { saveMarkers } from "../../redux/reducers/mapMarkReducer";
+import {
+  saveMarkers,
+  setIsMarkerSaved,
+} from "../../redux/reducers/mapMarkReducer";
 
 import { savePostIts } from "../../redux/reducers/postItsReducer";
+
+import { CloseButton } from "../../components/ScheduleForm";
 
 const DayList = styled.div`
   display: flex;
@@ -43,6 +48,25 @@ const SaveButton = styled(DayButton)`
   font-weight: bold;
 `;
 
+const SaveMessage = styled.div`
+  padding: 20px;
+  position: absolute;
+  top: calc(${(props) => props.theme.heights.header} + 50px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  width: 160px;
+  height: 72px;
+  border: 2px solid ${(props) => props.theme.primaryColors.primaryDark};
+  border-radius: 10px;
+  box-shadow: 1px 1px 5px gray;
+  background: ${(props) => props.theme.primaryColors.primaryDark};
+  text-align: center;
+  color: ${(props) => props.theme.basicColors.white};
+  font-size: ${(props) => props.theme.fontSizes.small};
+  font-weight: bold;
+`;
+
 export default function DayLists() {
   const dispatch = useDispatch();
   const dailyRoutines = useSelector((store) => store.schedules.dailyRoutines);
@@ -57,6 +81,8 @@ export default function DayLists() {
   const spotId = useSelector((store) => store.schedules.spotId);
   const postItId = useSelector((store) => store.postIts.postItId);
 
+  const isSaved = useSelector((store) => store.mapMarks.isMarkerSaved);
+
   const calcDates = useCallback(() => {
     const dates = [];
     const range = (endDate - startDate) / 86400000;
@@ -68,16 +94,6 @@ export default function DayLists() {
     return dates;
   }, [endDate, startDate]);
 
-  // TODO: 看是不是要搬到按下的時候(create page??)
-  useEffect(() => {
-    // dispatch(setCurrentDate(startDate));
-    // const dates = calcDates();
-    // if (dailyRoutines === null) {
-    //   dispatch(initDailyRoutinesKey(dates, 1, 1));
-    // }
-  }, [dispatch, startDate, endDate, calcDates]);
-
-  // TODO: 存 schdule、post-it、marker
   function handleSaveClick() {
     const dates = calcDates();
     const userId = sessionStorage.getItem("userId");
@@ -92,6 +108,14 @@ export default function DayLists() {
 
   return (
     <DayList>
+      {isSaved && (
+        <SaveMessage>
+          儲存成功！
+          <CloseButton onClick={() => dispatch(setIsMarkerSaved(false))}>
+            ✖
+          </CloseButton>
+        </SaveMessage>
+      )}
       <SaveButton onClick={handleSaveClick}>SAVE</SaveButton>
       {currentDate &&
         Object.keys(dailyRoutines).map((date) => (

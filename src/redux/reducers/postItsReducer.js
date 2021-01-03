@@ -2,12 +2,10 @@ import { createSlice } from "@reduxjs/toolkit";
 
 import { getScheduleContent, savePostItsAPI } from "../../webAPI";
 
-// let id = 1;
-
 export const postItsReducer = createSlice({
   name: "postIt",
   initialState: {
-    postItId: null, // TODO:
+    postItId: null,
     spots: {
       // [`spot-${id}`]: {
       //   id: "spot-1",
@@ -28,8 +26,12 @@ export const postItsReducer = createSlice({
       },
     },
     columnsOrder: ["postIt", "dailyRoutine"],
+    isPostItsSaved: false,
   },
   reducers: {
+    setIsPostItsSaved: (state, action) => {
+      state.isPostItsSaved = action.payload;
+    },
     setSpots: (state, action) => {
       state.spots = action.payload;
     },
@@ -118,9 +120,9 @@ export const {
   setSpots,
   setSpotsIds,
   setPostItId,
+  setIsPostItsSaved,
 } = postItsReducer.actions;
 
-// thunk async logic
 export const setOriginalColumns = (sourceId, newStart) => (dispatch) => {
   dispatch(setStartColumns({ sourceId, newStart }));
 };
@@ -158,11 +160,16 @@ export const initPostIts = (userId, scheduleId) => (dispatch) => {
   });
 };
 
-// TODO:
 export const savePostIts = (spots, spotsIds, postItId, userId, scheduleId) => (
   dispatch
 ) => {
-  savePostItsAPI(spots, spotsIds, postItId, userId, scheduleId);
+  savePostItsAPI(spots, spotsIds, postItId, userId, scheduleId).then((res) => {
+    if (res.ok === true) {
+      dispatch(setIsPostItsSaved(true));
+    } else {
+      dispatch(setIsPostItsSaved(true));
+    }
+  });
 };
 
 export default postItsReducer.reducer;

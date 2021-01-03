@@ -14,9 +14,10 @@ export function updateSchedule(url, json) {
   }).then((response) => response.json());
 }
 
-// TODO:
 export const getScheduleContent = (userId, scheduleId) => {
-  return fetch(`${BASE_URL}/${userId}/${scheduleId}`).then((res) => res.json());
+  return fetch(`${BASE_URL}/schedules/${userId}/${scheduleId}`).then((res) =>
+    res.json()
+  );
 };
 
 export const saveMarkersAPI = (markers, userId, scheduleId) => {
@@ -98,7 +99,6 @@ export const saveDailyRoutinesKeyAPI = (dailyRoutines, userId, scheduleId) => {
   }).then((res) => res.json());
 };
 
-// TODO:
 export const getFinishPlanAPI = (userId, scheduleId) => {
   return fetch(`${BASE_URL}/schedules/${userId}/${scheduleId}`).then((res) =>
     res.json()
