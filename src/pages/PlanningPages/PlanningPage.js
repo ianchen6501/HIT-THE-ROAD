@@ -48,7 +48,7 @@ import { getAuthTokenFromSessionStorage } from "../../utils";
 const PlanWrapper = styled.div`
   position: relative;
   display: flex;
-  height: 100vh;
+  min-height: 100vh;
   padding-top: ${(props) => props.theme.heights.header};
   padding-bottom: ${(props) => props.theme.heights.footer};
 
@@ -60,7 +60,7 @@ const PlanWrapper = styled.div`
 const ScheduleWrapper = styled.div`
   display: flex;
   z-index: 1;
-  height: 100%;
+  min-height: 100%;
 `;
 
 const Schedule = styled.div`

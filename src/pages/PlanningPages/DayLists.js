@@ -31,7 +31,7 @@ const DayButton = styled.button`
   border: none;
   border-right: 0.5px solid black;
   border-bottom: 1px solid black;
-  height: 36px;
+  min-height: 36px;
   color: ${(props) => props.theme.primaryColors.primaryDarker};
 
   ${(props) =>
