@@ -1,8 +1,12 @@
 import styled from "styled-components";
+
+import { useParams } from "react-router-dom";
+
 import { MEDIA_QUERY_SM } from "../../constants/break_point";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getFinishPlan } from "../../redux/reducers/finishPlanReducer";
+import { getPost } from "../../redux/reducers/postsReducer";
+// import { getFinishPlan } from "../../redux/reducers/finishPlanReducer";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -35,6 +39,15 @@ const PlanHeader = styled.div`
   align-items: center;
   width: 100%;
   word-break: break-all;
+`;
+
+const PlanNickname = styled.div`
+  margin-bottom: 20px;
+  border-radius: 10px;
+  text-align: center;
+  font-weight: bold;
+  font-size: ${(props) => props.theme.fontSizes.small};
+  color: ${(props) => props.theme.secondaryColors.secondaryLighter};
 `;
 
 const PlanLocation = styled.div`
@@ -131,12 +144,29 @@ const SpotMemo = styled.div`
   word-break: break-all;
 `;
 
-export default function FinishPlanPage() {
+export default function ExploreSinglePage() {
+  let { slug } = useParams();
   const dispatch = useDispatch();
-  const scheduleName = useSelector((store) => store.finishPlans.scheduleName);
-  const dailyRoutines = useSelector((store) => store.finishPlans.dailyRoutines);
-  const location = useSelector((store) => store.finishPlans.location);
+  const scheduleInfo = useSelector((store) => store.posts.post);
   const [dates, setDates] = useState([]);
+  const [dailyRoutines, setDailyRoutines] = useState();
+  const [scheduleName, setScheduleName] = useState();
+  const [location, setLocation] = useState();
+  const [nickname, setNickname] = useState();
+
+  useEffect(() => {
+    const scheduleId = slug;
+    dispatch(getPost(scheduleId));
+  }, [dispatch, slug]);
+
+  useEffect(() => {
+    if (scheduleInfo) {
+      setDailyRoutines(scheduleInfo.dailyRoutines);
+      setScheduleName(scheduleInfo.scheduleName);
+      setLocation(scheduleInfo.location);
+      setNickname(scheduleInfo.user);
+    }
+  }, [scheduleInfo]);
 
   useEffect(() => {
     const datesTest = [];
@@ -144,22 +174,19 @@ export default function FinishPlanPage() {
       Object.keys(dailyRoutines).map((key) => datesTest.push(key));
     }
     setDates(datesTest);
-  }, [dailyRoutines, dispatch]);
-
-  useEffect(() => {
-    const userId = sessionStorage.getItem("userId");
-    const scheduleId = sessionStorage.getItem("scheduleId");
-    dispatch(getFinishPlan(userId, scheduleId));
-  }, [dispatch]);
+  }, [dailyRoutines]);
 
   return (
     <Wrapper>
-      {scheduleName && dailyRoutines && location && (
+      {scheduleName && dailyRoutines && location && nickname && (
         <div>
           <PlanHeader>
             <PlanLocation>{location}</PlanLocation>
             <PlanTitle>{scheduleName}</PlanTitle>
           </PlanHeader>
+          <PlanNickname>
+            {nickname.fbName ? nickname.fbName : nickname.nickname}
+          </PlanNickname>
           <PlanWrapper>
             {dates &&
               dates.map((date) => (
@@ -214,11 +241,3 @@ export default function FinishPlanPage() {
     </Wrapper>
   );
 }
-
-// scheduleName
-// location
-// dailyRoutines.key 每天
-// dailyRoutines.key 下面每天行程
-// location
-// category
-// memo
