@@ -5,8 +5,7 @@ import { useParams } from "react-router-dom";
 import { MEDIA_QUERY_SM } from "../../constants/break_point";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getPost } from "../../redux/reducers/postsReducer";
-// import { getFinishPlan } from "../../redux/reducers/finishPlanReducer";
+import { getSinglePost } from "../../redux/reducers/postsReducer";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -147,7 +146,7 @@ const SpotMemo = styled.div`
 export default function ExploreSinglePage() {
   let { slug } = useParams();
   const dispatch = useDispatch();
-  const scheduleInfo = useSelector((store) => store.posts.post);
+  const scheduleInfo = useSelector((store) => store.posts.singlePost);
   const [dates, setDates] = useState([]);
   const [dailyRoutines, setDailyRoutines] = useState();
   const [scheduleName, setScheduleName] = useState();
@@ -156,7 +155,7 @@ export default function ExploreSinglePage() {
 
   useEffect(() => {
     const scheduleId = slug;
-    dispatch(getPost(scheduleId));
+    dispatch(getSinglePost(scheduleId));
   }, [dispatch, slug]);
 
   useEffect(() => {

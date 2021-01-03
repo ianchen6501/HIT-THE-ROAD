@@ -1,12 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-import { getPostAPI } from "../../webAPI";
+import { getSinglePostAPI } from "../../webAPI";
 
 export const postsReducer = createSlice({
   name: "schedules",
   initialState: {
     posts: null,
-    post: {},
+    singlePost: {},
   },
   reducers: {
     setIsLoading: (state, action) => {
@@ -17,10 +17,10 @@ export const postsReducer = createSlice({
     },
     setPost: (state, action) => {
       const { User, scheduleName, location, dailyRoutines } = action.payload;
-      state.post.user = User;
-      state.post.scheduleName = scheduleName;
-      state.post.location = location;
-      state.post.dailyRoutines = dailyRoutines;
+      state.singlePost.user = User;
+      state.singlePost.scheduleName = scheduleName;
+      state.singlePost.location = location;
+      state.singlePost.dailyRoutines = dailyRoutines;
     },
   },
 });
@@ -55,8 +55,8 @@ export const getPosts = () => (dispatch) => {
   return response;
 };
 
-export const getPost = (scheduleId) => (dispatch) => {
-  getPostAPI(scheduleId).then((res) => dispatch(setPost(res)));
+export const getSinglePost = (scheduleId) => (dispatch) => {
+  getSinglePostAPI(scheduleId).then((res) => dispatch(setPost(res)));
 };
 
 export default postsReducer.reducer;

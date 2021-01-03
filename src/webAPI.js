@@ -105,6 +105,6 @@ export const getFinishPlanAPI = (userId, scheduleId) => {
   );
 };
 
-export const getPostAPI = (scheduleId) => {
+export const getSinglePostAPI = (scheduleId) => {
   return fetch(`${BASE_URL}/posts/${scheduleId}`).then((res) => res.json());
 };
