@@ -2,12 +2,12 @@ import styled from "styled-components";
 
 export const ScheduleDetailForm = styled.form`
   display: block;
-  position: absolute;
+  position: fixed;
   left: 50%;
   top: 20%;
   transform: translateX(-50%);
   padding: 20px;
-  z-index: 2;
+  z-index: 3;
   background: ${(props) => props.theme.secondaryColors.secondaryDarker};
   box-shadow: 1px 3px 5px gray;
   border-radius: 5px;

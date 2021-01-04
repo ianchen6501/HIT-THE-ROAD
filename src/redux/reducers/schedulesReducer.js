@@ -69,6 +69,7 @@ export const schedulesReducer = createSlice({
         routine.id === selectedId
           ? (state.dailyRoutines[state.currentDate][index] = {
               ...action.payload,
+              postItId: state.dailyRoutines[state.currentDate][index].postItId,
               id: selectedId,
             })
           : routine
@@ -145,7 +146,6 @@ export const {
   setIsLoading,
 } = schedulesReducer.actions;
 
-// thunk async logic
 export const update = ({ location, start, end, category, budget, memo }) => (
   dispatch
 ) => {

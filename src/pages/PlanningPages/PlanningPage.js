@@ -53,6 +53,7 @@ const PlanWrapper = styled.div`
 
   ${MEDIA_QUERY_SM} {
     flex-direction: column;
+    width: 100vw;
   }
 `;
 
@@ -259,6 +260,10 @@ const LoadingDiv = styled.div`
   text-align: center;
   line-height: 100vh;
   color: ${(props) => props.theme.primaryColors.primaryDarker};
+
+  ${MEDIA_QUERY_SM} {
+    font-size: ${(props) => props.theme.titles.h3};
+  }
 `;
 
 export default function PlanningPage() {
@@ -334,6 +339,7 @@ export default function PlanningPage() {
       (routine) => routine.id === id
     );
     dispatch(deleteSpot(index));
+
     if (dailyRoutines[currentDate][index].postItId) {
       const postItId = dailyRoutines[currentDate][index].postItId;
       dispatch(setIsScheduled(postItId));
@@ -576,8 +582,6 @@ export default function PlanningPage() {
                         </div>
                       ))}
 
-                      {/* 新增 */}
-                      <ScheduleAddForm />
                       <SchedulePlus onClick={handleSchedulePlusClick}>
                         +
                       </SchedulePlus>
@@ -589,6 +593,9 @@ export default function PlanningPage() {
               </Droppable>
             </ScheduleWrapper>
           )}
+
+          {/* 新增 */}
+          <ScheduleAddForm />
 
           {editRoutine && (
             <ScheduleUpdateForm

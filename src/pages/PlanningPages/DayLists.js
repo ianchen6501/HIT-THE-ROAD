@@ -50,7 +50,7 @@ const SaveButton = styled(DayButton)`
 
 const SaveMessage = styled.div`
   padding: 20px;
-  position: absolute;
+  position: fixed;
   top: calc(${(props) => props.theme.heights.header} + 50px);
   left: 50%;
   transform: translateX(-50%);
