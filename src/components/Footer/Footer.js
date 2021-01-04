@@ -11,8 +11,9 @@ const FooterContainer = styled.div`
   z-index: 2;
   color: ${(props) => props.theme.secondaryColors.secondaryDarker};
   font-size: 16px;
+  font-weight: 800;
 `;
 
 export default function Footer() {
-  return <FooterContainer>Made by ...</FooterContainer>;
+  return <FooterContainer>Made by HIT-THE-ROAD</FooterContainer>;
 }

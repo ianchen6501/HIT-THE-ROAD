@@ -29,7 +29,12 @@ export const postsReducer = createSlice({
   },
 });
 
-export const { setIsLoading, setPosts, setPost, setSinglePost } = postsReducer.actions;
+export const {
+  setIsLoading,
+  setPosts,
+  setPost,
+  setSinglePost,
+} = postsReducer.actions;
 
 export const getSinglePost = (scheduleId) => (dispatch) => {
   getSinglePostAPI(scheduleId).then((res) => dispatch(setSinglePost(res)));
@@ -38,25 +43,11 @@ export const getSinglePost = (scheduleId) => (dispatch) => {
 export const getPosts = () => (dispatch) => {
   dispatch(setIsLoading(true));
 
-  fetch(`${SERVER_URL}/posts?isFinished=1`)
+  fetch(`${SERVER_URL}/posts`)
     .then((response) => {
       return response.json();
     })
     .then((json) => dispatch(setPosts(json)))
-    .catch((error) => console.log(error));
-
-  dispatch(setIsLoading(false));
-};
-
-export const getPost = (id, userId) => (dispatch) => {
-  //FIXME: 待確定拿資料方式
-  dispatch(setIsLoading(true));
-
-  fetch(`${SERVER_URL}/schedules/${userId}/${id}`)
-    .then((response) => {
-      return response.json();
-    })
-    .then((json) => dispatch(setPost(json)))
     .catch((error) => console.log(error));
 
   dispatch(setIsLoading(false));

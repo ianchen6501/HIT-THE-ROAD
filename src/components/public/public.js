@@ -31,15 +31,21 @@ export const Wrapper = styled.div`
 `;
 
 const LoadingContainer = styled.div`
-  text-align: center;
-  line-height: 648px;
-  font-size: ${(props) => props.theme.titles.h3};
+  position: relative;
+  min-height: 100vh;
+  top: -${(props) => props.theme.heights.header};
+  padding-top: ${(props) => props.theme.heights.header};
+  padding-bottom: ${(props) => props.theme.heights.footer};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: ${(props) => props.theme.titles.h4};
   color: ${(props) => props.theme.secondaryColors.secondaryDarker};
 `;
 
 export function LoadingPage() {
   return (
-    <Wrapper>
+    <Wrapper $solidPlate={true}>
       <LoadingContainer>loading!</LoadingContainer>
     </Wrapper>
   );

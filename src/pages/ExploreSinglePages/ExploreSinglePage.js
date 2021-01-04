@@ -176,7 +176,7 @@ export default function ExploreSinglePage() {
   }, [dailyRoutines]);
 
   return (
-    <Wrapper>
+    <Wrapper $solidPlate={true}>
       {scheduleName && dailyRoutines && location && nickname && (
         <div>
           <PlanHeader>

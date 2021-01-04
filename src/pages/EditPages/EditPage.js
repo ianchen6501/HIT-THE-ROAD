@@ -12,7 +12,6 @@ import {
 
 import { SERVER_URL } from "../../static/static";
 import { useHistory, useLocation } from "react-router-dom";
-import { updateSchedule } from "../../webAPI";
 
 //styled-component
 const Title = styled.div`
@@ -73,26 +72,11 @@ const destinationSelects = [
 
 export default function CreatePage() {
   const history = useHistory();
-  const location = useLocation();
-
-  // const currentDate = new Date().getDate();
-  // const currentMonth = new Date().getMonth() + 1;
-  // const currentYear = new Date().getFullYear();
 
   const [scheduleName, setScheduleName] = useState("");
   const [destination, setDestination] = useState("台北");
-  // const [startDate, setStartDate] = useState(
-  //   new Date(currentYear, currentMonth, currentDate).getTime()
-  // );
-  // const [endDate, setEndDate] = useState(
-  //   new Date(currentYear, currentMonth, currentDate).getTime()
-  // );
   const [errorMessage, setErrorMessage] = useState("");
   const [scheduleNameErrorMessage, setScheduleNameErrorMessage] = useState("");
-
-  useEffect(() => {
-    console.log(location);
-  });
 
   function handleSubmitSchedule() {
     const message = "this field can not be empty.";
@@ -101,22 +85,28 @@ export default function CreatePage() {
       return setScheduleNameErrorMessage(message);
     }
 
-    // const json = JSON.stringify({ //FIXME:
-    //   scheduleName,
-    //   location: destination,
-    //   dateRange: {
-    //     start: startDate,
-    //     end: endDate
-    //   }
-    // })
+    const body = {
+      scheduleName,
+      destination,
+    };
 
-    updateSchedule(`${SERVER_URL}/${location.pathname}`)
+    const json = JSON.stringify(body);
+
+    fetch(`${SERVER_URL}/schedules`, {
+      method: "PATCH",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: json,
+    })
+      .then((result) => {
+        return result.json();
+      })
       .then((json) => {
-        console.log(json);
         if (!json.ok) {
           return setErrorMessage(json.message);
         } else {
-          return history.push("/"); // FIXME: 改為回到 userPage
+          return history.push("/user");
         }
       })
       .catch((error) => {
