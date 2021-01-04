@@ -11,6 +11,7 @@ import {
 export const schedulesReducer = createSlice({
   name: "schedules",
   initialState: {
+    isLoading: true,
     isRouteSaved: false,
     isRoutineSaved: false,
     spotId: null,
@@ -41,6 +42,9 @@ export const schedulesReducer = createSlice({
     routes: [],
   },
   reducers: {
+    setIsLoading: (state, action) => {
+      state.isLoading = action.payload;
+    },
     setIsRouteSaved: (state, action) => {
       state.action = action.payload;
     },
@@ -138,6 +142,7 @@ export const {
   setSpotId,
   setIsRouteSaved,
   setIsRoutineSaved,
+  setIsLoading,
 } = schedulesReducer.actions;
 
 // thunk async logic
@@ -182,23 +187,29 @@ export const deleteSpot = (index) => (dispatch) => {
 };
 
 export const initSchedules = (userId, scheduleId) => (dispatch) => {
-  getScheduleContent(userId, scheduleId).then((res) => {
-    dispatch(setDateRange(res.dateRange));
-    res.routes === null
-      ? dispatch(setRoutes([]))
-      : dispatch(setRoutes(res.routes));
-    dispatch(setSpotId(res.spotId));
-  });
+  dispatch(setIsLoading(true));
+  getScheduleContent(userId, scheduleId)
+    .then((res) => {
+      dispatch(setDateRange(res.dateRange));
+      res.routes === null
+        ? dispatch(setRoutes([]))
+        : dispatch(setRoutes(res.routes));
+      dispatch(setSpotId(res.spotId));
+    })
+    .catch((error) => console.error(error));
+  dispatch(setIsLoading(false));
 };
 
 // 進到 planning-page 時 call API 拿資料
 export const initDailyRoutines = (userId, scheduleId) => (dispatch) => {
-  getScheduleContent(userId, scheduleId).then((res) =>
-    dispatch(setDailyRoutines(res.dailyRoutines))
-  );
-  getScheduleContent(userId, scheduleId).then((res) =>
-    dispatch(setCurrentDate(res.dateRange.start))
-  );
+  dispatch(setIsLoading(true));
+  getScheduleContent(userId, scheduleId)
+    .then((res) => dispatch(setDailyRoutines(res.dailyRoutines)))
+    .catch((error) => console.error(error));
+  getScheduleContent(userId, scheduleId)
+    .then((res) => dispatch(setCurrentDate(res.dateRange.start)))
+    .catch((error) => console.error(error));
+  dispatch(setIsLoading(false));
 };
 
 // 新增行程時使用
@@ -207,17 +218,27 @@ export const initDailyRoutinesKey = (dates, userId, scheduleId) => (
 ) => {
   const dailyRoutines = {};
   dates.map((date) => (dailyRoutines[date] = []));
-  saveDailyRoutinesKeyAPI(dailyRoutines, userId, scheduleId);
+  saveDailyRoutinesKeyAPI(dailyRoutines, userId, scheduleId)
+    .then((res) => {
+      if (res.ok === true) {
+        dispatch(setIsRoutineSaved(true));
+      } else {
+        dispatch(setIsRoutineSaved(false));
+      }
+    })
+    .catch((error) => console.error(error));
 };
 
 export const saveRoutes = (routes, userId, scheduleId) => (dispatch) => {
-  saveRoutesAPI(routes, userId, scheduleId).then((res) => {
-    if (res.ok === true) {
-      dispatch(setIsRouteSaved(true));
-    } else {
-      dispatch(setIsRouteSaved(false));
-    }
-  });
+  saveRoutesAPI(routes, userId, scheduleId)
+    .then((res) => {
+      if (res.ok === true) {
+        dispatch(setIsRouteSaved(true));
+      } else {
+        dispatch(setIsRouteSaved(false));
+      }
+    })
+    .catch((error) => console.error(error));
 };
 
 export const saveDailyRoutines = (
@@ -237,13 +258,15 @@ export const saveDailyRoutines = (
     dispatch(saveAllDailyRoutines({ date, orderRoutines }));
     saveRoutines[date] = orderRoutines;
   }
-  saveDailyRoutinesAPI(saveRoutines, spotId, userId, scheduleId).then((res) => {
-    if (res.ok === true) {
-      dispatch(setIsRoutineSaved(true));
-    } else {
-      dispatch(setIsRoutineSaved(false));
-    }
-  });
+  saveDailyRoutinesAPI(saveRoutines, spotId, userId, scheduleId)
+    .then((res) => {
+      if (res.ok === true) {
+        dispatch(setIsRoutineSaved(true));
+      } else {
+        dispatch(setIsRoutineSaved(false));
+      }
+    })
+    .catch((error) => console.error(error));
 };
 
 export default schedulesReducer.reducer;

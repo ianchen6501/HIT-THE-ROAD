@@ -416,7 +416,6 @@ export default function MapArea() {
   }
 
   // 如果有重複
-  // TODO:
   function handleResultButtonClick() {
     const route = routes.find((route) => route.originId === originId);
     if (route) {

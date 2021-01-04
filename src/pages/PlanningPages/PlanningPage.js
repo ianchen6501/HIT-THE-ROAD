@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 
@@ -25,7 +25,6 @@ import {
   deleteRouteByOriginId,
   initSchedules,
   initDailyRoutines,
-  setCurrentDate,
 } from "../../redux/reducers/schedulesReducer";
 
 import {
@@ -252,7 +251,21 @@ const TransitStop = styled.div`
   color: ${(props) => props.theme.primaryColors.primaryDarker};
 `;
 
+const LoadingDiv = styled.div`
+  width: 100%;
+  height: 100vh;
+  background: ${(props) => props.theme.primaryColors.primaryLighter};
+  font-size: ${(props) => props.theme.titles.h1};
+  text-align: center;
+  line-height: 100vh;
+  color: ${(props) => props.theme.primaryColors.primaryDarker};
+`;
+
 export default function PlanningPage() {
+  const isPostItsLoading = useSelector((store) => store.postIts.isLoading);
+  const isMarkerssLoading = useSelector((store) => store.mapMarks.isLoading);
+  const isSchedulesLoading = useSelector((store) => store.schedules.isLoading);
+
   const dispatch = useDispatch();
   const [editRoutine, setEditRoutine] = useState(null);
   const [editIndex, setEditIndex] = useState(null);
@@ -412,170 +425,183 @@ export default function PlanningPage() {
   return (
     //  DropDragContext
     <DragDropContext onDragEnd={onDragEnd}>
-      <PlanWrapper>
-        {!orderByStartRoutines && <div>loading</div>}
-        {orderByStartRoutines && (
-          <ScheduleWrapper>
-            <DayLists />
-            <Droppable droppableId={"dailyRoutine"}>
-              {(provided, snapshot) => (
-                <Schedule
-                  ref={provided.innerRef}
-                  {...provided.droppableProps}
-                  isDraggingOver={snapshot.isDraggingOver}
-                >
-                  <ScheduleTitle>
-                    {new Date(currentDate).toLocaleString([], {
-                      month: "2-digit",
-                      day: "2-digit",
-                    })}
-                  </ScheduleTitle>
+      {currentDate === null &&
+        isPostItsLoading &&
+        isMarkerssLoading &&
+        isSchedulesLoading && <LoadingDiv>Loading</LoadingDiv>}
+      {!isPostItsLoading && !isMarkerssLoading && !isSchedulesLoading && (
+        <PlanWrapper>
+          {/* {!orderByStartRoutines && <div>loading</div>} */}
+          {orderByStartRoutines && (
+            <ScheduleWrapper>
+              <DayLists />
+              <Droppable droppableId={"dailyRoutine"}>
+                {(provided, snapshot) => (
+                  <Schedule
+                    ref={provided.innerRef}
+                    {...provided.droppableProps}
+                    isDraggingOver={snapshot.isDraggingOver}
+                  >
+                    <ScheduleTitle>
+                      {currentDate !== null &&
+                        new Date(currentDate).toLocaleString([], {
+                          month: "2-digit",
+                          day: "2-digit",
+                        })}
+                    </ScheduleTitle>
 
-                  <ScheduleList>
-                    {orderByStartRoutines.map((routine, index) => (
-                      <div key={routine.id}>
-                        <ScheduleItemWrapper>
-                          <ScheduleCategory>
-                            {routine.category === "hotel" && (
-                              <FontAwesomeIcon icon={faHotel} />
-                            )}
-                            {routine.category === "shopping" && (
-                              <FontAwesomeIcon icon={faShoppingBag} />
-                            )}
-                            {routine.category === "food" && (
-                              <FontAwesomeIcon icon={faUtensils} />
-                            )}
-                            {routine.category === "attraction" && (
-                              <FontAwesomeIcon icon={faCampground} />
-                            )}
-                          </ScheduleCategory>
-                          <ScheduleItem>
-                            <ScheduleItemContent
-                              onClick={() => {
-                                handleScheduleItemClick(index, routine);
-                              }}
+                    <ScheduleList>
+                      {orderByStartRoutines.map((routine, index) => (
+                        <div key={routine.id}>
+                          <ScheduleItemWrapper>
+                            <ScheduleCategory>
+                              {routine.category === "hotel" && (
+                                <FontAwesomeIcon icon={faHotel} />
+                              )}
+                              {routine.category === "shopping" && (
+                                <FontAwesomeIcon icon={faShoppingBag} />
+                              )}
+                              {routine.category === "food" && (
+                                <FontAwesomeIcon icon={faUtensils} />
+                              )}
+                              {routine.category === "attraction" && (
+                                <FontAwesomeIcon icon={faCampground} />
+                              )}
+                            </ScheduleCategory>
+                            <ScheduleItem>
+                              <ScheduleItemContent
+                                onClick={() => {
+                                  handleScheduleItemClick(index, routine);
+                                }}
+                              >
+                                {routine.location}
+                              </ScheduleItemContent>
+                              <SettingButtonWrapper>
+                                <SettingButton
+                                  onClick={() => handleSetOriginClick(routine)}
+                                >
+                                  出發地
+                                </SettingButton>
+                                <SettingButton
+                                  onClick={() =>
+                                    handleSetDestinationClick(routine)
+                                  }
+                                >
+                                  抵達地
+                                </SettingButton>
+                              </SettingButtonWrapper>
+                            </ScheduleItem>
+                            <ScheduleTimeWrapper>
+                              <ScheduleTime>
+                                {routine.start &&
+                                  new Date(routine.start).toLocaleTimeString(
+                                    [],
+                                    {
+                                      timeStyle: "short",
+                                      hour12: false,
+                                    }
+                                  )}
+                              </ScheduleTime>
+                              <ScheduleTime>
+                                {routine.end &&
+                                  new Date(routine.end).toLocaleTimeString([], {
+                                    timeStyle: "short",
+                                    hour12: false,
+                                  })}
+                              </ScheduleTime>
+                            </ScheduleTimeWrapper>
+
+                            <DeleteButton
+                              onClick={() => handleDeleteClick(routine.id)}
                             >
-                              {routine.location}
-                            </ScheduleItemContent>
-                            <SettingButtonWrapper>
-                              <SettingButton
-                                onClick={() => handleSetOriginClick(routine)}
-                              >
-                                出發地
-                              </SettingButton>
-                              <SettingButton
-                                onClick={() =>
-                                  handleSetDestinationClick(routine)
-                                }
-                              >
-                                抵達地
-                              </SettingButton>
-                            </SettingButtonWrapper>
-                          </ScheduleItem>
-                          <ScheduleTimeWrapper>
-                            <ScheduleTime>
-                              {routine.start &&
-                                new Date(routine.start).toLocaleTimeString([], {
-                                  timeStyle: "short",
-                                  hour12: false,
-                                })}
-                            </ScheduleTime>
-                            <ScheduleTime>
-                              {routine.end &&
-                                new Date(routine.end).toLocaleTimeString([], {
-                                  timeStyle: "short",
-                                  hour12: false,
-                                })}
-                            </ScheduleTime>
-                          </ScheduleTimeWrapper>
+                              ✖
+                            </DeleteButton>
+                          </ScheduleItemWrapper>
 
-                          <DeleteButton
-                            onClick={() => handleDeleteClick(routine.id)}
-                          >
-                            ✖
-                          </DeleteButton>
-                        </ScheduleItemWrapper>
-
-                        {routes &&
-                          routes.map(
-                            (route) =>
-                              route.originId === routine.id && (
-                                <TrafficInfoWrapper key={route.originId}>
-                                  <TransitLines>
-                                    {route.directionSteps.travelMode ===
-                                      "TRANSIT" &&
-                                      route.directionSteps.steps.map(
-                                        (step, index) => (
-                                          <div key={index}>
-                                            <TransitLineWrapper>
-                                              <TransitLine>
-                                                {step.line}{" "}
-                                                {step.transitDuration}
-                                              </TransitLine>
-
-                                              <TransitStop>
-                                                起始站：
-                                                {step.departureStop}
-                                              </TransitStop>
-                                              <TransitInfo>
-                                                {step.instructions}
-                                              </TransitInfo>
-                                              <TransitStop>
-                                                終點站：
-                                                {step.arrivalStop}
-                                              </TransitStop>
-                                            </TransitLineWrapper>
-                                          </div>
-                                        )
-                                      )}
-                                  </TransitLines>
-                                  <TrafficDuration>
-                                    <div>
+                          {routes &&
+                            routes.map(
+                              (route) =>
+                                route.originId === routine.id && (
+                                  <TrafficInfoWrapper key={route.originId}>
+                                    <TransitLines>
                                       {route.directionSteps.travelMode ===
-                                        "WALKING" && "走路 "}
-                                      {route.directionSteps.travelMode ===
-                                        "DRIVING" && "開車 "}
-                                      {route.directionSteps.travelMode ===
-                                        "BICYCLING" && "腳踏車 "}
-                                      {route.directionSteps.duration}
-                                    </div>
+                                        "TRANSIT" &&
+                                        route.directionSteps.steps.map(
+                                          (step, index) => (
+                                            <div key={index}>
+                                              <TransitLineWrapper>
+                                                <TransitLine>
+                                                  {step.line}{" "}
+                                                  {step.transitDuration}
+                                                </TransitLine>
 
-                                    <TrafficInfoDeleteButton
-                                      onClick={() =>
-                                        handleDeleteRouteClick(route.originId)
-                                      }
-                                    >
-                                      ✖
-                                    </TrafficInfoDeleteButton>
-                                  </TrafficDuration>
-                                </TrafficInfoWrapper>
-                              )
-                          )}
-                      </div>
-                    ))}
+                                                <TransitStop>
+                                                  起始站：
+                                                  {step.departureStop}
+                                                </TransitStop>
+                                                <TransitInfo>
+                                                  {step.instructions}
+                                                </TransitInfo>
+                                                <TransitStop>
+                                                  終點站：
+                                                  {step.arrivalStop}
+                                                </TransitStop>
+                                              </TransitLineWrapper>
+                                            </div>
+                                          )
+                                        )}
+                                    </TransitLines>
+                                    <TrafficDuration>
+                                      <div>
+                                        {route.directionSteps.travelMode ===
+                                          "WALKING" && "走路 "}
+                                        {route.directionSteps.travelMode ===
+                                          "DRIVING" && "開車 "}
+                                        {route.directionSteps.travelMode ===
+                                          "BICYCLING" && "腳踏車 "}
+                                        {route.directionSteps.duration}
+                                      </div>
 
-                    {/* 新增 */}
-                    <ScheduleAddForm />
-                    <SchedulePlus onClick={handleSchedulePlusClick}>
-                      +
-                    </SchedulePlus>
-                  </ScheduleList>
+                                      <TrafficInfoDeleteButton
+                                        onClick={() =>
+                                          handleDeleteRouteClick(route.originId)
+                                        }
+                                      >
+                                        ✖
+                                      </TrafficInfoDeleteButton>
+                                    </TrafficDuration>
+                                  </TrafficInfoWrapper>
+                                )
+                            )}
+                        </div>
+                      ))}
 
-                  {provided.placeholder}
-                </Schedule>
-              )}
-            </Droppable>
-          </ScheduleWrapper>
-        )}
+                      {/* 新增 */}
+                      <ScheduleAddForm />
+                      <SchedulePlus onClick={handleSchedulePlusClick}>
+                        +
+                      </SchedulePlus>
+                    </ScheduleList>
 
-        {editRoutine && (
-          <ScheduleUpdateForm editIndex={editIndex} editRoutine={editRoutine} />
-        )}
+                    {provided.placeholder}
+                  </Schedule>
+                )}
+              </Droppable>
+            </ScheduleWrapper>
+          )}
 
-        <MapArea />
+          {editRoutine && (
+            <ScheduleUpdateForm
+              editIndex={editIndex}
+              editRoutine={editRoutine}
+            />
+          )}
 
-        <PostItItem />
-      </PlanWrapper>
+          <MapArea />
+
+          <PostItItem />
+        </PlanWrapper>
+      )}
     </DragDropContext>
   );
 }

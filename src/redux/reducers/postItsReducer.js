@@ -5,6 +5,7 @@ import { getScheduleContent, savePostItsAPI } from "../../webAPI";
 export const postItsReducer = createSlice({
   name: "postIt",
   initialState: {
+    isLoading: true,
     postItId: null,
     spots: {
       // [`spot-${id}`]: {
@@ -29,6 +30,9 @@ export const postItsReducer = createSlice({
     isPostItsSaved: false,
   },
   reducers: {
+    setIsLoading: (state, action) => {
+      state.isLoading = action.payload;
+    },
     setIsPostItsSaved: (state, action) => {
       state.isPostItsSaved = action.payload;
     },
@@ -121,6 +125,7 @@ export const {
   setSpotsIds,
   setPostItId,
   setIsPostItsSaved,
+  setIsLoading,
 } = postItsReducer.actions;
 
 export const setOriginalColumns = (sourceId, newStart) => (dispatch) => {
@@ -147,29 +152,41 @@ export const setDestinationColumn = (
 };
 
 export const initPostIts = (userId, scheduleId) => (dispatch) => {
-  getScheduleContent(userId, scheduleId).then((res) => {
-    res.spots === null ? dispatch(setSpots({})) : dispatch(setSpots(res.spots));
-  });
-  getScheduleContent(userId, scheduleId).then((res) => {
-    res.spotsIds === null
-      ? dispatch(setSpotsIds([]))
-      : dispatch(setSpotsIds(res.spotsIds));
-  });
-  getScheduleContent(userId, scheduleId).then((res) => {
-    dispatch(setPostItId(res.postItId));
-  });
+  dispatch(setIsLoading(true));
+  getScheduleContent(userId, scheduleId)
+    .then((res) => {
+      res.spots === null
+        ? dispatch(setSpots({}))
+        : dispatch(setSpots(res.spots));
+    })
+    .catch((error) => console.error(error));
+  getScheduleContent(userId, scheduleId)
+    .then((res) => {
+      res.spotsIds === null
+        ? dispatch(setSpotsIds([]))
+        : dispatch(setSpotsIds(res.spotsIds));
+    })
+    .catch((error) => console.error(error));
+  getScheduleContent(userId, scheduleId)
+    .then((res) => {
+      dispatch(setPostItId(res.postItId));
+    })
+    .catch((error) => console.error(error));
+  dispatch(setIsLoading(false));
 };
 
 export const savePostIts = (spots, spotsIds, postItId, userId, scheduleId) => (
   dispatch
 ) => {
-  savePostItsAPI(spots, spotsIds, postItId, userId, scheduleId).then((res) => {
-    if (res.ok === true) {
-      dispatch(setIsPostItsSaved(true));
-    } else {
-      dispatch(setIsPostItsSaved(true));
-    }
-  });
+  savePostItsAPI(spots, spotsIds, postItId, userId, scheduleId)
+    .then((res) => {
+      if (res.ok === true) {
+        dispatch(setIsPostItsSaved(true));
+      } else {
+        dispatch(setIsPostItsSaved(true));
+      }
+    })
+    .catch((error) => console.error(error));
 };
 
 export default postItsReducer.reducer;
