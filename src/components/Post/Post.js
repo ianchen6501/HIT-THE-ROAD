@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import img1 from "../../static/釜山.jpeg";
 import { HeartOutlined } from "@ant-design/icons";
-import { getPost } from "../../redux/reducers/postsReducer";
+import { useHistory } from "react-router-dom";
 
 const PostContainer = styled.div`
   width: 100%;
@@ -31,7 +31,7 @@ const PostRightContainer = styled.div`
 const Image = styled.div`
   height: 100%;
   width: 25%;
-  background: url(${img1});
+  background: ${(props) => props.theme.secondaryColors.secondary};
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -89,7 +89,7 @@ const HeadSticker = styled.div`
   width: 60px;
   height: 60px;
   border-radius: 60px;
-  background: black;
+  background: ${(props) => props.theme.secondaryColors.secondary};
 `;
 
 const Arthur = styled.div`
@@ -99,6 +99,7 @@ const Arthur = styled.div`
 
 export default function Post({ postData }) {
   const dispatch = useDispatch();
+  const history = useHistory();
 
   function changeMillisecondsToLocalDate(milliseconds) {
     const day = new Date(milliseconds).getDate();
@@ -107,8 +108,8 @@ export default function Post({ postData }) {
     return `${year}/ ${month + 1}/ ${day}`;
   }
 
-  function handleTitleOnClick(id, userId) {
-    dispatch(getPost(id, userId));
+  function handleTitleOnClick(id) {
+    history.push(`/explore/${id}`);
   }
 
   const title = postData.scheduleName;
