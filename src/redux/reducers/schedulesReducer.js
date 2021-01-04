@@ -86,7 +86,6 @@ export const schedulesReducer = createSlice({
       state.editId = action.payload;
     },
     setCurrentDate: (state, action) => {
-      console.log("setcurrentdate");
       state.currentDate = action.payload;
     },
     setOrderByStartRoutines: (state, action) => {
@@ -192,7 +191,7 @@ export const initSchedules = (userId, scheduleId) => (dispatch) => {
   });
 };
 
-// TODO: 進到 planning-page 時 call API 拿資料
+// 進到 planning-page 時 call API 拿資料
 export const initDailyRoutines = (userId, scheduleId) => (dispatch) => {
   getScheduleContent(userId, scheduleId).then((res) =>
     dispatch(setDailyRoutines(res.dailyRoutines))
@@ -221,7 +220,6 @@ export const saveRoutes = (routes, userId, scheduleId) => (dispatch) => {
   });
 };
 
-// TODO:
 export const saveDailyRoutines = (
   dates,
   dailyRoutines,

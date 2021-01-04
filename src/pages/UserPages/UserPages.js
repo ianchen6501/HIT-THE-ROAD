@@ -306,11 +306,7 @@ export default function UserPage() {
     setIsChangingIsFinished(false);
   }
 
-  // TODO:
   function handleScheduleTitleOnClick(scheduleData) {
-    console.log(scheduleData);
-    // dispatch(setCurrentDate(scheduleData.dateRange.start));
-    // dispatch(setDailyRoutines(scheduleData.dailyRoutines));
     sessionStorage.setItem("userId", userData.id);
     sessionStorage.setItem("scheduleId", scheduleData.id);
 

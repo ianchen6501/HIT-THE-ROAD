@@ -224,7 +224,6 @@ export default function MapArea() {
   const [isMapDragged, setIsMapDragged] = useState(false);
   const [currentDirectionsDisplay, setCurrentDirectionsDisplay] = useState();
   const markLocations = useSelector((store) => store.mapMarks.markLocations);
-  // TODO:
   const routes = useSelector((store) => store.schedules.routes);
 
   if (mapsApi) {
@@ -393,7 +392,22 @@ export default function MapArea() {
       if (status === "OK") {
         setIsRouteInfoShow(true);
         directionsDisplay.setDirections(result);
-        const { duration, steps } = result.routes[0].legs[0];
+        const routeResult = result.routes[0].legs[0];
+        const duration = routeResult.duration.text;
+        let steps = [];
+        for (let i = 0; i < routeResult.steps.length; i++) {
+          if (routeResult.steps[i]["travel_mode"] === "TRANSIT") {
+            const transitInfo = {
+              transitDuration: routeResult.steps[i].duration.text,
+              instructions: routeResult.steps[i].instructions,
+              arrivalStop: routeResult.steps[i].transit["arrival_stop"].name,
+              departureStop:
+                routeResult.steps[i].transit["departure_stop"].name,
+              line: routeResult.steps[i].transit.line["short_name"],
+            };
+            steps.push(transitInfo);
+          }
+        }
         dispatch(setDirectionSteps({ duration, steps, travelMode }));
       } else {
         setIsRouteAlertShow(true);
@@ -402,7 +416,6 @@ export default function MapArea() {
   }
 
   // 如果有重複
-  // TODO:
   function handleResultButtonClick() {
     const route = routes.find((route) => route.originId === originId);
     if (route) {

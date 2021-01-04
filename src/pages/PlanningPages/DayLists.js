@@ -73,7 +73,7 @@ export default function DayLists() {
   const startDate = useSelector((store) => store.schedules.dateRange.start);
   const endDate = useSelector((store) => store.schedules.dateRange.end);
   const currentDate = useSelector((store) => store.schedules.currentDate);
-  // TODO: 為了要存
+  // 為了要存
   const routes = useSelector((store) => store.schedules.routes);
   const spots = useSelector((store) => store.postIts.spots);
   const spotsId = useSelector((store) => store.postIts.columns.postIt.spotsIds);

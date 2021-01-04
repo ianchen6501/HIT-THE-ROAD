@@ -507,38 +507,24 @@ export default function PlanningPage() {
                                       route.directionSteps.steps.map(
                                         (step, index) => (
                                           <div key={index}>
-                                            {step["travel_mode"] ===
-                                              "TRANSIT" && (
-                                              <TransitLineWrapper>
-                                                <TransitLine>
-                                                  {
-                                                    step.transit.line[
-                                                      "short_name"
-                                                    ]
-                                                  }{" "}
-                                                  {step.duration.text}
-                                                </TransitLine>
+                                            <TransitLineWrapper>
+                                              <TransitLine>
+                                                {step.line}{" "}
+                                                {step.transitDuration}
+                                              </TransitLine>
 
-                                                <TransitStop>
-                                                  起始站：
-                                                  {
-                                                    step.transit[
-                                                      "departure_stop"
-                                                    ].name
-                                                  }
-                                                </TransitStop>
-                                                <TransitInfo>
-                                                  {step.instructions}
-                                                </TransitInfo>
-                                                <TransitStop>
-                                                  終點站：
-                                                  {
-                                                    step.transit["arrival_stop"]
-                                                      .name
-                                                  }
-                                                </TransitStop>
-                                              </TransitLineWrapper>
-                                            )}
+                                              <TransitStop>
+                                                起始站：
+                                                {step.departureStop}
+                                              </TransitStop>
+                                              <TransitInfo>
+                                                {step.instructions}
+                                              </TransitInfo>
+                                              <TransitStop>
+                                                終點站：
+                                                {step.arrivalStop}
+                                              </TransitStop>
+                                            </TransitLineWrapper>
                                           </div>
                                         )
                                       )}
@@ -551,7 +537,7 @@ export default function PlanningPage() {
                                         "DRIVING" && "開車 "}
                                       {route.directionSteps.travelMode ===
                                         "BICYCLING" && "腳踏車 "}
-                                      {route.directionSteps.duration.text}
+                                      {route.directionSteps.duration}
                                     </div>
 
                                     <TrafficInfoDeleteButton
