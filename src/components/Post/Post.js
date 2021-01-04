@@ -16,6 +16,10 @@ const PostContainer = styled.div`
   &:hover {
     background: ${(props) => props.theme.basicColors.white};
   }
+
+  @media only screen and (max-width: 769px) {
+    width: 80%;
+  }
 `;
 
 const PostRightContainer = styled.div`

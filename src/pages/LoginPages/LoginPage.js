@@ -20,12 +20,12 @@ import styled from "styled-components";
 
 const Reminder = styled.div`
   position: relative;
-  top: 200px;
   width: fit-content;
   margin: 0px auto;
   padding: 6px 10px;
   border-radius: 5px;
   color: ${(props) => props.theme.secondaryColors.secondaryDarker};
+  font-size: ${(props) => props.theme.fontSizes.medium};
   font-weight: 800;
   background: ${(props) => props.theme.primaryColors.primaryLighter};
 `;
@@ -162,8 +162,8 @@ export default function LoginPage() {
           <UserButtonBackground />
         </UserButtonBorder>
         {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
+        <Reminder>如果尚未註冊請先註冊。</Reminder>
       </FormContainer>
-      <Reminder>如果尚未註冊請先註冊。</Reminder>
     </Wrapper>
   );
 }

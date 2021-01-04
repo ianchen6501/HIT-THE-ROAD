@@ -27,27 +27,25 @@ const CustomInputElement = styled.div`
   font-size: ${(props) => props.theme.fontSizes.medium};
 `;
 
-const CustomInput = ({ value, onClick }) => {
-  return <CustomInputElement onClick={onClick}>{value}</CustomInputElement>;
-};
-
 export default function Example({
   startDate,
   setStartDate,
   endDate,
   setEndDate,
 }) {
-  const DatePickerStyle = {
-    border: `1px solid ${(props) =>
-      props.theme.secondaryColors.secondaryLight}`,
-    height: "80px",
+  const test = {
+    background: "black",
+  };
+
+  const CustomInput = ({ value, onClick }) => {
+    return <CustomInputElement onClick={onClick}>{value}</CustomInputElement>;
   };
 
   return (
     <Container>
       <DatePickerContainer>
         <DatePicker
-          className={DatePickerStyle}
+          className={test}
           dateFormat="yyyy/MM/dd"
           selected={new Date(startDate)}
           onChange={(date) => setStartDate(date.getTime())}
