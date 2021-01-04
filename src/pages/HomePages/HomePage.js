@@ -21,10 +21,20 @@ const Heading = styled.h1`
 const BannerContainer = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
   padding: 0px;
+
+  @media only screen and (max-width: 1040px) {
+    flex-direction: column;
+  }
 `;
 
-const PostsContainer = styled.div``;
+const PostsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
 
 const IntroContainer = styled.div`
   height: 300px;
@@ -32,6 +42,10 @@ const IntroContainer = styled.div`
   display: flex;
   flex-direction: column;
   box-shadow: 0.5px 0.5px 3px -1px;
+
+  @media only screen and (max-width: 1040px) {
+    margin: 10px 0px;
+  }
 `;
 
 const IntroImage = styled.div`
@@ -113,7 +127,7 @@ export default function HomePage() {
               <Post postData={post} key={index}></Post>
             ))}
             <Link to={"/explore"}>
-              <MoreTag>&#x02192; more &#x02190;</MoreTag>
+              <MoreTag>more</MoreTag>
             </Link>
           </PostsContainer>
         )}

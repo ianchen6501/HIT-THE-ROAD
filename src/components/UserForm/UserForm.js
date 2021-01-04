@@ -13,6 +13,10 @@ export const FormContainer = styled.div`
   justify-content: center;
   align-items: center;
   font-size: ${(props) => props.theme.fontSizes.large};
+
+  @media only screen and (max-width: 780px) {
+    width: 400px;
+  }
 `;
 export const UserInput = styled.input`
   width: 480px;
@@ -25,6 +29,10 @@ export const UserInput = styled.input`
 
   &::-webkit-input-placeholder {
     color: ${(props) => props.theme.secondaryColors.secondaryDarker};
+  }
+
+  @media only screen and (max-width: 780px) {
+    width: 300px;
   }
 `;
 
@@ -67,6 +75,11 @@ export const UserButtonBorder = styled.div`
 
   &:hover > div {
     color: white;
+  }
+
+  @media only screen and (max-width: 780px) {
+    width: 300px;
+    padding-right: 296px;
   }
 `;
 
