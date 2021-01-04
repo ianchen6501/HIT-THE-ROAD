@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 export const Wrapper = styled.div`
   height: ${(props) => (props.$solidPlate ? "100vh" : "auto")};
-  ${"" /* min-height: 100vh; */}
+  min-height: 100vh;
   margin: 0 auto;
   padding-top: ${(props) =>
     props.$atHomepage ? "0" : props.theme.heights.header};

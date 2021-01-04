@@ -20,18 +20,18 @@ const HeaderContainer = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  ${(props) => props.$atHomepage && `padding-top: 30px`};
   right: 0;
   left: 0;
   top: 0;
   bottom: 0;
   padding: 0px, 30px;
+  ${(props) => props.$atHomepage && `padding-top: 30px`};
+  z-index: 2;
   background: linear-gradient(
     ${(props) => props.theme.primaryColors.primaryLight},
     ${(props) => props.theme.secondaryColors.secondaryLighter}
   );
   box-shadow: 0px 2px 2px grey;
-  z-index: 2;
 
   ${MEDIA_QUERY_SM} {
     width: 100vw;
@@ -48,6 +48,7 @@ const HeaderUpContainer = styled.div`
 
 const Logo = styled.div`
   position: relative;
+  bottom: 3px;
   width: ${(props) => (props.$atHomepage ? "360px" : "210px")};
   height: ${(props) => (props.$atHomepage ? "120px" : "70px")};
   background: url(${logo});
@@ -58,22 +59,23 @@ const Logo = styled.div`
   ${(props) => props.$atHomepage && `bottom: 20px;`}
 
   ${MEDIA_QUERY_SM} {
+    bottom: 0px;
     transform: scale(0.8);
     width: 120px;
   }
 `;
 
-const Brand = styled.div`
-  margin-left: 20px;
-  font-size: 32px;
-  font-weight: bold;
-  text-decoration: none;
-  color: ${(props) => props.theme.secondaryColors.secondaryDarker};
+// const Brand = styled.div`
+//   margin-left: 20px;
+//   font-size: 32px;
+//   font-weight: bold;
+//   text-decoration: none;
+//   color: ${(props) => props.theme.secondaryColors.secondaryDarker};
 
-  ${MEDIA_QUERY_SM} {
-    display: none;
-  }
-`;
+//   ${MEDIA_QUERY_SM} {
+//     display: none;
+//   }
+// `;
 
 const NavbarWrapper = styled.div``;
 
@@ -112,6 +114,7 @@ const NavbarButton = styled.div`
 const NavbarList = styled.div`
   display: flex;
   align-items: center;
+  margin-right: 10px;
 
   ${MEDIA_QUERY_SM} {
     display: ${(props) => (props.$isNavbarListShow ? "block" : "none")};
@@ -127,21 +130,18 @@ const NavbarList = styled.div`
 `;
 
 const Nav = styled(Link)`
-  display: flex;
-  align-items: center;
-  justify-content: center;
   box-sizing: border-box;
-  padding: 10px 15px;
-  cursor: pointer;
-  border-radius: 10px;
-  color: ${(props) => props.theme.secondaryColors.secondaryDarker};
+  padding: 10px 15px 5px;
+  border-bottom: 1px solid transparent;
+  color: ${(props) => props.theme.secondaryColors.secondary};
   font-weight: bold;
   text-decoration: none;
-  transition: font-size 0.3s, background 0.3s;
-  margin-right: 10px;
+  cursor: pointer;
+  transition: all 0.5s;
 
   &:hover {
-    font-size: 18px;
+    border-bottom: 1px solid ${(props) => props.theme.basicColors.white};
+    color: ${(props) => props.theme.basicColors.white};
   }
 
   ${(props) =>
@@ -205,11 +205,11 @@ export default function Header({ isCheckedLogin }) {
     <HeaderContainer $atHomepage={location.pathname === "/"}>
       <HeaderUpContainer $atHomepage={location.pathname === "/"}>
         <LeftContainer>
-          <Brand as={Link} to="/">
+          {/* <Brand as={Link} to="/">
             HitTheRoad
-          </Brand>
+          </Brand> */}
           {location.pathname !== "/" && (
-            <Logo $atHomepage={location.pathname === "/"}></Logo>
+            <Logo as={Link} $atHomepage={location.pathname === "/"} to="/" />
           )}
         </LeftContainer>
         {isCheckedLogin && (
