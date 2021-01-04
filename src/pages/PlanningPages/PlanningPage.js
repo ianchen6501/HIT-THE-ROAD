@@ -339,6 +339,7 @@ export default function PlanningPage() {
       (routine) => routine.id === id
     );
     dispatch(deleteSpot(index));
+
     if (dailyRoutines[currentDate][index].postItId) {
       const postItId = dailyRoutines[currentDate][index].postItId;
       dispatch(setIsScheduled(postItId));
