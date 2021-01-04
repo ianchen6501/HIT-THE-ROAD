@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { MEDIA_QUERY_SM } from "../../constants/break_point";
 
 const FooterContainer = styled.div`
   position: relative;
@@ -11,6 +12,10 @@ const FooterContainer = styled.div`
   z-index: 2;
   color: ${(props) => props.theme.secondaryColors.secondaryDarker};
   font-size: 16px;
+
+  ${MEDIA_QUERY_SM} {
+    width: 100vw;
+  }
 `;
 
 export default function Footer() {

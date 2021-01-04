@@ -6,6 +6,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { API_KEY } from "../../constants/key";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { MEDIA_QUERY_SM } from "../../constants/break_point";
 
 import {
   addPostItFromMark,
@@ -26,6 +27,11 @@ import {
 const MapAreaWrapper = styled.div`
   position: relative;
   flex: 1;
+
+  ${MEDIA_QUERY_SM} {
+    height: 50vh;
+    border-bottom: 3px solid ${(props) => props.theme.basicColors.black};
+  }
 `;
 
 const MapWrapper = styled.div`
@@ -47,7 +53,6 @@ const SearchBoxWrapper = styled.div`
 const SearchInput = styled.input`
   display: block;
   box-sizing: border-box;
-  ${"" /* width: 100%; */}
   min-width: 240px;
 `;
 

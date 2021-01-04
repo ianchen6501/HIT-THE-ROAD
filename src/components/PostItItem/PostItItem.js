@@ -19,6 +19,9 @@ import {
 } from "../../redux/reducers/postItsReducer";
 
 import { deleteMapMarkByPlaceId } from "../../redux/reducers/mapMarkReducer";
+import { MEDIA_QUERY_SM } from "../../constants/break_point";
+
+const Wrapper = styled.div``;
 
 // droppable
 const PostItWrapper = styled.div`
@@ -34,6 +37,12 @@ const PostItWrapper = styled.div`
       ? props.theme.basicColors.white
       : props.theme.primaryColors.primaryLighter};
   overflow: auto;
+
+  ${MEDIA_QUERY_SM} {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
 `;
 
 // draggable
@@ -52,6 +61,11 @@ const PostIt = styled.div`
   box-shadow: 0px 2px 2px grey;
   overflow: hidden;
   font-size: 12px;
+
+  ${MEDIA_QUERY_SM} {
+    margin-left: 5px;
+    margin-right: 5px;
+  }
 `;
 
 const PostItInfo = styled.div`
@@ -205,7 +219,7 @@ export default function PostItItem() {
   const canSubmit = Boolean(location) && Boolean(category);
 
   return (
-    <div>
+    <Wrapper>
       <Droppable droppableId={"postIt"}>
         {(provided, snapshot) => (
           <PostItWrapper
@@ -337,6 +351,6 @@ export default function PostItItem() {
           <Button disabled={!canSubmit}>送出</Button>
         </PostItForm>
       )}
-    </div>
+    </Wrapper>
   );
 }

@@ -53,6 +53,7 @@ const PlanWrapper = styled.div`
 
   ${MEDIA_QUERY_SM} {
     flex-direction: column;
+    width: 100vw;
   }
 `;
 
@@ -259,6 +260,10 @@ const LoadingDiv = styled.div`
   text-align: center;
   line-height: 100vh;
   color: ${(props) => props.theme.primaryColors.primaryDarker};
+
+  ${MEDIA_QUERY_SM} {
+    font-size: ${(props) => props.theme.titles.h3};
+  }
 `;
 
 export default function PlanningPage() {
