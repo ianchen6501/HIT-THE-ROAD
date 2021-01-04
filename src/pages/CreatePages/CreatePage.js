@@ -127,6 +127,7 @@ export default function CreatePage() {
       UserId: userData.id,
     });
 
+    //FIXME: 改成 dispatch + webAPI
     fetch(`${SERVER_URL}/schedules`, {
       method: "POST",
       headers: {
@@ -138,25 +139,10 @@ export default function CreatePage() {
         return result.json();
       })
       .then((json) => {
-        console.log(json);
         if (!json.ok) {
           return setErrorMessage(json.message);
         } else {
           return history.push("/user");
-        }
-      })
-      .catch((error) => {
-        return setErrorMessage(error.toString());
-      })
-      .then((result) => {
-        return result.json();
-      })
-      .then((json) => {
-        console.log(json);
-        if (!json.ok) {
-          return setErrorMessage(json.message);
-        } else {
-          return history.push("/");
         }
       })
       .catch((error) => {

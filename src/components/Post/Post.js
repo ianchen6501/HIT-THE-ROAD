@@ -1,8 +1,6 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
-import img1 from "../../static/釜山.jpeg";
-import { HeartOutlined } from "@ant-design/icons";
 import { useHistory } from "react-router-dom";
 
 const PostContainer = styled.div`
@@ -10,7 +8,7 @@ const PostContainer = styled.div`
   position: relative;
   display: flex;
   align-items: center;
-  height: 160px;
+  height: 150px;
   margin-bottom: 20px;
   box-shadow: 0.5px 0.5px 3px -1px;
   transition: background 0.2s;
@@ -28,14 +26,14 @@ const PostRightContainer = styled.div`
   justify-content: space-between;
 `;
 
-const Image = styled.div`
-  height: 100%;
-  width: 25%;
-  background: ${(props) => props.theme.secondaryColors.secondary};
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-`;
+// const Image = styled.div`
+//   height: 100%;
+//   width: 25%;
+//   background: ${(props) => props.theme.secondaryColors.secondary};
+//   background-position: center;
+//   background-repeat: no-repeat;
+//   background-size: cover;
+// `;
 
 const TitleContainer = styled.div`
   position: relative;
@@ -85,12 +83,12 @@ const Location = styled.div`
   font-weight: bold;
 `;
 
-const HeadSticker = styled.div`
-  width: 60px;
-  height: 60px;
-  border-radius: 60px;
-  background: ${(props) => props.theme.secondaryColors.secondary};
-`;
+// const HeadSticker = styled.div`
+//   width: 60px;
+//   height: 60px;
+//   border-radius: 60px;
+//   background: ${(props) => props.theme.secondaryColors.secondary};
+// `;
 
 const Arthur = styled.div`
   font-size: ${(props) => props.theme.fontSizes.small};
@@ -124,20 +122,13 @@ export default function Post({ postData }) {
 
   return (
     <PostContainer>
-      <Image />
+      {/* <Image /> */}
       <PostRightContainer>
         <ContentLeftContainer>
           <TitleContainer>
             <Title onClick={() => handleTitleOnClick(id, userId)}>
               {title}
             </Title>
-            <HeartOutlined
-              style={{
-                position: "relative",
-                transform: "Scale(1.5)",
-                margin: "0px 0px 0px 10px",
-              }}
-            />
           </TitleContainer>
           <Location>{location}</Location>
           <Dates>
@@ -145,7 +136,7 @@ export default function Post({ postData }) {
           </Dates>
         </ContentLeftContainer>
         <ContentRightContainer>
-          <HeadSticker />
+          {/* <HeadSticker /> */}
           <Arthur>{arthur}</Arthur>
         </ContentRightContainer>
       </PostRightContainer>

@@ -72,7 +72,7 @@ export default function ExplorePage() {
   }
 
   return (
-    <Wrapper>
+    <Wrapper $solidPlate={true}>
       <FilterContainer>
         {keywords.map((keyword) => (
           <KeywordFilter

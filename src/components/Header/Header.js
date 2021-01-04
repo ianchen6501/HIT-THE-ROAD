@@ -146,11 +146,6 @@ export default function Header({ isCheckedLogin }) {
         {isCheckedLogin && (
           <NavbarList>
             {userData && (
-              <Nav to="/create" $active={location.pathname === "/user"}>
-                新增行程
-              </Nav>
-            )}
-            {userData && (
               <Nav to="/user" $active={location.pathname === "/user"}>
                 編輯行程
               </Nav>

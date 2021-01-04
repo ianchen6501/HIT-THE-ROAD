@@ -220,20 +220,10 @@ function Schedule({
           <CheckBoxLabel htmlfor={scheduleData.id}>完成</CheckBoxLabel>
         </RightUpContainer>
         <RightDownContainer>
-          {/* TODO: 應該是會到 googleMap 那裡或者根本不用放？ */}
-          <IconLink to={`/edit/${scheduleData.id}`}>
-            <FontAwesomeIcon icon={faEdit} />
-            {/* <EditOutlined style={editOutlinedStyle} /> */}
-          </IconLink>
           <FontAwesomeIcon
             onClick={() => handleDeleteOutlinedOnClick(scheduleData.id)}
             icon={faTrashAlt}
           />
-
-          {/* <DeleteOutlined
-            onClick={() => handleDeleteOutlinedOnClick(scheduleData.id)}
-            style={deleteOutlinedStyle}
-          /> */}
         </RightDownContainer>
       </RightContainer>
     </ScheduleContainer>
