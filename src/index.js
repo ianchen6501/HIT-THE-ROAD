@@ -63,7 +63,6 @@ const theme = {
 function initFacebookSdk() {
   return new Promise((resolve) => {
     resolve();
-    console.log("init");
     //初始化
     window.fbAsyncInit = function () {
       window.FB.init({

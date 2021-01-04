@@ -16,7 +16,7 @@ const DatePickerContainer = styled.div`
   }
 `;
 
-const CustomInput = styled.div`
+const CustomInputElement = styled.div`
   height: 50px;
   display: flex;
   align-items: center;
@@ -27,24 +27,25 @@ const CustomInput = styled.div`
   font-size: ${(props) => props.theme.fontSizes.medium};
 `;
 
-function ExampleCustomInput({ value, onClick }) {
-  return (
-    <CustomInput className="example" onClick={onClick}>
-      {value}
-    </CustomInput>
-  );
-}
-
 export default function Example({
   startDate,
   setStartDate,
   endDate,
   setEndDate,
 }) {
+  const test = {
+    background: "black",
+  };
+
+  const CustomInput = ({ value, onClick }) => {
+    return <CustomInputElement onClick={onClick}>{value}</CustomInputElement>;
+  };
+
   return (
     <Container>
       <DatePickerContainer>
         <DatePicker
+          className={test}
           dateFormat="yyyy/MM/dd"
           selected={new Date(startDate)}
           onChange={(date) => setStartDate(date.getTime())}
@@ -52,7 +53,7 @@ export default function Example({
           selectsStart
           startDate={new Date(startDate)}
           endDate={new Date(endDate)}
-          customInput={<ExampleCustomInput />}
+          customInput={<CustomInput />}
         />
       </DatePickerContainer>
       <DatePickerContainer>
@@ -64,7 +65,7 @@ export default function Example({
           startDate={new Date(startDate)}
           endDate={new Date(endDate)}
           minDate={new Date(startDate)}
-          customInput={<ExampleCustomInput />}
+          customInput={<CustomInput />}
         />
       </DatePickerContainer>
     </Container>

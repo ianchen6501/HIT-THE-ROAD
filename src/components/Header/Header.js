@@ -217,12 +217,7 @@ export default function Header({ isCheckedLogin }) {
             <NavbarButton
               onClick={() => setIsNavbarListShow(!isNavbarListShow)}
             />
-            <NavbarList $isNavbarListShow={isNavbarListShow}>
-              {userData && (
-                <Nav to="/create" $active={location.pathname === "/user"}>
-                  新增行程
-                </Nav>
-              )}
+            <NavbarList>
               {userData && (
                 <Nav to="/user" $active={location.pathname === "/user"}>
                   編輯行程
@@ -244,7 +239,7 @@ export default function Header({ isCheckedLogin }) {
                 </Nav>
               )}
             </NavbarList>
-          </NavbarWrapper>
+           </NavbarWrapper>
         )}
       </HeaderUpContainer>
       {location.pathname === "/" && (

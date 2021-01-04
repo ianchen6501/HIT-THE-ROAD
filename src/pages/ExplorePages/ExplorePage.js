@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
+import { getPosts, getFilteredPosts } from "../../redux/reducers/postsReducer";
 import { Wrapper } from "../../components/public";
 import Post from "../../components/Post";
-import { getPosts, getFilteredPosts } from "../../redux/reducers/postsReducer";
+import Paginator from "../../components/Paginator";
 
 const FilterContainer = styled.div`
   margin-top: 30px;
@@ -36,8 +37,10 @@ const KeywordFilter = styled.div`
 
 export default function ExplorePage() {
   const dispatch = useDispatch();
-  const postsData = useSelector((store) => store.posts.posts);
+  const posts = useSelector((store) => store.posts.posts);
   const [filter, setFilter] = useState("全部");
+  const [currentPage, setCurrentPage] = useState(1);
+  const limit = 5;
   //假的 filter 資料，之後從資料庫拿
   const keywords = [
     "全部",
@@ -61,15 +64,15 @@ export default function ExplorePage() {
 
   useEffect(() => {
     dispatch(getPosts());
-  }, [dispatch]);
+  }, [dispatch, limit]);
 
   function handleFilterOnClick(keyword) {
     setFilter(keyword);
     dispatch(getFilteredPosts(keyword));
   }
-  //TODO: paginator
+
   return (
-    <Wrapper>
+    <Wrapper $solidPlate={true}>
       <FilterContainer>
         {keywords.map((keyword) => (
           <KeywordFilter
@@ -80,10 +83,16 @@ export default function ExplorePage() {
           </KeywordFilter>
         ))}
       </FilterContainer>
-      {postsData &&
-        postsData.map((post, index) => (
-          <Post postData={post} key={index}></Post>
-        ))}
+      {posts &&
+        posts
+          .slice((currentPage - 1) * limit, currentPage * limit)
+          .map((post, index) => <Post postData={post} key={index}></Post>)}
+      <Paginator
+        posts={posts}
+        setCurrentPage={setCurrentPage}
+        currentPage={currentPage}
+        limit={limit}
+      />
     </Wrapper>
   );
 }

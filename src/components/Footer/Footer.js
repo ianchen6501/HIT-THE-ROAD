@@ -20,5 +20,5 @@ const FooterContainer = styled.div`
 `;
 
 export default function Footer() {
-  return <FooterContainer>Made by ianchen & yunanpan</FooterContainer>;
+  return <FooterContainer>Made by HIT-THE-ROAD</FooterContainer>;
 }
