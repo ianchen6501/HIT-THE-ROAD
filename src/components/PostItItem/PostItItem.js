@@ -127,7 +127,7 @@ const AddPostIt = styled.div`
 
 const PostItForm = styled.form`
   display: block;
-  position: absolute;
+  position: fixed;
   left: 50%;
   top: 20%;
   transform: translateX(-50%);

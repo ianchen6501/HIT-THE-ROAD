@@ -37,6 +37,7 @@ const MapAreaWrapper = styled.div`
 const MapWrapper = styled.div`
   width: 100%;
   height: 100%;
+  z-index: -1;
 `;
 
 const SearchBoxWrapper = styled.div`
@@ -59,7 +60,6 @@ const SearchInput = styled.input`
 const SearchAutocompleteWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  ${"" /* width: 100%; */}
   width: 240px;
 `;
 
@@ -551,6 +551,7 @@ export default function MapArea() {
           defaultZoom={defaultProps.zoom}
           yesIWantToUseGoogleMapApiInternals
           onGoogleApiLoaded={({ map, maps }) => handleApiLoaded(map, maps)}
+          style={{ zIndex: -1 }}
         >
           {markLocations &&
             markLocations.map((place) => (

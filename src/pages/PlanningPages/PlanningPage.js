@@ -581,8 +581,6 @@ export default function PlanningPage() {
                         </div>
                       ))}
 
-                      {/* 新增 */}
-                      <ScheduleAddForm />
                       <SchedulePlus onClick={handleSchedulePlusClick}>
                         +
                       </SchedulePlus>
@@ -594,6 +592,9 @@ export default function PlanningPage() {
               </Droppable>
             </ScheduleWrapper>
           )}
+
+          {/* 新增 */}
+          <ScheduleAddForm />
 
           {editRoutine && (
             <ScheduleUpdateForm
