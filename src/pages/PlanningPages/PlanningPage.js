@@ -24,6 +24,7 @@ import {
   deleteSpot,
   deleteRouteByOriginId,
   initSchedules,
+  initDailyRoutines,
 } from "../../redux/reducers/schedulesReducer";
 
 import {
@@ -46,7 +47,7 @@ import { getAuthTokenFromSessionStorage } from "../../utils";
 const PlanWrapper = styled.div`
   position: relative;
   display: flex;
-  height: 100vh;
+  min-height: 100vh;
   padding-top: ${(props) => props.theme.heights.header};
   padding-bottom: ${(props) => props.theme.heights.footer};
 
@@ -58,7 +59,7 @@ const PlanWrapper = styled.div`
 const ScheduleWrapper = styled.div`
   display: flex;
   z-index: 1;
-  height: 100%;
+  min-height: 100%;
 `;
 
 const Schedule = styled.div`
@@ -250,7 +251,21 @@ const TransitStop = styled.div`
   color: ${(props) => props.theme.primaryColors.primaryDarker};
 `;
 
+const LoadingDiv = styled.div`
+  width: 100%;
+  height: 100vh;
+  background: ${(props) => props.theme.primaryColors.primaryLighter};
+  font-size: ${(props) => props.theme.titles.h1};
+  text-align: center;
+  line-height: 100vh;
+  color: ${(props) => props.theme.primaryColors.primaryDarker};
+`;
+
 export default function PlanningPage() {
+  const isPostItsLoading = useSelector((store) => store.postIts.isLoading);
+  const isMarkerssLoading = useSelector((store) => store.mapMarks.isLoading);
+  const isSchedulesLoading = useSelector((store) => store.schedules.isLoading);
+
   const dispatch = useDispatch();
   const [editRoutine, setEditRoutine] = useState(null);
   const [editIndex, setEditIndex] = useState(null);
@@ -267,7 +282,6 @@ export default function PlanningPage() {
 
   // 用來判斷存取的路線要顯示在誰後面（暫定都存在 origin 後面）
   const originId = useSelector((store) => store.mapMarks.originId);
-
   let directionSteps = useSelector((store) => store.mapMarks.directionSteps);
   const routes = useSelector((store) => store.schedules.routes);
 
@@ -275,32 +289,33 @@ export default function PlanningPage() {
     dispatch(setEditId(null));
   }, [currentDate, dispatch]);
 
-  // TODO: 測試拿 API
+  // 進入此頁第一件要做的事
+  // 利用 userId 和 scheduleId 拿資料
   useEffect(() => {
     const userId = getAuthTokenFromSessionStorage("userId");
     const scheduleId = getAuthTokenFromSessionStorage("scheduleId");
-    console.log(userId, scheduleId);
-    const init = async function () {
-      await dispatch(initSchedules(userId, scheduleId));
-      await dispatch(initMarkers(userId, scheduleId));
-      await dispatch(initPostIts(userId, scheduleId));
-    };
-    init();
+    // dailyRoutines、currentDate
+    dispatch(initDailyRoutines(userId, scheduleId));
+    // routes、dateRange、spotId
+    dispatch(initSchedules(userId, scheduleId));
+    dispatch(initMarkers(userId, scheduleId));
+    dispatch(initPostIts(userId, scheduleId));
   }, [dispatch]);
 
   useEffect(() => {
-    // 根據 start 排列
-    // console.log("daily: ", dailyRoutines);
-    // console.log("currentDate: ", currentDate);
-    if (dailyRoutines && currentDate) {
-      // TODO: 有時 dailyRoutines[currentDate] 會是 [] 空陣列
-      const orderRoutines = dailyRoutines[currentDate].slice();
-      orderRoutines.sort(function (a, b) {
-        return a.start - b.start;
-      });
-      dispatch(setOrderByStartRoutines(orderRoutines));
+    if (Object.keys(dailyRoutines).length > 0 && currentDate) {
+      const isCurrentDateExist = Object.keys(dailyRoutines).find(
+        (key) => Number(key) === currentDate
+      );
+      if (isCurrentDateExist) {
+        const orderRoutines = dailyRoutines[currentDate].slice();
+        orderRoutines.sort(function (a, b) {
+          return a.start - b.start;
+        });
+        dispatch(setOrderByStartRoutines(orderRoutines));
+      }
     }
-  }, [dailyRoutines, currentDate, dispatch]);
+  }, [dispatch, dailyRoutines, currentDate]);
 
   function handleScheduleItemClick(index, routine) {
     setEditRoutine(routine);
@@ -314,7 +329,6 @@ export default function PlanningPage() {
   }
 
   // 刪除
-  // TODO: 讓便利貼的 isSchedule 調回去
   function handleDeleteClick(id) {
     const index = dailyRoutines[currentDate].findIndex(
       (routine) => routine.id === id
@@ -411,184 +425,183 @@ export default function PlanningPage() {
   return (
     //  DropDragContext
     <DragDropContext onDragEnd={onDragEnd}>
-      <PlanWrapper>
-        {!dailyRoutines && <div>loading</div>}
-        {dailyRoutines && (
-          <ScheduleWrapper>
-            <DayLists />
-            <Droppable droppableId={"dailyRoutine"}>
-              {(provided, snapshot) => (
-                <Schedule
-                  ref={provided.innerRef}
-                  {...provided.droppableProps}
-                  isDraggingOver={snapshot.isDraggingOver}
-                >
-                  <ScheduleTitle>
-                    {new Date(currentDate).toLocaleString([], {
-                      month: "2-digit",
-                      day: "2-digit",
-                    })}
-                  </ScheduleTitle>
+      {currentDate === null &&
+        isPostItsLoading &&
+        isMarkerssLoading &&
+        isSchedulesLoading && <LoadingDiv>Loading</LoadingDiv>}
+      {!isPostItsLoading && !isMarkerssLoading && !isSchedulesLoading && (
+        <PlanWrapper>
+          {/* {!orderByStartRoutines && <div>loading</div>} */}
+          {orderByStartRoutines && (
+            <ScheduleWrapper>
+              <DayLists />
+              <Droppable droppableId={"dailyRoutine"}>
+                {(provided, snapshot) => (
+                  <Schedule
+                    ref={provided.innerRef}
+                    {...provided.droppableProps}
+                    isDraggingOver={snapshot.isDraggingOver}
+                  >
+                    <ScheduleTitle>
+                      {currentDate !== null &&
+                        new Date(currentDate).toLocaleString([], {
+                          month: "2-digit",
+                          day: "2-digit",
+                        })}
+                    </ScheduleTitle>
 
-                  <ScheduleList>
-                    {orderByStartRoutines.map((routine, index) => (
-                      <div key={routine.id}>
-                        <ScheduleItemWrapper>
-                          <ScheduleCategory>
-                            {routine.category === "hotel" && (
-                              <FontAwesomeIcon icon={faHotel} />
-                            )}
-                            {routine.category === "shopping" && (
-                              <FontAwesomeIcon icon={faShoppingBag} />
-                            )}
-                            {routine.category === "food" && (
-                              <FontAwesomeIcon icon={faUtensils} />
-                            )}
-                            {routine.category === "attraction" && (
-                              <FontAwesomeIcon icon={faCampground} />
-                            )}
-                          </ScheduleCategory>
-                          <ScheduleItem>
-                            <ScheduleItemContent
-                              onClick={() => {
-                                handleScheduleItemClick(index, routine);
-                              }}
+                    <ScheduleList>
+                      {orderByStartRoutines.map((routine, index) => (
+                        <div key={routine.id}>
+                          <ScheduleItemWrapper>
+                            <ScheduleCategory>
+                              {routine.category === "hotel" && (
+                                <FontAwesomeIcon icon={faHotel} />
+                              )}
+                              {routine.category === "shopping" && (
+                                <FontAwesomeIcon icon={faShoppingBag} />
+                              )}
+                              {routine.category === "food" && (
+                                <FontAwesomeIcon icon={faUtensils} />
+                              )}
+                              {routine.category === "attraction" && (
+                                <FontAwesomeIcon icon={faCampground} />
+                              )}
+                            </ScheduleCategory>
+                            <ScheduleItem>
+                              <ScheduleItemContent
+                                onClick={() => {
+                                  handleScheduleItemClick(index, routine);
+                                }}
+                              >
+                                {routine.location}
+                              </ScheduleItemContent>
+                              <SettingButtonWrapper>
+                                <SettingButton
+                                  onClick={() => handleSetOriginClick(routine)}
+                                >
+                                  出發地
+                                </SettingButton>
+                                <SettingButton
+                                  onClick={() =>
+                                    handleSetDestinationClick(routine)
+                                  }
+                                >
+                                  抵達地
+                                </SettingButton>
+                              </SettingButtonWrapper>
+                            </ScheduleItem>
+                            <ScheduleTimeWrapper>
+                              <ScheduleTime>
+                                {routine.start &&
+                                  new Date(routine.start).toLocaleTimeString(
+                                    [],
+                                    {
+                                      timeStyle: "short",
+                                      hour12: false,
+                                    }
+                                  )}
+                              </ScheduleTime>
+                              <ScheduleTime>
+                                {routine.end &&
+                                  new Date(routine.end).toLocaleTimeString([], {
+                                    timeStyle: "short",
+                                    hour12: false,
+                                  })}
+                              </ScheduleTime>
+                            </ScheduleTimeWrapper>
+
+                            <DeleteButton
+                              onClick={() => handleDeleteClick(routine.id)}
                             >
-                              {routine.location}
-                            </ScheduleItemContent>
-                            <SettingButtonWrapper>
-                              <SettingButton
-                                onClick={() => handleSetOriginClick(routine)}
-                              >
-                                出發地
-                              </SettingButton>
-                              <SettingButton
-                                onClick={() =>
-                                  handleSetDestinationClick(routine)
-                                }
-                              >
-                                抵達地
-                              </SettingButton>
-                            </SettingButtonWrapper>
-                          </ScheduleItem>
-                          <ScheduleTimeWrapper>
-                            <ScheduleTime>
-                              {routine.start &&
-                                new Date(routine.start).toLocaleTimeString([], {
-                                  timeStyle: "short",
-                                  hour12: false,
-                                })}
-                            </ScheduleTime>
-                            <ScheduleTime>
-                              {routine.end &&
-                                new Date(routine.end).toLocaleTimeString([], {
-                                  timeStyle: "short",
-                                  hour12: false,
-                                })}
-                            </ScheduleTime>
-                          </ScheduleTimeWrapper>
+                              ✖
+                            </DeleteButton>
+                          </ScheduleItemWrapper>
 
-                          <DeleteButton
-                            onClick={() => handleDeleteClick(routine.id)}
-                          >
-                            ✖
-                          </DeleteButton>
-                        </ScheduleItemWrapper>
-
-                        {routes &&
-                          routes.map(
-                            (route) =>
-                              route.originId === routine.id && (
-                                <TrafficInfoWrapper key={route.originId}>
-                                  <TransitLines>
-                                    {route.directionSteps.travelMode ===
-                                      "TRANSIT" &&
-                                      route.directionSteps.steps.map(
-                                        (step, index) => (
-                                          <div key={index}>
-                                            {step["travel_mode"] ===
-                                              "TRANSIT" && (
+                          {routes &&
+                            routes.map(
+                              (route) =>
+                                route.originId === routine.id && (
+                                  <TrafficInfoWrapper key={route.originId}>
+                                    <TransitLines>
+                                      {route.directionSteps.travelMode ===
+                                        "TRANSIT" &&
+                                        route.directionSteps.steps.map(
+                                          (step, index) => (
+                                            <div key={index}>
                                               <TransitLineWrapper>
                                                 <TransitLine>
-                                                  {
-                                                    step.transit.line[
-                                                      "short_name"
-                                                    ]
-                                                  }{" "}
-                                                  {step.duration.text}
+                                                  {step.line}{" "}
+                                                  {step.transitDuration}
                                                 </TransitLine>
 
                                                 <TransitStop>
                                                   起始站：
-                                                  {
-                                                    step.transit[
-                                                      "departure_stop"
-                                                    ].name
-                                                  }
+                                                  {step.departureStop}
                                                 </TransitStop>
                                                 <TransitInfo>
                                                   {step.instructions}
                                                 </TransitInfo>
                                                 <TransitStop>
                                                   終點站：
-                                                  {
-                                                    step.transit["arrival_stop"]
-                                                      .name
-                                                  }
+                                                  {step.arrivalStop}
                                                 </TransitStop>
                                               </TransitLineWrapper>
-                                            )}
-                                          </div>
-                                        )
-                                      )}
-                                  </TransitLines>
-                                  <TrafficDuration>
-                                    <div>
-                                      {route.directionSteps.travelMode ===
-                                        "WALKING" && "走路 "}
-                                      {route.directionSteps.travelMode ===
-                                        "DRIVING" && "開車 "}
-                                      {route.directionSteps.travelMode ===
-                                        "BICYCLING" && "腳踏車 "}
-                                      {route.directionSteps.duration.text}
-                                    </div>
+                                            </div>
+                                          )
+                                        )}
+                                    </TransitLines>
+                                    <TrafficDuration>
+                                      <div>
+                                        {route.directionSteps.travelMode ===
+                                          "WALKING" && "走路 "}
+                                        {route.directionSteps.travelMode ===
+                                          "DRIVING" && "開車 "}
+                                        {route.directionSteps.travelMode ===
+                                          "BICYCLING" && "腳踏車 "}
+                                        {route.directionSteps.duration}
+                                      </div>
 
-                                    <TrafficInfoDeleteButton
-                                      onClick={() =>
-                                        handleDeleteRouteClick(route.originId)
-                                      }
-                                    >
-                                      ✖
-                                    </TrafficInfoDeleteButton>
-                                  </TrafficDuration>
-                                </TrafficInfoWrapper>
-                              )
-                          )}
-                      </div>
-                    ))}
+                                      <TrafficInfoDeleteButton
+                                        onClick={() =>
+                                          handleDeleteRouteClick(route.originId)
+                                        }
+                                      >
+                                        ✖
+                                      </TrafficInfoDeleteButton>
+                                    </TrafficDuration>
+                                  </TrafficInfoWrapper>
+                                )
+                            )}
+                        </div>
+                      ))}
 
-                    {/* 新增 */}
-                    <ScheduleAddForm />
-                    <SchedulePlus onClick={handleSchedulePlusClick}>
-                      +
-                    </SchedulePlus>
-                  </ScheduleList>
+                      {/* 新增 */}
+                      <ScheduleAddForm />
+                      <SchedulePlus onClick={handleSchedulePlusClick}>
+                        +
+                      </SchedulePlus>
+                    </ScheduleList>
 
-                  {provided.placeholder}
-                </Schedule>
-              )}
-            </Droppable>
-          </ScheduleWrapper>
-        )}
+                    {provided.placeholder}
+                  </Schedule>
+                )}
+              </Droppable>
+            </ScheduleWrapper>
+          )}
 
-        {editRoutine && (
-          <ScheduleUpdateForm editIndex={editIndex} editRoutine={editRoutine} />
-        )}
+          {editRoutine && (
+            <ScheduleUpdateForm
+              editIndex={editIndex}
+              editRoutine={editRoutine}
+            />
+          )}
 
-        <MapArea />
+          <MapArea />
 
-        <PostItItem />
-      </PlanWrapper>
+          <PostItItem />
+        </PlanWrapper>
+      )}
     </DragDropContext>
   );
 }

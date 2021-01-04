@@ -12,10 +12,6 @@ import {
   getUnfinishedSchedules,
   getFinishedSchedules,
 } from "../../redux/reducers/usersReducer";
-import {
-  setCurrentDate,
-  setDailyRoutines,
-} from "../../redux/reducers/schedulesReducer";
 
 const ScheduleContainer = styled.div`
   position: relative;
@@ -113,12 +109,10 @@ const CheckBoxLabel = styled.label`
   font-weight: 900;
 `;
 
-// TODO:
 const Container = styled.div`
   display: flex;
   padding-top: ${(props) => props.theme.heights.header};
-  padding-bottom: ${(props) => props.theme.heights.footer};
-  height: 100vh;
+  min-height: 100vh;
 
   background: ${(props) => props.theme.primaryColors.primaryLighter};
 `;
@@ -313,16 +307,13 @@ export default function UserPage() {
   }
 
   function handleScheduleTitleOnClick(scheduleData) {
-    console.log(scheduleData);
-    dispatch(setCurrentDate(scheduleData.dateRange.start));
-    dispatch(setDailyRoutines(scheduleData.dailyRoutines));
     sessionStorage.setItem("userId", userData.id);
     sessionStorage.setItem("scheduleId", scheduleData.id);
 
     if (scheduleData.isFinished) {
       history.push("/finish-plan-page");
     } else {
-      history.push("/Planning-page");
+      history.push("/planning-page");
     }
   }
 
@@ -339,7 +330,6 @@ export default function UserPage() {
 
   if (schedules) {
     return (
-      // TODO: 設旁邊
       <Container>
         <SideList>
           <SideButton

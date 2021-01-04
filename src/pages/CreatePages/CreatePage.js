@@ -114,6 +114,7 @@ export default function CreatePage() {
       }
       return dates;
     }
+
     const dates = calcDates();
 
     const json = JSON.stringify({

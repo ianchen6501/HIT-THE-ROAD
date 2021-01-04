@@ -5,14 +5,22 @@ import { getScheduleContent, saveMarkersAPI } from "../../webAPI";
 export const mapMarksReducer = createSlice({
   name: "mapMark",
   initialState: {
+    isLoading: true,
     markLocations: [],
     isMarkDeleted: false,
     origin: "",
     destination: "",
     directionSteps: null,
     originId: null,
+    isMarkerSaved: false,
   },
   reducers: {
+    setIsLoading: (state, action) => {
+      state.isLoading = action.payload;
+    },
+    setIsMarkerSaved: (state, action) => {
+      state.isMarkerSaved = action.payload;
+    },
     setMarker: (state, action) => {
       state.markLocations = action.payload;
     },
@@ -64,21 +72,32 @@ export const {
   setDestination,
   setDirectionSteps,
   deleteMarkLocation,
+  setIsMarkerSaved,
+  setIsLoading,
 } = mapMarksReducer.actions;
 
-// thunk async logic
 export const initMarkers = (userId, scheduleId) => (dispatch) => {
-  getScheduleContent(userId, scheduleId).then((res) => {
-    res.markers === null
-      ? dispatch(setMarker([]))
-      : dispatch(setMarker(res.markers));
-  });
+  dispatch(setIsLoading(true));
+  getScheduleContent(userId, scheduleId)
+    .then((res) => {
+      res.markers === null
+        ? dispatch(setMarker([]))
+        : dispatch(setMarker(res.markers));
+    })
+    .catch((error) => console.error(error));
+  dispatch(setIsLoading(false));
 };
 
 export const saveMarkers = (markers, userId, scheduleId) => (dispatch) => {
-  saveMarkersAPI(markers, userId, scheduleId).then((res) =>
-    console.log("res: ", res)
-  );
+  saveMarkersAPI(markers, userId, scheduleId)
+    .then((res) => {
+      if (res.ok === true) {
+        dispatch(setIsMarkerSaved(true));
+      } else {
+        dispatch(setIsMarkerSaved(false));
+      }
+    })
+    .catch((error) => console.error(error));
 };
 
 export default mapMarksReducer.reducer;
