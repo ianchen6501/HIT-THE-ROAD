@@ -5,13 +5,14 @@ import {
   saveDailyRoutinesAPI,
   saveDailyRoutinesKeyAPI,
 } from "../../webAPI";
+import { SERVER_URL } from "../../static/static";
 
 // orderByStartRoutines 有動的話就要存到 dailyRoutines
 
 export const schedulesReducer = createSlice({
   name: "schedules",
   initialState: {
-    isLoading: true,
+    isLoading: false,
     isRouteSaved: false,
     isRoutineSaved: false,
     spotId: null,

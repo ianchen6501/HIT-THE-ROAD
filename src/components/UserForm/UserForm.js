@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { MEDIA_QUERY_MD } from "../../constants/break_point";
 
 export const FormContainer = styled.div`
   position: relative;
@@ -14,7 +15,7 @@ export const FormContainer = styled.div`
   align-items: center;
   font-size: ${(props) => props.theme.fontSizes.large};
 
-  @media only screen and (max-width: 780px) {
+  ${MEDIA_QUERY_MD} {
     width: 400px;
   }
 `;
@@ -31,7 +32,7 @@ export const UserInput = styled.input`
     color: ${(props) => props.theme.secondaryColors.secondaryDarker};
   }
 
-  @media only screen and (max-width: 780px) {
+  ${MEDIA_QUERY_MD} {
     width: 300px;
   }
 `;
@@ -77,7 +78,7 @@ export const UserButtonBorder = styled.div`
     color: white;
   }
 
-  @media only screen and (max-width: 780px) {
+  ${MEDIA_QUERY_MD} {
     width: 300px;
     padding-right: 296px;
   }

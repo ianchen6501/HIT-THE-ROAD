@@ -34,14 +34,6 @@ const SubTitle = styled.div`
   font-weight: 800;
 `;
 
-const DatePickerContainer = styled.div`
-  width: 480px;
-
-  @media only screen and (max-width: 780px) {
-    width: 300px;
-  }
-`;
-
 const Select = styled.select`
   width: 100%;
   height: 50px;

@@ -66,4 +66,34 @@ export const checkIsLogin = () => async (dispatch) => {
   dispatch(setIsLoading(false));
 };
 
+//UserPage 刪除行程
+export const deleteSchedule = (id, UserId) => (dispatch) => {
+  dispatch(setIsLoading(true));
+  const json = JSON.stringify({
+    UserId,
+  });
+  fetch(`${SERVER_URL}/schedules/${id}`, {
+    method: "DELETE",
+    headers: {
+      "content-type": "application/json",
+    },
+    body: json,
+  })
+    .then((result) => {
+      return result.json();
+    })
+    .then((json) => {
+      console.log(json);
+      if (!json.ok) {
+        console.log(json.message);
+      } else {
+        console.log(json.message);
+      }
+    })
+    .catch((error) => {
+      console.log(error.toString());
+    });
+  dispatch(setIsLoading(false));
+};
+
 export default usersReducer.reducer;

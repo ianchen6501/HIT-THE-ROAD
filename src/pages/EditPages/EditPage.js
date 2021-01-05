@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { Wrapper } from "../../components/public";
 import {
@@ -11,7 +11,7 @@ import {
 } from "../../components/UserForm";
 
 import { SERVER_URL } from "../../static/static";
-import { useHistory, useLocation } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 //styled-component
 const Title = styled.div`

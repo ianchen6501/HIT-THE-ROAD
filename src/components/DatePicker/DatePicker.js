@@ -13,17 +13,6 @@ const Container = styled.div`
   }
 `;
 
-const CustomInputElement = styled.div`
-  height: 50px;
-  display: flex;
-  align-items: center;
-  background: white;
-  border: 1px solid ${(props) => props.theme.secondaryColors.secondaryLight};
-  padding-left: 5px;
-  color: ${(props) => props.theme.secondaryColors.secondaryDarker};
-  font-size: ${(props) => props.theme.fontSizes.medium};
-`;
-
 export default function Example({
   startDate,
   setStartDate,

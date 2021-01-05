@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { Wrapper, LoadingPage } from "../../components/public";
-import { SERVER_URL } from "../../static/static";
-// import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+import { deleteSchedule } from "../../redux/reducers/usersReducer";
+import { SERVER_URL } from "../../static/static";
 
 import {
   getUnfinishedSchedules,
@@ -91,12 +91,6 @@ const RightDownContainer = styled.div`
   line-height: ${(props) => props.theme.fontSizes.medium};
 `;
 
-const IconLink = styled(Link)`
-  color: ${(props) => props.theme.primaryColors.primaryDarker};
-  font-size: ${(props) => props.theme.fontSizes.medium};
-  line-height: ${(props) => props.theme.fontSizes.medium};
-`;
-
 const CheckBox = styled.input`
   width: 20px;
   height: 20px;
@@ -160,16 +154,6 @@ const Reminder = styled.div`
 
 // TODO: END
 
-// const deleteOutlinedStyle = {
-//   transform: "scale(2)",
-//   cursor: "pointer",
-// };
-
-// const editOutlinedStyle = {
-//   transform: "scale(2)",
-//   cursor: "pointer",
-// };
-
 function Schedule({
   scheduleData,
   handleDeleteOutlinedOnClick,
@@ -225,8 +209,8 @@ function Schedule({
 }
 
 export default function UserPage() {
-  const [isDeleteing, setIsDeleting] = useState(false);
   const [isChangingIsFinished, setIsChangingIsFinished] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const userData = useSelector((store) => store.users.userData);
   const schedules = useSelector((store) => store.users.schedules);
   const history = useHistory();
@@ -235,37 +219,14 @@ export default function UserPage() {
   // TODO: 設定按鈕的 $active
   const [buttonActive, setButtonActive] = useState("unfinish");
 
+  //刪除 schedule //FIXME: 畫面更新
   function handleDeleteOutlinedOnClick(id) {
     setIsDeleting(true);
     const UserId = userData.id;
-    const json = JSON.stringify({
-      UserId,
-    });
-    fetch(`${SERVER_URL}/schedules/${id}`, {
-      method: "DELETE",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: json,
-    })
-      .then((result) => {
-        return result.json();
-      })
-      .then((json) => {
-        console.log(json);
-        if (!json.ok) {
-          setIsDeleting(false);
-          console.log(json.message);
-        } else {
-          setIsDeleting(false);
-          console.log(json.message);
-        }
-      })
-      .catch((error) => {
-        console.log(error.toString());
-      });
+    dispatch(deleteSchedule(id, UserId));
+    setIsDeleting(false);
   }
-
+  //變更 schedule 完成狀態
   async function handleCheckboxOnChange(event) {
     const UserId = userData.id;
     const scheduleId = event.target.id;
@@ -295,7 +256,7 @@ export default function UserPage() {
       });
     setIsChangingIsFinished(false);
   }
-
+  //進入編修或完成頁面
   function handleScheduleTitleOnClick(scheduleData) {
     sessionStorage.setItem("userId", userData.id);
     sessionStorage.setItem("scheduleId", scheduleData.id);
@@ -312,9 +273,9 @@ export default function UserPage() {
     if (userData) {
       dispatch(getUnfinishedSchedules(userData.id));
     }
-  }, [dispatch, userData, isDeleteing, isChangingIsFinished]);
+  }, [dispatch, userData, isChangingIsFinished, isDeleting]);
 
-  if (!userData || !schedules || isDeleteing || isChangingIsFinished) {
+  if (!userData || !schedules || isChangingIsFinished) {
     return <LoadingPage />;
   }
 

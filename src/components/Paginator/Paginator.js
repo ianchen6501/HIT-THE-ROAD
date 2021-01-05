@@ -93,7 +93,7 @@ export default function Paginator({
       }
       setPaginateArray(array);
     }
-  }, [posts]);
+  }, [posts, limit]);
 
   function handleSwitchPage(page) {
     setCurrentPage(page);
