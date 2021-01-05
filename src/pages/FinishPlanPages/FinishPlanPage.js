@@ -23,7 +23,7 @@ const Wrapper = styled.div`
   min-height: 100vh;
 
   ${MEDIA_QUERY_SM} {
-    width: ${(props) => props.theme.Wrappers.smallWidth};
+    width: 100vw;
   }
 `;
 
@@ -59,6 +59,7 @@ const PlanWrapper = styled.div`
 
   ${MEDIA_QUERY_SM} {
     flex-direction: column;
+    align-items: center;
   }
 `;
 
@@ -69,7 +70,7 @@ const PlanColumn = styled.div`
   border-radius: 5px;
 
   ${MEDIA_QUERY_SM} {
-    width: 100%;
+    width: 320px;
   }
 `;
 
