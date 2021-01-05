@@ -23,7 +23,7 @@ const Wrapper = styled.div`
   min-height: 100vh;
 
   ${MEDIA_QUERY_SM} {
-    width: ${(props) => props.theme.Wrappers.smallWidth};
+    width: 100vw;
   }
 `;
 
@@ -59,6 +59,7 @@ const PlanWrapper = styled.div`
 
   ${MEDIA_QUERY_SM} {
     flex-direction: column;
+    align-items: center;
   }
 `;
 
@@ -69,7 +70,7 @@ const PlanColumn = styled.div`
   border-radius: 5px;
 
   ${MEDIA_QUERY_SM} {
-    width: 100%;
+    width: 320px;
   }
 `;
 
@@ -171,40 +172,41 @@ export default function FinishPlanPage() {
                     })}
                   </RoutineTitle>
                   <RoutineWrapper>
-                    {dailyRoutines[date].map((routine) => (
-                      <Spot key={routine.id}>
-                        <SpotInfo>
-                          <SpotCategory>
-                            {routine.category === "hotel" && (
-                              <FontAwesomeIcon icon={faHotel} />
-                            )}
-                            {routine.category === "shopping" && (
-                              <FontAwesomeIcon icon={faShoppingBag} />
-                            )}
-                            {routine.category === "food" && (
-                              <FontAwesomeIcon icon={faUtensils} />
-                            )}
-                            {routine.category === "attraction" && (
-                              <FontAwesomeIcon icon={faCampground} />
-                            )}
-                          </SpotCategory>
-                          <SpotName>{routine.location}</SpotName>
-                          <TimeWrapper>
-                            {" "}
-                            {new Date(routine.start).toLocaleTimeString([], {
-                              timeStyle: "short",
-                              hour12: false,
-                            })}{" "}
-                            ~{" "}
-                            {new Date(routine.end).toLocaleTimeString([], {
-                              timeStyle: "short",
-                              hour12: false,
-                            })}
-                          </TimeWrapper>
-                        </SpotInfo>
-                        <SpotMemo>{routine.memo}</SpotMemo>
-                      </Spot>
-                    ))}
+                    {dailyRoutines[date] &&
+                      dailyRoutines[date].map((routine) => (
+                        <Spot key={routine.id}>
+                          <SpotInfo>
+                            <SpotCategory>
+                              {routine.category === "hotel" && (
+                                <FontAwesomeIcon icon={faHotel} />
+                              )}
+                              {routine.category === "shopping" && (
+                                <FontAwesomeIcon icon={faShoppingBag} />
+                              )}
+                              {routine.category === "food" && (
+                                <FontAwesomeIcon icon={faUtensils} />
+                              )}
+                              {routine.category === "attraction" && (
+                                <FontAwesomeIcon icon={faCampground} />
+                              )}
+                            </SpotCategory>
+                            <SpotName>{routine.location}</SpotName>
+                            <TimeWrapper>
+                              {" "}
+                              {new Date(routine.start).toLocaleTimeString([], {
+                                timeStyle: "short",
+                                hour12: false,
+                              })}{" "}
+                              ~{" "}
+                              {new Date(routine.end).toLocaleTimeString([], {
+                                timeStyle: "short",
+                                hour12: false,
+                              })}
+                            </TimeWrapper>
+                          </SpotInfo>
+                          <SpotMemo>{routine.memo}</SpotMemo>
+                        </Spot>
+                      ))}
                   </RoutineWrapper>
                 </PlanColumn>
               ))}
