@@ -10,7 +10,7 @@ export const Wrapper = styled.div`
   padding-bottom: ${(props) => props.theme.heights.footer};
 
   @media only screen and (max-width: 480px) {
-    width: ${(props) => props.theme.Wrappers.extraSmallWidth};
+    width: 100%;
   }
 
   @media only screen and (min-width: 600px) {

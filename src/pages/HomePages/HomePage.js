@@ -88,11 +88,10 @@ const IntroTitle = styled.div`
 `;
 
 const IntroContent = styled.div`
-  height: 50px;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 0px 20px;
+  padding: 15px 20px;
   font-weight: bold;
 `;
 

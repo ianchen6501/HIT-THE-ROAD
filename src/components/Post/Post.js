@@ -1,13 +1,13 @@
 import React from "react";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
+import { MEDIA_QUERY_MD } from "../../constants/break_point";
 
 const PostContainer = styled.div`
   width: 100%;
   position: relative;
   display: flex;
   align-items: center;
-  height: 150px;
   margin-bottom: 20px;
   box-shadow: 0.5px 0.5px 3px -1px;
   transition: background 0.2s;
@@ -16,7 +16,7 @@ const PostContainer = styled.div`
     background: ${(props) => props.theme.basicColors.white};
   }
 
-  @media only screen and (max-width: 769px) {
+  ${MEDIA_QUERY_MD} {
     width: 80%;
   }
 `;
@@ -27,6 +27,10 @@ const PostRightContainer = styled.div`
   width: 100%;
   padding: 15px;
   justify-content: space-between;
+
+  ${MEDIA_QUERY_MD} {
+    flex-direction: column;
+  }
 `;
 
 // const Image = styled.div`
@@ -45,7 +49,7 @@ const TitleContainer = styled.div`
 `;
 
 const Title = styled.div`
-  font-size: ${(props) => props.theme.titles.h3};
+  font-size: ${(props) => props.theme.titles.h4};
   font-weight: bold;
   cursor: pointer;
   overflow: hidden;
@@ -68,21 +72,25 @@ const ContentLeftContainer = styled.div`
 
 const ContentRightContainer = styled.div`
   position: relative;
-  width: 20%;
-  padding: 15px 0px;
+  padding: 5px 0px 0px 0px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
+  justify-content: flex-end;
+  align-items: flex-end;
+
+  ${MEDIA_QUERY_MD} {
+    border-top: 0.5px solid
+      ${(props) => props.theme.secondaryColors.secondaryDarker};
+  }
 `;
 
 const Dates = styled.div`
-  font-size: ${(props) => props.theme.fontSizes.medium};
+  font-size: ${(props) => props.theme.fontSizes.small};
   font-weight: bold;
 `;
 
 const Location = styled.div`
-  font-size: ${(props) => props.theme.fontSizes.medium};
+  font-size: ${(props) => props.theme.fontSizes.small};
   font-weight: bold;
 `;
 
