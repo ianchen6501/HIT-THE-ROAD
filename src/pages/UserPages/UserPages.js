@@ -5,6 +5,7 @@ import { Wrapper, LoadingPage } from "../../components/public";
 import { useHistory } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+import { MEDIA_QUERY_SM } from "../../constants/break_point";
 import {
   deleteSchedule,
   ToggleCheckBoxChanged,
@@ -14,6 +15,12 @@ import {
   getUnfinishedSchedules,
   getFinishedSchedules,
 } from "../../redux/reducers/usersReducer";
+
+const ScheduleWrapper = styled(Wrapper)`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
 
 const ScheduleContainer = styled.div`
   position: relative;
@@ -32,6 +39,11 @@ const ScheduleContainer = styled.div`
   &:hover {
     box-shadow: 0px 2px 6px gray;
   }
+
+  ${MEDIA_QUERY_SM} {
+    width: 90%;
+    padding: 10px 20px;
+  }
 `;
 
 const Title = styled.div`
@@ -40,14 +52,21 @@ const Title = styled.div`
   font-size: ${(props) => props.theme.titles.h6};
   font-weight: 900;
   color: ${(props) => props.theme.primaryColors.primaryDark};
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   cursor: pointer;
 
   &:hover {
     color: ${(props) => props.theme.primaryColors.primary};
   }
+
+  ${MEDIA_QUERY_SM} {
+    font-size: ${(props) => props.theme.fontSizes.small};
+  }
 `;
 
-const SubSitile = styled.div`
+const SubTitle = styled.div`
   font-size: ${(props) => props.theme.fontSizes.small};
   font-weight: 900;
   color: ${(props) => props.theme.primaryColors.primaryDark};
@@ -55,22 +74,36 @@ const SubSitile = styled.div`
   &:nth-child(1) {
     margin-right: 20px;
   }
+
+  ${MEDIA_QUERY_SM} {
+    font-size: ${(props) => props.theme.fontSizes.extraSmall};
+  }
 `;
 
 const LeftContainer = styled.div`
+  flex: 1;
   display: flex;
-  height: 100%;
   flex-direction: column;
+  margin-right: 10px;
+  height: 100%;
+
+  ${MEDIA_QUERY_SM} {
+    width: 120px;
+  }
 `;
 
 const LeftDownContainer = styled.div`
   display: flex;
+
+  ${MEDIA_QUERY_SM} {
+    flex-direction: column;
+  }
 `;
 
 const RightContainer = styled.div`
   display: flex;
-  width: 60px;
   flex-direction: column;
+  min-width: 60px;
 `;
 
 const RightUpContainer = styled.div`
@@ -79,10 +112,14 @@ const RightUpContainer = styled.div`
   display: flex;
   align-items: center;
   color: ${(props) => props.theme.primaryColors.primaryDarker};
+
+  ${MEDIA_QUERY_SM} {
+    font-size: ${(props) => props.theme.fontSizes.small};
+    line-height: ${(props) => props.theme.fontSizes.small};
+  }
 `;
 
 const RightDownContainer = styled.div`
-  height: 50%;
   width: 100%;
   display: flex;
   align-items: flex-end;
@@ -91,6 +128,11 @@ const RightDownContainer = styled.div`
   color: ${(props) => props.theme.primaryColors.primaryDarker};
   font-size: ${(props) => props.theme.fontSizes.medium};
   line-height: ${(props) => props.theme.fontSizes.medium};
+
+  ${MEDIA_QUERY_SM} {
+    font-size: ${(props) => props.theme.fontSizes.small};
+    line-height: ${(props) => props.theme.fontSizes.small};
+  }
 `;
 
 const CheckBox = styled.input`
@@ -128,6 +170,7 @@ const SideButton = styled.button`
   border-right: 0.5px solid black;
   border-bottom: 1px solid black;
   height: 36px;
+  min-width: 60px;
   color: ${(props) => props.theme.primaryColors.primaryDarker};
 
   ${(props) =>
@@ -180,10 +223,10 @@ function Schedule({
           {scheduleData.scheduleName}
         </Title>
         <LeftDownContainer>
-          <SubSitile>{scheduleData.location}</SubSitile>
-          <SubSitile>
+          <SubTitle>{scheduleData.location}</SubTitle>
+          <SubTitle>
             {startData}-{endData}
-          </SubSitile>
+          </SubTitle>
         </LeftDownContainer>
       </LeftContainer>
       <RightContainer>
@@ -293,7 +336,7 @@ export default function UserPage() {
             新增
           </SideButton>
         </SideList>
-        <Wrapper>
+        <ScheduleWrapper>
           {schedules.length ? (
             schedules.map((scheduleData, index) => (
               <Schedule
@@ -307,7 +350,7 @@ export default function UserPage() {
           ) : (
             <Reminder>目前沒有行程喔!</Reminder>
           )}
-        </Wrapper>
+        </ScheduleWrapper>
       </Container>
     );
   }

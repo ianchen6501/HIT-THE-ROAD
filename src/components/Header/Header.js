@@ -123,8 +123,11 @@ const NavbarList = styled.div`
     position: absolute;
     top: ${(props) => props.theme.heights.header};
     left: 0px;
+    margin-left: 10px;
     padding-left: 5px;
     padding-right: 5px;
+    width: 100px;
+    text-align: center;
     background: ${(props) => props.theme.secondaryColors.secondaryLighter};
     box-shadow: -3px 3px 3px grey;
   }
@@ -150,6 +153,7 @@ const Nav = styled(Link)`
     `background: ${(props) => props.theme.primaryColors.primaryDarker};`}
 
   ${MEDIA_QUERY_SM} {
+    display: block;
     margin: 0;
     width: 100%;
     border-bottom: 1px solid ${(props) => props.theme.basicColors.white};
@@ -205,9 +209,6 @@ export default function Header({ isCheckedLogin }) {
     <HeaderContainer $atHomepage={location.pathname === "/"}>
       <HeaderUpContainer $atHomepage={location.pathname === "/"}>
         <LeftContainer>
-          {/* <Brand as={Link} to="/">
-            HitTheRoad
-          </Brand> */}
           {location.pathname !== "/" && (
             <Logo as={Link} $atHomepage={location.pathname === "/"} to="/" />
           )}
@@ -217,7 +218,7 @@ export default function Header({ isCheckedLogin }) {
             <NavbarButton
               onClick={() => setIsNavbarListShow(!isNavbarListShow)}
             />
-            <NavbarList>
+            <NavbarList $isNavbarListShow={isNavbarListShow}>
               {userData && (
                 <Nav to="/user" $active={location.pathname === "/user"}>
                   編輯行程
