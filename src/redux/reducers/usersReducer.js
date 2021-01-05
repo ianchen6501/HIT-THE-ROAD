@@ -1,6 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { SERVER_URL } from "../../static/static";
-import { getAll } from "../../webAPI";
+import {
+  deleteScheculeAPI,
+  getAllUnfinishedschedulesAPI,
+  getAllFinishedschedulesAPI,
+  getUserDataAPI,
+  ToggleScheduleIsfinishedAPI,
+} from "../../webAPI";
 import { getAuthTokenFromLocalStorage } from "../../utils";
 
 export const usersReducer = createSlice({
@@ -35,33 +40,29 @@ export const {
 } = usersReducer.actions;
 
 export const getUnfinishedSchedules = (id) => (dispatch) => {
-  getAll(`${SERVER_URL}/schedules/${id}?isFinished=0`).then((json) => {
+  dispatch(setIsLoading(true));
+  getAllUnfinishedschedulesAPI(id).then((json) => {
     dispatch(setSchedules(json));
   });
+  dispatch(setIsLoading(false));
 };
 
 export const getFinishedSchedules = (id) => (dispatch) => {
-  getAll(`${SERVER_URL}/schedules/${id}?isFinished=1`).then((json) => {
+  dispatch(setIsLoading(true));
+  getAllFinishedschedulesAPI(id).then((json) => {
     dispatch(setSchedules(json));
   });
+  dispatch(setIsLoading(false));
 };
 
 export const checkIsLogin = () => async (dispatch) => {
   dispatch(setIsLoading(true));
   const token = await getAuthTokenFromLocalStorage();
   if (token) {
-    const body = { token };
-    await fetch(`${SERVER_URL}/users`, {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify(body),
-    })
-      .then((response) => response.json())
-      .then((json) => {
-        dispatch(setUserData(json.userData));
-      });
+    const json = JSON.stringify({ token });
+    await getUserDataAPI(json).then((json) => {
+      dispatch(setUserData(json.userData));
+    });
   }
   dispatch(setIsLoading(false));
 };
@@ -72,16 +73,7 @@ export const deleteSchedule = (id, UserId) => (dispatch) => {
   const json = JSON.stringify({
     UserId,
   });
-  fetch(`${SERVER_URL}/schedules/${id}`, {
-    method: "DELETE",
-    headers: {
-      "content-type": "application/json",
-    },
-    body: json,
-  })
-    .then((result) => {
-      return result.json();
-    })
+  deleteScheculeAPI(id, json)
     .then((json) => {
       console.log(json);
       if (!json.ok) {
@@ -94,6 +86,21 @@ export const deleteSchedule = (id, UserId) => (dispatch) => {
       console.log(error.toString());
     });
   dispatch(setIsLoading(false));
+};
+
+export const ToggleCheckBoxChanged = (
+  UserId,
+  scheduleId,
+  checkedStatus
+) => async (dispatch) => {
+  const body = {
+    UserId,
+  };
+  await ToggleScheduleIsfinishedAPI(scheduleId, checkedStatus, body).then(
+    (json) => {
+      console.log(json);
+    }
+  );
 };
 
 export default usersReducer.reducer;
