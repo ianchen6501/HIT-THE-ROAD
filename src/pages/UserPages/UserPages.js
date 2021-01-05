@@ -154,8 +154,6 @@ const Reminder = styled.div`
   font-weight: bold;
 `;
 
-// TODO: END
-
 function Schedule({
   scheduleData,
   handleDeleteOutlinedOnClick,
@@ -219,8 +217,6 @@ export default function UserPage() {
   const schedules = useSelector((store) => store.users.schedules);
   const history = useHistory();
   const dispatch = useDispatch();
-
-  // TODO: 設定按鈕的 $active
   const [buttonActive, setButtonActive] = useState("unfinish");
 
   //刪除 schedule //FIXME: 畫面更新
@@ -257,6 +253,7 @@ export default function UserPage() {
   useEffect(() => {
     if (userData) {
       dispatch(getUnfinishedSchedules(userData.id));
+      setButtonActive("unfinish");
     }
   }, [dispatch, userData, isChangingIsFinished, isDeleting, isLoading]);
 
