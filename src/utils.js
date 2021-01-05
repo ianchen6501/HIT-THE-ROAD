@@ -14,8 +14,16 @@ export const deleteAuthTokenFromLocalStorage = () => {
 };
 
 //sessionStorage
+export const setAuthTokenFromSessionStorage = (key, value) => {
+  return sessionStorage.setItem(key, value);
+};
+
 export const getAuthTokenFromSessionStorage = (key) => {
   return sessionStorage.getItem(key);
+};
+
+export const deleteAuthTokenFromSessionStorage = (key) => {
+  return sessionStorage.removeItem(key);
 };
 
 export const FBstartApp = async () => {

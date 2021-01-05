@@ -7,9 +7,19 @@ import "./DatePicker.css";
 const Container = styled.div`
   width: 100%;
   display: flex;
+  justify-content: space-between;
+`;
+
+const DatePickerContainer = styled.div`
+  width: 100%;
 
   > div {
     width: 100%;
+  }
+
+  > div > div > input {
+    width: 100%;
+    font-size: 18px;
   }
 `;
 
@@ -21,26 +31,30 @@ export default function Example({
 }) {
   return (
     <Container>
-      <DatePicker
-        className="DatePicker"
-        dateFormat="yyyy/MM/dd"
-        selected={new Date(startDate)}
-        onChange={(date) => setStartDate(date.getTime())}
-        minDate={new Date()}
-        selectsStart
-        startDate={new Date(startDate)}
-        endDate={new Date(endDate)}
-      />
-      <DatePicker
-        className="DatePicker"
-        dateFormat="yyyy/MM/dd"
-        selected={new Date(endDate)}
-        onChange={(date) => setEndDate(date.getTime())}
-        selectsEnd
-        startDate={new Date(startDate)}
-        endDate={new Date(endDate)}
-        minDate={new Date(startDate)}
-      />
+      <DatePickerContainer>
+        <DatePicker
+          className="DatePicker"
+          dateFormat="yyyy/MM/dd"
+          selected={new Date(startDate)}
+          onChange={(date) => setStartDate(date.getTime())}
+          minDate={new Date()}
+          selectsStart
+          startDate={new Date(startDate)}
+          endDate={new Date(endDate)}
+        />
+      </DatePickerContainer>
+      <DatePickerContainer>
+        <DatePicker
+          className="DatePicker"
+          dateFormat="yyyy/MM/dd"
+          selected={new Date(endDate)}
+          onChange={(date) => setEndDate(date.getTime())}
+          selectsEnd
+          startDate={new Date(startDate)}
+          endDate={new Date(endDate)}
+          minDate={new Date(startDate)}
+        />
+      </DatePickerContainer>
     </Container>
   );
 }

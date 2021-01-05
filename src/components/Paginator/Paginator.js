@@ -2,6 +2,11 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
 const PaginatorContainer = styled.div`
+  position: absolute;
+  bottom: ${(props) => props.theme.heights.footer};
+  left: 50%;
+  transfrom: translateX(-50%);
+
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -121,12 +126,12 @@ export default function Paginator({
         ))}
       </PagesContainer>
       <ControlerContainer>
-        {currentPage !== 1 ? (
+        {currentPage !== 1 && pages !== 0 ? (
           <Previous onClick={handlePrevious}>&#x025C2;</Previous>
         ) : (
           <Previous $inactive={true}>&#x025C2;</Previous>
         )}
-        {currentPage !== pages ? (
+        {currentPage !== pages && pages !== 0 ? (
           <Next onClick={handleNext}>&#x025B8;</Next>
         ) : (
           <Next $inactive={true}>&#x025B8;</Next>

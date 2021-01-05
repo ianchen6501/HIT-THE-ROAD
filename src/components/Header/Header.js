@@ -66,17 +66,21 @@ const Logo = styled.div`
   }
 `;
 
-// const Brand = styled.div`
-//   margin-left: 20px;
-//   font-size: 32px;
-//   font-weight: bold;
-//   text-decoration: none;
-//   color: ${(props) => props.theme.secondaryColors.secondaryDarker};
+const Brand = styled.div`
+  margin-left: 20px;
+  font-size: 16px;
+  font-weight: bold;
+  text-decoration: none;
+  color: ${(props) => props.theme.secondaryColors.secondary};
 
-//   ${MEDIA_QUERY_SM} {
-//     display: none;
-//   }
-// `;
+  ${MEDIA_QUERY_SM} {
+    display: none;
+  }
+
+  &:hover {
+    color: ${(props) => props.theme.basicColors.white};
+  }
+`;
 
 const NavbarWrapper = styled.div``;
 
@@ -209,6 +213,11 @@ export default function Header({ isCheckedLogin }) {
     <HeaderContainer $atHomepage={location.pathname === "/"}>
       <HeaderUpContainer $atHomepage={location.pathname === "/"}>
         <LeftContainer>
+          {location.pathname == "/" && (
+            <Brand as={Link} to="/">
+              HitTheRoad
+            </Brand>
+          )}
           {location.pathname !== "/" && (
             <Logo as={Link} $atHomepage={location.pathname === "/"} to="/" />
           )}

@@ -11,9 +11,10 @@ import {
 } from "../../components/UserForm";
 
 import DatePicker from "../../components/DatePicker";
-import { SERVER_URL } from "../../static/static";
 import { useHistory } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { MEDIA_QUERY_EXSM, MEDIA_QUERY_MD } from "../../constants/break_point";
+import { createSchedule } from "../../redux/reducers/usersReducer";
 
 //styled-component
 const Title = styled.div`
@@ -24,6 +25,10 @@ const Title = styled.div`
   font-size: ${(props) => props.theme.titles.h3};
   font-weight: 800;
   text-align: center;
+
+  ${MEDIA_QUERY_MD} {
+    font-size: ${(props) => props.theme.titles.h4};
+  }
 `;
 
 const SubTitle = styled.div`
@@ -43,8 +48,12 @@ const Select = styled.select`
 
 const SubContainer = styled.div`
   width: 480px;
-  @media only screen and (max-width: 780px) {
-    width: 300px;
+  ${MEDIA_QUERY_MD} {
+    width: 360px;
+  }
+
+  ${MEDIA_QUERY_EXSM} {
+    width: 225px;
   }
 `;
 
@@ -79,6 +88,7 @@ const destinationSelects = [
 
 export default function CreatePage() {
   const history = useHistory();
+  const dispatch = useDispatch();
 
   const currentDate = new Date().getDate();
   const currentMonth = new Date().getMonth();
@@ -92,64 +102,24 @@ export default function CreatePage() {
   const [endDate, setEndDate] = useState(
     new Date(currentYear, currentMonth, currentDate).getTime()
   );
-  const [errorMessage, setErrorMessage] = useState("");
+  // const [errorMessage, setErrorMessage] = useState("");
   const [scheduleNameErrorMessage, setScheduleNameErrorMessage] = useState("");
   const userData = useSelector((store) => store.users.userData);
+  const createErrorMessage = useSelector(
+    (store) => store.users.createErrorMessage
+  );
 
   function handleSubmitSchedule() {
     const message = "this field can not be empty.";
+    const UserId = userData.id;
 
     if (!scheduleName) {
       return setScheduleNameErrorMessage(message);
     }
 
-    //算每一天的起始時間
-    function calcDates() {
-      const dates = {};
-      const range = (endDate - startDate) / 86400000;
-      for (let i = 0; i <= range; i++) {
-        const date = new Date(startDate)
-          .setDate(new Date(startDate).getDate() + i)
-          .toString();
-        dates[date] = [];
-      }
-      return dates;
-    }
-
-    const dates = calcDates();
-
-    const json = JSON.stringify({
-      scheduleName,
-      location,
-      dateRange: {
-        start: startDate,
-        end: endDate,
-      },
-      dailyRoutines: dates,
-      UserId: userData.id,
-    });
-
-    //FIXME: 改成 dispatch + webAPI
-    fetch(`${SERVER_URL}/schedules`, {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: json,
-    })
-      .then((result) => {
-        return result.json();
-      })
-      .then((json) => {
-        if (!json.ok) {
-          return setErrorMessage(json.message);
-        } else {
-          return history.push("/user");
-        }
-      })
-      .catch((error) => {
-        return setErrorMessage(error.toString());
-      });
+    dispatch(
+      createSchedule(startDate, endDate, scheduleName, location, UserId)
+    ).then(() => history.push("/planning-page"));
   }
 
   return (
@@ -197,7 +167,9 @@ export default function CreatePage() {
             <UserButtonBackground />
           </UserButtonBorder>
         </div>
-        {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
+        {createErrorMessage && (
+          <ErrorMessage>{createErrorMessage}</ErrorMessage>
+        )}
       </FormContainer>
     </Wrapper>
   );

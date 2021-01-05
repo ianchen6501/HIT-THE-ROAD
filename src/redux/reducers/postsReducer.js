@@ -64,7 +64,6 @@ export const getFilteredPosts = (keyword) => (dispatch) => {
       return response.json();
     })
     .then((json) => {
-      console.log(json);
       dispatch(setPosts(json));
     })
     .catch((error) => console.log(error));

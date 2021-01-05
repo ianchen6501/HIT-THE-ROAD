@@ -4,9 +4,14 @@ import {
   getAllUnfinishedschedulesAPI,
   getAllFinishedschedulesAPI,
   getUserDataAPI,
-  ToggleScheduleIsfinishedAPI,
+  toggleScheduleIsfinishedAPI,
+  createScheduleAPI,
 } from "../../webAPI";
-import { getAuthTokenFromLocalStorage } from "../../utils";
+import {
+  getAuthTokenFromLocalStorage,
+  setAuthTokenFromSessionStorage,
+  deleteAuthTokenFromSessionStorage,
+} from "../../utils";
 
 export const usersReducer = createSlice({
   name: "users",
@@ -15,6 +20,8 @@ export const usersReducer = createSlice({
     authTokenResponse: null,
     userData: null,
     schedules: null,
+    scheduleData: null,
+    createErrorMessage: null,
   },
   reducers: {
     setIsLoading: (state, action) => {
@@ -29,6 +36,12 @@ export const usersReducer = createSlice({
     setSchedules: (state, action) => {
       state.schedules = action.payload;
     },
+    setScheduleData: (state, action) => {
+      state.schedules = action.payload;
+    },
+    setCreateErrorMessage: (state, action) => {
+      state.schedules = action.payload;
+    },
   },
 });
 
@@ -37,6 +50,8 @@ export const {
   setAuthTokenResponse,
   setUserData,
   setSchedules,
+  setScheduleData,
+  setCreateErrorMessage,
 } = usersReducer.actions;
 
 export const getUnfinishedSchedules = (id) => (dispatch) => {
@@ -69,13 +84,11 @@ export const checkIsLogin = () => async (dispatch) => {
 
 //UserPage 刪除行程
 export const deleteSchedule = (id, UserId) => (dispatch) => {
-  dispatch(setIsLoading(true));
   const json = JSON.stringify({
     UserId,
   });
-  deleteScheculeAPI(id, json)
+  return deleteScheculeAPI(id, json)
     .then((json) => {
-      console.log(json);
       if (!json.ok) {
         console.log(json.message);
       } else {
@@ -85,7 +98,6 @@ export const deleteSchedule = (id, UserId) => (dispatch) => {
     .catch((error) => {
       console.log(error.toString());
     });
-  dispatch(setIsLoading(false));
 };
 
 export const ToggleCheckBoxChanged = (
@@ -96,11 +108,59 @@ export const ToggleCheckBoxChanged = (
   const body = {
     UserId,
   };
-  await ToggleScheduleIsfinishedAPI(scheduleId, checkedStatus, body).then(
+  await toggleScheduleIsfinishedAPI(scheduleId, checkedStatus, body).then(
     (json) => {
       console.log(json);
     }
   );
+};
+
+export const createSchedule = (
+  startDate,
+  endDate,
+  scheduleName,
+  location,
+  UserId
+) => (dispatch) => {
+  function calcDates() {
+    const dates = {};
+    const range = (endDate - startDate) / 86400000;
+    for (let i = 0; i <= range; i++) {
+      const date = new Date(startDate)
+        .setDate(new Date(startDate).getDate() + i)
+        .toString();
+      dates[date] = [];
+    }
+    return dates;
+  }
+
+  const dates = calcDates();
+
+  const json = JSON.stringify({
+    scheduleName,
+    location,
+    dateRange: {
+      start: startDate,
+      end: endDate,
+    },
+    dailyRoutines: dates,
+    UserId,
+  });
+
+  return createScheduleAPI(json)
+    .then((json) => {
+      if (!json.ok) {
+        setCreateErrorMessage(json.message);
+      } else {
+        deleteAuthTokenFromSessionStorage("userId");
+        deleteAuthTokenFromSessionStorage("scheduleId");
+        setAuthTokenFromSessionStorage("userId", UserId);
+        setAuthTokenFromSessionStorage("scheduleId", json.scheduleData.id);
+      }
+    })
+    .catch((error) => {
+      setCreateErrorMessage(error.toString());
+    });
 };
 
 export default usersReducer.reducer;

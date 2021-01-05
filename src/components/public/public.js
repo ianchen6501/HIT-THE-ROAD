@@ -1,7 +1,10 @@
 import React from "react";
 import styled from "styled-components";
+import { MEDIA_QUERY_SM } from "../../constants/break_point";
 
 export const Wrapper = styled.div`
+  position: relative;
+  width: 75vw;
   height: ${(props) => (props.$solidPlate ? "100vh" : "auto")};
   min-height: 100vh;
   margin: 0 auto;
@@ -9,24 +12,8 @@ export const Wrapper = styled.div`
     props.$atHomepage ? "0" : props.theme.heights.header};
   padding-bottom: ${(props) => props.theme.heights.footer};
 
-  @media only screen and (max-width: 480px) {
-    width: ${(props) => props.theme.Wrappers.extraSmallWidth};
-  }
-
-  @media only screen and (min-width: 600px) {
-    width: ${(props) => props.theme.Wrappers.smallWidth};
-  }
-
-  @media only screen and (min-width: 780px) {
-    width: ${(props) => props.theme.Wrappers.mediumWidth};
-  }
-
-  @media only screen and (min-width: 1040px) {
-    width: ${(props) => props.theme.Wrappers.largeWidth};
-  }
-
-  @media only screen and (min-width: 1200px) {
-    width: ${(props) => props.theme.Wrappers.extraLargeWidth};
+  ${MEDIA_QUERY_SM} {
+    width: 100vw;
   }
 `;
 

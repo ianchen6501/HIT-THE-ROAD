@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { MEDIA_QUERY_MD } from "../../constants/break_point";
+import { MEDIA_QUERY_EXSM, MEDIA_QUERY_MD } from "../../constants/break_point";
 
 export const FormContainer = styled.div`
   position: relative;
@@ -16,7 +16,11 @@ export const FormContainer = styled.div`
   font-size: ${(props) => props.theme.fontSizes.large};
 
   ${MEDIA_QUERY_MD} {
-    width: 400px;
+    width: 480px;
+  }
+
+  ${MEDIA_QUERY_EXSM} {
+    width: 300px;
   }
 `;
 export const UserInput = styled.input`
@@ -33,7 +37,11 @@ export const UserInput = styled.input`
   }
 
   ${MEDIA_QUERY_MD} {
-    width: 300px;
+    width: 360px;
+  }
+
+  ${MEDIA_QUERY_EXSM} {
+    width: 225px;
   }
 `;
 
@@ -48,6 +56,14 @@ export const UserButton = styled.button`
 export const Title = styled.div`
   font-size: ${(props) => props.theme.titles.h3};
   font-weight: bold;
+
+  ${MEDIA_QUERY_MD} {
+    font-size: ${(props) => props.theme.titles.h5};
+  }
+
+  ${MEDIA_QUERY_EXSM} {
+    font-size: ${(props) => props.theme.titles.h6};
+  }
 `;
 
 export const UserInputContainer = styled.div`
@@ -79,8 +95,13 @@ export const UserButtonBorder = styled.div`
   }
 
   ${MEDIA_QUERY_MD} {
-    width: 300px;
-    padding-right: 296px;
+    width: 360px;
+    padding-right: 356px;
+  }
+
+  ${MEDIA_QUERY_EXSM} {
+    width: 225px;
+    padding-right: 221px;
   }
 `;
 

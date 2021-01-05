@@ -124,9 +124,7 @@ export const deleteScheculeAPI = (id, json) => {
       "content-type": "application/json",
     },
     body: json,
-  }).then((result) => {
-    result.json();
-  });
+  }).then((result) => result.json());
 };
 
 export const getUserDataAPI = (json) => {
@@ -139,7 +137,7 @@ export const getUserDataAPI = (json) => {
   }).then((response) => response.json());
 };
 
-export const ToggleScheduleIsfinishedAPI = (
+export const toggleScheduleIsfinishedAPI = (
   scheduleId,
   checkedStatus,
   body
@@ -156,4 +154,14 @@ export const ToggleScheduleIsfinishedAPI = (
   ).then((response) => {
     return response.json();
   });
+};
+
+export const createScheduleAPI = (json) => {
+  return fetch(`${BASE_URL}/schedules`, {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+    },
+    body: json,
+  }).then((result) => result.json());
 };
