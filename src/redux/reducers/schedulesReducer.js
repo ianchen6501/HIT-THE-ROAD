@@ -5,7 +5,6 @@ import {
   saveDailyRoutinesAPI,
   saveDailyRoutinesKeyAPI,
 } from "../../webAPI";
-import { SERVER_URL } from "../../static/static";
 
 // orderByStartRoutines 有動的話就要存到 dailyRoutines
 
