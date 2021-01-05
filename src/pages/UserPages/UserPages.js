@@ -6,7 +6,7 @@ import { SERVER_URL } from "../../static/static";
 // import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { Link, useHistory } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 
 import {
   getUnfinishedSchedules,
@@ -158,8 +158,6 @@ const Reminder = styled.div`
   font-weight: bold;
 `;
 
-// TODO: END
-
 // const deleteOutlinedStyle = {
 //   transform: "scale(2)",
 //   cursor: "pointer",
@@ -231,8 +229,6 @@ export default function UserPage() {
   const schedules = useSelector((store) => store.users.schedules);
   const history = useHistory();
   const dispatch = useDispatch();
-
-  // TODO: 設定按鈕的 $active
   const [buttonActive, setButtonActive] = useState("unfinish");
 
   function handleDeleteOutlinedOnClick(id) {
@@ -311,6 +307,7 @@ export default function UserPage() {
   useEffect(() => {
     if (userData) {
       dispatch(getUnfinishedSchedules(userData.id));
+      setButtonActive("unfinish");
     }
   }, [dispatch, userData, isDeleteing, isChangingIsFinished]);
 
