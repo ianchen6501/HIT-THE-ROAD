@@ -265,11 +265,9 @@ export default function UserPage() {
   //刪除 schedule //FIXME: 畫面更新
   function handleDeleteOutlinedOnClick(id) {
     setIsDeleting(false);
-    console.log(isDeleting);
     const UserId = userData.id;
     dispatch(deleteSchedule(id, UserId));
     setIsDeleting(false);
-    console.log(isDeleting);
   }
   //變更 schedule 完成狀態
   async function handleCheckboxOnChange(event) {

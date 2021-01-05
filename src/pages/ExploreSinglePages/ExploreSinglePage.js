@@ -168,6 +168,7 @@ export default function ExploreSinglePage() {
   }, [scheduleInfo]);
 
   useEffect(() => {
+    window.scroll(0, 0);
     const datesTest = [];
     if (dailyRoutines) {
       Object.keys(dailyRoutines).map((key) => datesTest.push(key));
@@ -197,40 +198,41 @@ export default function ExploreSinglePage() {
                     })}
                   </RoutineTitle>
                   <RoutineWrapper>
-                    {dailyRoutines[date].map((routine) => (
-                      <Spot key={routine.id}>
-                        <SpotInfo>
-                          <SpotCategory>
-                            {routine.category === "hotel" && (
-                              <FontAwesomeIcon icon={faHotel} />
-                            )}
-                            {routine.category === "shopping" && (
-                              <FontAwesomeIcon icon={faShoppingBag} />
-                            )}
-                            {routine.category === "food" && (
-                              <FontAwesomeIcon icon={faUtensils} />
-                            )}
-                            {routine.category === "attraction" && (
-                              <FontAwesomeIcon icon={faCampground} />
-                            )}
-                          </SpotCategory>
-                          <SpotName>{routine.location}</SpotName>
-                          <TimeWrapper>
-                            {" "}
-                            {new Date(routine.start).toLocaleTimeString([], {
-                              timeStyle: "short",
-                              hour12: false,
-                            })}{" "}
-                            ~{" "}
-                            {new Date(routine.end).toLocaleTimeString([], {
-                              timeStyle: "short",
-                              hour12: false,
-                            })}
-                          </TimeWrapper>
-                        </SpotInfo>
-                        <SpotMemo>{routine.memo}</SpotMemo>
-                      </Spot>
-                    ))}
+                    {dailyRoutines[date] &&
+                      dailyRoutines[date].map((routine) => (
+                        <Spot key={routine.id}>
+                          <SpotInfo>
+                            <SpotCategory>
+                              {routine.category === "hotel" && (
+                                <FontAwesomeIcon icon={faHotel} />
+                              )}
+                              {routine.category === "shopping" && (
+                                <FontAwesomeIcon icon={faShoppingBag} />
+                              )}
+                              {routine.category === "food" && (
+                                <FontAwesomeIcon icon={faUtensils} />
+                              )}
+                              {routine.category === "attraction" && (
+                                <FontAwesomeIcon icon={faCampground} />
+                              )}
+                            </SpotCategory>
+                            <SpotName>{routine.location}</SpotName>
+                            <TimeWrapper>
+                              {" "}
+                              {new Date(routine.start).toLocaleTimeString([], {
+                                timeStyle: "short",
+                                hour12: false,
+                              })}{" "}
+                              ~{" "}
+                              {new Date(routine.end).toLocaleTimeString([], {
+                                timeStyle: "short",
+                                hour12: false,
+                              })}
+                            </TimeWrapper>
+                          </SpotInfo>
+                          <SpotMemo>{routine.memo}</SpotMemo>
+                        </Spot>
+                      ))}
                   </RoutineWrapper>
                 </PlanColumn>
               ))}
