@@ -1,8 +1,9 @@
 .LogoSVG {
+  width: 100%;
   stroke-dasharray: 1000;
   stroke-dashoffset: 1000;
 
-  animation: Move linear;
+  animation: Move;
   animation-duration: 2s;
   animation-iteration-count: infinite;
 }

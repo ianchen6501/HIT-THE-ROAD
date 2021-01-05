@@ -1,5 +1,4 @@
 import React from "react";
-import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 
@@ -100,7 +99,6 @@ const Arthur = styled.div`
 `;
 
 export default function Post({ postData }) {
-  const dispatch = useDispatch();
   const history = useHistory();
 
   function changeMillisecondsToLocalDate(milliseconds) {

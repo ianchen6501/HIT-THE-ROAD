@@ -1,7 +1,15 @@
 const BASE_URL = "https://hit-the-road.mings.tw";
 
-export function getAll(url) {
-  return fetch(url).then((response) => response.json());
+export function getAllUnfinishedschedulesAPI(id) {
+  return fetch(`${BASE_URL}/schedules/${id}?isFinished=0`).then((response) =>
+    response.json()
+  );
+}
+
+export function getAllFinishedschedulesAPI(id) {
+  return fetch(`${BASE_URL}/schedules/${id}?isFinished=1`).then((response) =>
+    response.json()
+  );
 }
 
 export function updateSchedule(url, json) {
@@ -107,4 +115,45 @@ export const getFinishPlanAPI = (userId, scheduleId) => {
 
 export const getSinglePostAPI = (scheduleId) => {
   return fetch(`${BASE_URL}/posts/${scheduleId}`).then((res) => res.json());
+};
+
+export const deleteScheculeAPI = (id, json) => {
+  return fetch(`${BASE_URL}/schedules/${id}`, {
+    method: "DELETE",
+    headers: {
+      "content-type": "application/json",
+    },
+    body: json,
+  }).then((result) => {
+    result.json();
+  });
+};
+
+export const getUserDataAPI = (json) => {
+  return fetch(`${BASE_URL}/users`, {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+    },
+    body: json,
+  }).then((response) => response.json());
+};
+
+export const ToggleScheduleIsfinishedAPI = (
+  scheduleId,
+  checkedStatus,
+  body
+) => {
+  return fetch(
+    `${BASE_URL}/schedules/${scheduleId}?isFinished=${checkedStatus}`,
+    {
+      method: "PATCH",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(body),
+    }
+  ).then((response) => {
+    return response.json();
+  });
 };

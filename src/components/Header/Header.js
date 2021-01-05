@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { Link, useLocation } from "react-router-dom";
-import logo from "../../static/logo.svg";
+import logo from "../../static/logo_static.svg";
 import { ReactComponent as LogoSVG } from "../../static/logo.svg";
 import "./Header.css";
 import { useDispatch, useSelector } from "react-redux";
@@ -48,14 +48,15 @@ const HeaderUpContainer = styled.div`
 
 const Logo = styled.div`
   position: relative;
+  top: 3px;
   bottom: 3px;
-  width: ${(props) => (props.$atHomepage ? "360px" : "210px")};
-  height: ${(props) => (props.$atHomepage ? "120px" : "70px")};
+  width: ${(props) => (props.$atHomepage ? "360px" : "180px")};
+  height: ${(props) => (props.$atHomepage ? "120px" : "60px")};
   background: url(${logo});
   background-position: center;
   background-repeat: no-repeat;
   background-size: ${(props) =>
-    props.$atHomepage ? "360px 120px" : "210px 70px"};
+    props.$atHomepage ? "360px 120px" : "180px 60px"};
   ${(props) => props.$atHomepage && `bottom: 20px;`}
 
   ${MEDIA_QUERY_SM} {
@@ -196,7 +197,6 @@ export default function Header({ isCheckedLogin }) {
   const [isNavbarListShow, setIsNavbarListShow] = useState(false);
 
   function handleLogout() {
-    // FBdeleteApp()
     deleteAuthTokenFromLocalStorage();
     dispatch(setUserData(null));
   }
@@ -239,7 +239,7 @@ export default function Header({ isCheckedLogin }) {
                 </Nav>
               )}
             </NavbarList>
-           </NavbarWrapper>
+          </NavbarWrapper>
         )}
       </HeaderUpContainer>
       {location.pathname === "/" && (

@@ -10,7 +10,7 @@ import {
   ErrorMessage,
 } from "../../components/UserForm";
 
-import DatePicker from "../../components/DayPicker";
+import DatePicker from "../../components/DatePicker";
 import { SERVER_URL } from "../../static/static";
 import { useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -34,18 +34,19 @@ const SubTitle = styled.div`
   font-weight: 800;
 `;
 
-const DatePickerContainer = styled.div`
-  width: 480px;
-`;
-
 const Select = styled.select`
-  width: 480px;
+  width: 100%;
   height: 50px;
   border: 1px solid ${(props) => props.theme.secondaryColors.secondaryLight};
   font-size: ${(props) => props.theme.fontSizes.medium};
 `;
 
-const SubContainer = styled.div``;
+const SubContainer = styled.div`
+  width: 480px;
+  @media only screen and (max-width: 780px) {
+    width: 300px;
+  }
+`;
 
 //style
 const userInputStyle = {
@@ -182,15 +183,13 @@ export default function CreatePage() {
         </SubContainer>
         <SubContainer>
           <SubTitle>時間</SubTitle>
-          <DatePickerContainer>
-            <DatePicker
-              style={{ zIndex: "4" }}
-              startDate={startDate}
-              setStartDate={setStartDate}
-              endDate={endDate}
-              setEndDate={setEndDate}
-            />
-          </DatePickerContainer>
+          <DatePicker
+            style={{ zIndex: "4" }}
+            startDate={startDate}
+            setStartDate={setStartDate}
+            endDate={endDate}
+            setEndDate={setEndDate}
+          />
         </SubContainer>
         <div onClick={handleSubmitSchedule}>
           <UserButtonBorder style={{ zIndex: "0" }}>

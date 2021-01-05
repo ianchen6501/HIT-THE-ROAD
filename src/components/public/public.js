@@ -17,7 +17,7 @@ export const Wrapper = styled.div`
     width: ${(props) => props.theme.Wrappers.smallWidth};
   }
 
-  @media only screen and (min-width: 769px) {
+  @media only screen and (min-width: 780px) {
     width: ${(props) => props.theme.Wrappers.mediumWidth};
   }
 

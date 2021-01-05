@@ -2,11 +2,13 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { Wrapper, LoadingPage } from "../../components/public";
-import { SERVER_URL } from "../../static/static";
-// import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+import {
+  deleteSchedule,
+  ToggleCheckBoxChanged,
+} from "../../redux/reducers/usersReducer";
 
 import {
   getUnfinishedSchedules,
@@ -91,12 +93,6 @@ const RightDownContainer = styled.div`
   line-height: ${(props) => props.theme.fontSizes.medium};
 `;
 
-const IconLink = styled(Link)`
-  color: ${(props) => props.theme.primaryColors.primaryDarker};
-  font-size: ${(props) => props.theme.fontSizes.medium};
-  line-height: ${(props) => props.theme.fontSizes.medium};
-`;
-
 const CheckBox = styled.input`
   width: 20px;
   height: 20px;
@@ -158,16 +154,6 @@ const Reminder = styled.div`
   font-weight: bold;
 `;
 
-// const deleteOutlinedStyle = {
-//   transform: "scale(2)",
-//   cursor: "pointer",
-// };
-
-// const editOutlinedStyle = {
-//   transform: "scale(2)",
-//   cursor: "pointer",
-// };
-
 function Schedule({
   scheduleData,
   handleDeleteOutlinedOnClick,
@@ -215,6 +201,7 @@ function Schedule({
           <FontAwesomeIcon
             onClick={() => handleDeleteOutlinedOnClick(scheduleData.id)}
             icon={faTrashAlt}
+            style={{ cursor: "pointer" }}
           />
         </RightDownContainer>
       </RightContainer>
@@ -223,75 +210,34 @@ function Schedule({
 }
 
 export default function UserPage() {
-  const [isDeleteing, setIsDeleting] = useState(false);
   const [isChangingIsFinished, setIsChangingIsFinished] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const isLoading = useSelector((store) => store.schedules.isLoading);
   const userData = useSelector((store) => store.users.userData);
   const schedules = useSelector((store) => store.users.schedules);
   const history = useHistory();
   const dispatch = useDispatch();
   const [buttonActive, setButtonActive] = useState("unfinish");
 
+  //刪除 schedule //FIXME: 畫面更新
   function handleDeleteOutlinedOnClick(id) {
-    setIsDeleting(true);
+    setIsDeleting(false);
+    console.log(isDeleting);
     const UserId = userData.id;
-    const json = JSON.stringify({
-      UserId,
-    });
-    fetch(`${SERVER_URL}/schedules/${id}`, {
-      method: "DELETE",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: json,
-    })
-      .then((result) => {
-        return result.json();
-      })
-      .then((json) => {
-        console.log(json);
-        if (!json.ok) {
-          setIsDeleting(false);
-          console.log(json.message);
-        } else {
-          setIsDeleting(false);
-          console.log(json.message);
-        }
-      })
-      .catch((error) => {
-        console.log(error.toString());
-      });
+    dispatch(deleteSchedule(id, UserId));
+    setIsDeleting(false);
+    console.log(isDeleting);
   }
-
+  //變更 schedule 完成狀態
   async function handleCheckboxOnChange(event) {
+    setIsChangingIsFinished(true);
     const UserId = userData.id;
     const scheduleId = event.target.id;
-    //更新 schedules isFinished state
-    setIsChangingIsFinished(true);
-    //更新 db isFinished state
-    const body = {
-      UserId,
-    };
     const checkedStatus = event.target.checked ? 1 : 0;
-    await fetch(
-      `${SERVER_URL}/schedules/${scheduleId}?isFinished=${checkedStatus}`,
-      {
-        method: "PATCH",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: JSON.stringify(body),
-      }
-    )
-      .then((response) => {
-        return response.json();
-      })
-      .then((json) => {
-        //FIXME: 修正為
-        console.log(json);
-      });
+    await dispatch(ToggleCheckBoxChanged(UserId, scheduleId, checkedStatus));
     setIsChangingIsFinished(false);
   }
-
+  //進入編修或完成頁面
   function handleScheduleTitleOnClick(scheduleData) {
     sessionStorage.setItem("userId", userData.id);
     sessionStorage.setItem("scheduleId", scheduleData.id);
@@ -309,9 +255,9 @@ export default function UserPage() {
       dispatch(getUnfinishedSchedules(userData.id));
       setButtonActive("unfinish");
     }
-  }, [dispatch, userData, isDeleteing, isChangingIsFinished]);
+  }, [dispatch, userData, isChangingIsFinished, isDeleting, isLoading]);
 
-  if (!userData || !schedules || isDeleteing || isChangingIsFinished) {
+  if (!userData || !schedules || isChangingIsFinished) {
     return <LoadingPage />;
   }
 

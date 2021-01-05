@@ -5,6 +5,10 @@ import { useLocation, Link } from "react-router-dom";
 import Post from "../../components/Post";
 import { getPosts } from "../../redux/reducers/postsReducer";
 import { useDispatch, useSelector } from "react-redux";
+import frontPageIcon01 from "../../static/frontpage_icon-01.jpg";
+import frontPageIcon02 from "../../static/frontpage_icon-02.jpg";
+import frontPageIcon03 from "../../static/frontpage_icon-03.jpg";
+import { MEDIA_QUERY_LG } from "../../constants/break_point";
 
 const Heading = styled.h1`
   display: inline-block;
@@ -25,7 +29,7 @@ const BannerContainer = styled.div`
   flex-wrap: wrap;
   padding: 0px;
 
-  @media only screen and (max-width: 1040px) {
+  ${MEDIA_QUERY_LG} {
     flex-direction: column;
   }
 `;
@@ -43,15 +47,35 @@ const IntroContainer = styled.div`
   flex-direction: column;
   box-shadow: 0.5px 0.5px 3px -1px;
 
-  @media only screen and (max-width: 1040px) {
+  ${MEDIA_QUERY_LG} {
     margin: 10px 0px;
   }
 `;
 
 const IntroImage = styled.div`
-  background: ${(props) => props.theme.basicColors.white};
   height: 200px;
   width: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+
+  ${(props) =>
+    props.$01 &&
+    `
+    background-image: url(${frontPageIcon01});
+  `}
+
+  ${(props) =>
+    props.$02 &&
+    `
+    background-image: url(${frontPageIcon02});
+  `}
+
+  ${(props) =>
+    props.$03 &&
+    `
+    background-image: url(${frontPageIcon03});
+  `}
 `;
 
 const IntroTitle = styled.div`
@@ -98,7 +122,7 @@ export default function HomePage() {
         <Heading>網站簡介</Heading>
         <BannerContainer>
           <IntroContainer>
-            <IntroImage></IntroImage>
+            <IntroImage $01={true}></IntroImage>
             <IntroTitle>planning</IntroTitle>
             <IntroContent>
               計畫你的每一次旅程，包含交通、時間、景點、預算，通通交給
@@ -106,15 +130,15 @@ export default function HomePage() {
             </IntroContent>
           </IntroContainer>
           <IntroContainer>
-            <IntroImage></IntroImage>
+            <IntroImage $02={true}></IntroImage>
             <IntroTitle>Post-it</IntroTitle>
             <IntroContent>
               輕鬆的用 Google map 工具來建立便利貼，快速規劃您的行程。
             </IntroContent>
           </IntroContainer>
           <IntroContainer>
-            <IntroImage></IntroImage>
-            <IntroTitle>albumn</IntroTitle>
+            <IntroImage $03={true}></IntroImage>
+            <IntroTitle>album</IntroTitle>
             <IntroContent>
               與朋友、家人及網路上的每一個人分享你精彩的旅程。
             </IntroContent>
