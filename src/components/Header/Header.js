@@ -68,7 +68,7 @@ const Logo = styled.div`
 
 const Brand = styled.div`
   margin-left: 20px;
-  font-size: 32px;
+  font-size: 16px;
   font-weight: bold;
   text-decoration: none;
   color: ${(props) => props.theme.secondaryColors.secondary};
@@ -209,9 +209,11 @@ export default function Header({ isCheckedLogin }) {
     <HeaderContainer $atHomepage={location.pathname === "/"}>
       <HeaderUpContainer $atHomepage={location.pathname === "/"}>
         <LeftContainer>
-          <Brand as={Link} to="/">
-            HitTheRoad
-          </Brand>
+          {location.pathname == "/" && (
+            <Brand as={Link} to="/">
+              HitTheRoad
+            </Brand>
+          )}
           {location.pathname !== "/" && (
             <Logo as={Link} $atHomepage={location.pathname === "/"} to="/" />
           )}

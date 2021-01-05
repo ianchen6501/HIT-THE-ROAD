@@ -40,7 +40,7 @@ export default function ExplorePage() {
   const posts = useSelector((store) => store.posts.posts);
   const [filter, setFilter] = useState("全部");
   const [currentPage, setCurrentPage] = useState(1);
-  const limit = 5;
+  const limit = 3;
   //假的 filter 資料，之後從資料庫拿
   const keywords = [
     "全部",
@@ -72,12 +72,13 @@ export default function ExplorePage() {
   }
 
   return (
-    <Wrapper $solidPlate={true}>
+    <Wrapper>
       <FilterContainer>
-        {keywords.map((keyword) => (
+        {keywords.map((keyword, index) => (
           <KeywordFilter
             $active={filter === keyword}
             onClick={() => handleFilterOnClick(keyword)}
+            key={index}
           >
             {keyword}
           </KeywordFilter>

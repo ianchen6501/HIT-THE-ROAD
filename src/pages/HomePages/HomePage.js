@@ -41,7 +41,7 @@ const PostsContainer = styled.div`
 `;
 
 const IntroContainer = styled.div`
-  height: 300px;
+  height: auto;
   width: 300px;
   display: flex;
   flex-direction: column;
@@ -53,8 +53,7 @@ const IntroContainer = styled.div`
 `;
 
 const IntroImage = styled.div`
-  height: 200px;
-  width: 100%;
+  height: 260px;
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;

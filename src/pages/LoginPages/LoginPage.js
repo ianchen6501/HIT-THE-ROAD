@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { setUserData } from "../../redux/reducers/usersReducer";
 import { useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 import { setAuthTokenToLocalStorage, FBstartApp } from "../../utils";
 import {
   FormContainer,
@@ -162,7 +162,9 @@ export default function LoginPage() {
           <UserButtonBackground />
         </UserButtonBorder>
         {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
-        <Reminder>如果尚未註冊請先註冊。</Reminder>
+        <Link to="/register">
+          <Reminder>如果尚未註冊請先註冊。</Reminder>
+        </Link>
       </FormContainer>
     </Wrapper>
   );

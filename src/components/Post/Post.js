@@ -8,7 +8,7 @@ const PostContainer = styled.div`
   position: relative;
   display: flex;
   align-items: center;
-  margin-bottom: 20px;
+  margin: 20px auto;
   box-shadow: 0.5px 0.5px 3px -1px;
   transition: background 0.2s;
 

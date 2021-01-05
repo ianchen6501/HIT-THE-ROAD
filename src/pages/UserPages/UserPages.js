@@ -9,11 +9,14 @@ import {
   deleteSchedule,
   ToggleCheckBoxChanged,
 } from "../../redux/reducers/usersReducer";
-
 import {
   getUnfinishedSchedules,
   getFinishedSchedules,
 } from "../../redux/reducers/usersReducer";
+import {
+  setAuthTokenFromSessionStorage,
+  deleteAuthTokenFromSessionStorage,
+} from "../../utils";
 
 const ScheduleContainer = styled.div`
   position: relative;
@@ -220,13 +223,12 @@ export default function UserPage() {
   const [buttonActive, setButtonActive] = useState("unfinish");
 
   //刪除 schedule //FIXME: 畫面更新
-  function handleDeleteOutlinedOnClick(id) {
-    setIsDeleting(false);
-    console.log(isDeleting);
+  async function handleDeleteOutlinedOnClick(id) {
+    setIsDeleting(true);
     const UserId = userData.id;
-    dispatch(deleteSchedule(id, UserId));
-    setIsDeleting(false);
-    console.log(isDeleting);
+    dispatch(deleteSchedule(id, UserId)).then(() => {
+      setIsDeleting(false);
+    });
   }
   //變更 schedule 完成狀態
   async function handleCheckboxOnChange(event) {
@@ -238,9 +240,11 @@ export default function UserPage() {
     setIsChangingIsFinished(false);
   }
   //進入編修或完成頁面
-  function handleScheduleTitleOnClick(scheduleData) {
-    sessionStorage.setItem("userId", userData.id);
-    sessionStorage.setItem("scheduleId", scheduleData.id);
+  async function handleScheduleTitleOnClick(scheduleData) {
+    await deleteAuthTokenFromSessionStorage("userId");
+    await deleteAuthTokenFromSessionStorage("scheduleId");
+    await setAuthTokenFromSessionStorage("userId", userData.id);
+    await setAuthTokenFromSessionStorage("scheduleId", scheduleData.id);
 
     if (scheduleData.isFinished) {
       history.push("/finish-plan-page");
