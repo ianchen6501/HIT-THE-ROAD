@@ -81,6 +81,7 @@ export default function ScheduleAddForm() {
           timeIntervals={30}
           timeCaption="Time"
           dateFormat="h:mm aa"
+          onChangeRaw={(e) => e.preventDefault()}
         />
       </div>
       <div>
@@ -94,6 +95,7 @@ export default function ScheduleAddForm() {
           timeIntervals={30}
           timeCaption="Time"
           dateFormat="h:mm aa"
+          onChangeRaw={(e) => e.preventDefault()}
         />
       </div>
       <div>

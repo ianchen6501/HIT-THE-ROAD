@@ -342,7 +342,9 @@ export default function PlanningPage() {
 
     if (dailyRoutines[currentDate][index].postItId) {
       const postItId = dailyRoutines[currentDate][index].postItId;
-      dispatch(setIsScheduled(postItId));
+      if (Object.keys(spots).find((key) => key === postItId) !== undefined) {
+        dispatch(setIsScheduled(postItId));
+      }
     }
   }
 
@@ -437,7 +439,6 @@ export default function PlanningPage() {
         isSchedulesLoading && <LoadingDiv>Loading</LoadingDiv>}
       {!isPostItsLoading && !isMarkerssLoading && !isSchedulesLoading && (
         <PlanWrapper>
-          {/* {!orderByStartRoutines && <div>loading</div>} */}
           {orderByStartRoutines && (
             <ScheduleWrapper>
               <DayLists />
