@@ -517,6 +517,7 @@ export default function MapArea() {
                 timeIntervals={30}
                 timeCaption="Time"
                 dateFormat="h:mm aa"
+                onChangeRaw={(e) => e.preventDefault()}
               />
             </DirectionsBox>
             <DirectionsButton
