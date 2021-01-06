@@ -99,6 +99,7 @@ export default function ScheduleUpdateForm(props) {
           timeIntervals={30}
           timeCaption="Time"
           dateFormat="h:mm aa"
+          onChangeRaw={(e) => e.preventDefault()}
         />
       </div>
       <div>
