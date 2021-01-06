@@ -60,6 +60,7 @@ export default function ExplorePage() {
     "花蓮",
     "宜蘭",
     "南投",
+    "離島",
   ];
 
   useEffect(() => {
