@@ -7,15 +7,7 @@ export const postItsReducer = createSlice({
   initialState: {
     isLoading: true,
     postItId: null,
-    spots: {
-      // [`spot-${id}`]: {
-      //   id: "spot-1",
-      //   location: "台北101",
-      //   category: "food",
-      //   memo: "hohoho",
-      //   isScheduled: false,
-      // },
-    },
+    spots: {},
     columns: {
       postIt: {
         id: "postIt",

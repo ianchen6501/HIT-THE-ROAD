@@ -76,7 +76,6 @@ export default function LoginPage() {
           return response.json();
         })
         .then((json) => {
-          console.log(json);
           if (!json.ok) {
             setErrorMessage(json.message);
           } else {
@@ -90,7 +89,6 @@ export default function LoginPage() {
 
   const handleOnClickFBLogin = () => {
     FBstartApp().then((res) => {
-      console.log(res);
       if (!res.ok) {
         return setErrorMessage(res.message);
       }

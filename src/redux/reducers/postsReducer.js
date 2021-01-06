@@ -8,7 +8,7 @@ export const postsReducer = createSlice({
     posts: null,
     post: null,
     singlePost: {},
-    isLoading: true,
+    isLoading: false,
   },
   reducers: {
     setIsLoading: (state, action) => {
