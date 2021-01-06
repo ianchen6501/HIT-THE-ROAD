@@ -135,7 +135,7 @@ export default function RegisterPage() {
   return (
     <Wrapper $solidPlate={true}>
       <FormContainer>
-        <Title>please sign up</Title>
+        <Title>please sign in</Title>
         <FacebookOutlined
           onClick={handleFacebookOutlinedOnClick}
           style={{
