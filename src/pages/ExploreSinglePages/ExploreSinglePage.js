@@ -148,6 +148,7 @@ export default function ExploreSinglePage() {
   let { slug } = useParams();
   const dispatch = useDispatch();
   const scheduleInfo = useSelector((store) => store.posts.singlePost);
+  const isLoading = useSelector((store) => store.posts.isLoading);
   const [dates, setDates] = useState([]);
   const [dailyRoutines, setDailyRoutines] = useState();
   const [scheduleName, setScheduleName] = useState();
@@ -166,7 +167,7 @@ export default function ExploreSinglePage() {
       setLocation(scheduleInfo.location);
       setNickname(scheduleInfo.user);
     }
-  }, [scheduleInfo]);
+  }, [scheduleInfo, dailyRoutines]);
 
   useEffect(() => {
     window.scroll(0, 0);
@@ -179,7 +180,7 @@ export default function ExploreSinglePage() {
 
   return (
     <Wrapper $solidPlate={true}>
-      {scheduleName && dailyRoutines && location && nickname && (
+      {!isLoading && scheduleName && dailyRoutines && location && nickname && (
         <div>
           <PlanHeader>
             <PlanLocation>{location}</PlanLocation>

@@ -265,7 +265,7 @@ export default function UserPage() {
   const dispatch = useDispatch();
   const [buttonActive, setButtonActive] = useState("unfinish");
 
-  //刪除 schedule //FIXME: 畫面更新
+  //刪除 schedule
   async function handleDeleteOutlinedOnClick(id) {
     setIsDeleting(true);
     const UserId = userData.id;

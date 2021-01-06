@@ -3,11 +3,12 @@ import { getSinglePostAPI } from "../../webAPI";
 import { SERVER_URL } from "../../static/static";
 
 export const postsReducer = createSlice({
-  name: "schedules",
+  name: "posts",
   initialState: {
     posts: null,
     post: null,
     singlePost: {},
+    isLoading: true,
   },
   reducers: {
     setIsLoading: (state, action) => {
@@ -37,7 +38,11 @@ export const {
 } = postsReducer.actions;
 
 export const getSinglePost = (scheduleId) => (dispatch) => {
-  getSinglePostAPI(scheduleId).then((res) => dispatch(setSinglePost(res)));
+  dispatch(setIsLoading(true));
+  getSinglePostAPI(scheduleId).then((res) => {
+    dispatch(setSinglePost(res));
+    dispatch(setIsLoading(false));
+  });
 };
 
 export const getPosts = () => (dispatch) => {
