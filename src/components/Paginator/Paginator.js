@@ -2,11 +2,6 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
 const PaginatorContainer = styled.div`
-  position: absolute;
-  bottom: ${(props) => props.theme.heights.footer};
-  left: 50%;
-  transfrom: translateX(-50%);
-
   display: flex;
   flex-direction: column;
   justify-content: center;
