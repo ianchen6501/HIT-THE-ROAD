@@ -165,3 +165,13 @@ export const createScheduleAPI = (json) => {
     body: json,
   }).then((result) => result.json());
 };
+
+export const getFilteredPostsAPI = (keyword) => {
+  return fetch(`${BASE_URL}/posts?filter=${keyword}`).then((response) =>
+    response.json()
+  );
+};
+
+export const getPostsAPI = () => {
+  return fetch(`${BASE_URL}/posts`).then((response) => response.json());
+};

@@ -1,6 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getSinglePostAPI } from "../../webAPI";
-import { SERVER_URL } from "../../static/static";
+import {
+  getSinglePostAPI,
+  getFilteredPostsAPI,
+  getPostsAPI,
+} from "../../webAPI";
 
 export const postsReducer = createSlice({
   name: "posts",
@@ -48,10 +51,7 @@ export const getSinglePost = (scheduleId) => (dispatch) => {
 export const getPosts = () => (dispatch) => {
   dispatch(setIsLoading(true));
 
-  fetch(`${SERVER_URL}/posts`)
-    .then((response) => {
-      return response.json();
-    })
+  getPostsAPI()
     .then((json) => dispatch(setPosts(json)))
     .catch((error) => console.log(error));
 
@@ -63,11 +63,7 @@ export const getFilteredPosts = (keyword) => (dispatch) => {
   if (keyword === "全部") {
     return dispatch(getPosts());
   }
-
-  fetch(`${SERVER_URL}/posts?filter=${keyword}`)
-    .then((response) => {
-      return response.json();
-    })
+  getFilteredPostsAPI(keyword)
     .then((json) => {
       dispatch(setPosts(json));
     })
