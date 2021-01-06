@@ -87,17 +87,7 @@ export const deleteSchedule = (id, UserId) => (dispatch) => {
   const json = JSON.stringify({
     UserId,
   });
-  return deleteScheculeAPI(id, json)
-    .then((json) => {
-      if (!json.ok) {
-        console.log(json.message);
-      } else {
-        console.log(json.message);
-      }
-    })
-    .catch((error) => {
-      console.log(error.toString());
-    });
+  return deleteScheculeAPI(id, json);
 };
 
 export const ToggleCheckBoxChanged = (
@@ -108,11 +98,7 @@ export const ToggleCheckBoxChanged = (
   const body = {
     UserId,
   };
-  await toggleScheduleIsfinishedAPI(scheduleId, checkedStatus, body).then(
-    (json) => {
-      console.log(json);
-    }
-  );
+  await toggleScheduleIsfinishedAPI(scheduleId, checkedStatus, body);
 };
 
 export const createSchedule = (
