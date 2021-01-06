@@ -35,10 +35,6 @@ const KeywordFilter = styled.div`
     props.$active && `background: ${props.theme.primaryColors.primaryLighter};`}
 `;
 
-const PostsContainer = styled.div`
-  min-height: 450px;
-`;
-
 export default function ExplorePage() {
   const dispatch = useDispatch();
   const posts = useSelector((store) => store.posts.posts);
@@ -88,12 +84,10 @@ export default function ExplorePage() {
           </KeywordFilter>
         ))}
       </FilterContainer>
-      <PostsContainer>
-        {posts &&
-          posts
-            .slice((currentPage - 1) * limit, currentPage * limit)
-            .map((post, index) => <Post postData={post} key={index}></Post>)}
-      </PostsContainer>
+      {posts &&
+        posts
+          .slice((currentPage - 1) * limit, currentPage * limit)
+          .map((post, index) => <Post postData={post} key={index}></Post>)}
       <Paginator
         posts={posts}
         setCurrentPage={setCurrentPage}
