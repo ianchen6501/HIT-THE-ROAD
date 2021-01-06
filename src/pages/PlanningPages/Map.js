@@ -202,7 +202,21 @@ const LocationMark = styled.div`
 
   &:hover {
     background: ${(props) => props.theme.secondaryColors.secondary};
+
+    & div {
+      display: block;
+    }
   }
+`;
+
+const LocationMarkInfo = styled.div`
+  display: none;
+  position: relative;
+  left: 40px;
+  padding: 5px;
+  width: 60px;
+  border: 1px solid ${(props) => props.theme.primaryColors.primaryDark};
+  background: ${(props) => props.theme.basicColors.white};
 `;
 
 export default function MapArea() {
@@ -215,7 +229,6 @@ export default function MapArea() {
   };
 
   const dispatch = useDispatch();
-  // const markLocations = useSelector((store) => store.mapMarks.markLocations);
 
   const [isApiLoaded, setIsApiLoaded] = useState(false);
   const [mapsApi, setMapsApi] = useState(null);
@@ -248,7 +261,6 @@ export default function MapArea() {
   }
 
   function handleSearchInputChange(e) {
-    // setIsMarked(false);
     setSearchText(e.target.value);
   }
 
@@ -560,7 +572,9 @@ export default function MapArea() {
                 lat={place.lat}
                 lng={place.lng}
                 onClick={() => handleMarkCancelClick(place.placeId)}
-              />
+              >
+                <LocationMarkInfo>{place.name}</LocationMarkInfo>
+              </LocationMark>
             ))}
         </GoogleMapReact>
       </MapWrapper>
