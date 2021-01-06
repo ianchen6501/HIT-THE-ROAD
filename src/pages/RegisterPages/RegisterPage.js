@@ -65,7 +65,6 @@ export default function RegisterPage() {
           return result.json();
         })
         .then((json) => {
-          console.log(json);
           if (!json.ok) {
             return setErrorMessage(json.message);
           } else {
@@ -88,7 +87,6 @@ export default function RegisterPage() {
         return;
       } else {
         const { id, name, email } = res.FBUserData;
-        console.log("client side", id, name, email);
         const json = JSON.stringify({
           fbId: id,
           fbName: name,
@@ -105,7 +103,6 @@ export default function RegisterPage() {
             return response.json();
           })
           .then((json) => {
-            console.log(json);
             if (!json.ok) {
               return setErrorMessage(json.message);
             }

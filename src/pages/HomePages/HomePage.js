@@ -95,14 +95,18 @@ const IntroContent = styled.div`
 `;
 
 const MoreTag = styled.div`
-  display: inline-block;
-  position: relative;
   margin-bottom: 30px;
-  left: 50%;
-  transform: translate(-50%, 0);
-  font-size: ${(props) => props.theme.fontSizes.medium};
-  cursor: pointer;
+  padding: 2px 5px;
+  border-radius: 5px;
+  font-size: ${(props) => props.theme.fontSizes.small};
+  border: 1px solid ${(props) => props.theme.secondaryColors.secondaryDarker};
   color: ${(props) => props.theme.secondaryColors.secondaryDarker};
+  font-weight: bold;
+  cursor: pointer;
+
+  &:hover {
+    box-shadow: 0 1px 2px grey;
+  }
 `;
 
 export default function HomePage() {
@@ -131,7 +135,7 @@ export default function HomePage() {
             <IntroImage $02={true}></IntroImage>
             <IntroTitle>Post-it</IntroTitle>
             <IntroContent>
-              輕鬆的用 Google map 工具來建立便利貼，快速規劃您的行程。
+              輕鬆的用 Google Maps 工具來建立便利貼，快速規劃您的行程。
             </IntroContent>
           </IntroContainer>
           <IntroContainer>

@@ -213,7 +213,7 @@ export default function Header({ isCheckedLogin }) {
     <HeaderContainer $atHomepage={location.pathname === "/"}>
       <HeaderUpContainer $atHomepage={location.pathname === "/"}>
         <LeftContainer>
-          {location.pathname == "/" && (
+          {location.pathname === "/" && (
             <Brand as={Link} to="/">
               HitTheRoad
             </Brand>

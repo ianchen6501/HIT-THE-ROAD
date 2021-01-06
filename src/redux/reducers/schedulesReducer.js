@@ -204,10 +204,10 @@ export const initSchedules = (userId, scheduleId) => (dispatch) => {
 export const initDailyRoutines = (userId, scheduleId) => (dispatch) => {
   dispatch(setIsLoading(true));
   getScheduleContent(userId, scheduleId)
-    .then((res) => dispatch(setDailyRoutines(res.dailyRoutines)))
-    .catch((error) => console.error(error));
-  getScheduleContent(userId, scheduleId)
-    .then((res) => dispatch(setCurrentDate(res.dateRange.start)))
+    .then((res) => {
+      dispatch(setDailyRoutines(res.dailyRoutines));
+      dispatch(setCurrentDate(res.dateRange.start));
+    })
     .catch((error) => console.error(error));
   dispatch(setIsLoading(false));
 };

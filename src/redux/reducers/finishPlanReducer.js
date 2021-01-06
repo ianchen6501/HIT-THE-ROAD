@@ -8,8 +8,12 @@ export const finishPlanReducer = createSlice({
     dailyRoutines: null,
     location: null,
     scheduleName: null,
+    isLoading: false,
   },
   reducers: {
+    setIsLoading: (state, action) => {
+      state.isLoading = action.payload;
+    },
     setDailyRoutines: (state, action) => {
       state.dailyRoutines = action.payload;
     },
@@ -26,21 +30,17 @@ export const {
   setDailyRoutines,
   setLocation,
   setScheduleName,
+  setIsLoading,
 } = finishPlanReducer.actions;
 
-// thunk async logic
 export const getFinishPlan = (userId, scheduleId) => (dispatch) => {
-  getFinishPlanAPI(userId, scheduleId).then((res) =>
-    // console.log("finishplan: ", res)
-    // const {dailyRoutines, location, scheduleName} = res
-    dispatch(setDailyRoutines(res.dailyRoutines))
-  );
-  getFinishPlanAPI(userId, scheduleId).then((res) =>
-    dispatch(setScheduleName(res.scheduleName))
-  );
-  getFinishPlanAPI(userId, scheduleId).then((res) =>
-    dispatch(setLocation(res.location))
-  );
+  dispatch(setIsLoading(true));
+  getFinishPlanAPI(userId, scheduleId).then((res) => {
+    dispatch(setDailyRoutines(res.dailyRoutines));
+    dispatch(setScheduleName(res.scheduleName));
+    dispatch(setLocation(res.location));
+    dispatch(setIsLoading(false));
+  });
 };
 
 export default finishPlanReducer.reducer;
