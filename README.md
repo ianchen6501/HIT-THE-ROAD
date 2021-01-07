@@ -5,9 +5,7 @@ hit the road 主要是以 React 所建立的行程規劃專案，結合 Google M
 
 ## DEMO
 
----
-
-// 附 demo 網址
+[hit the road 網址請點我](https://yunanpan.github.io/final-project/#/)
 
 如果不想註冊，可以用測試帳號登入使用：
 
@@ -19,8 +17,6 @@ hit the road 主要是以 React 所建立的行程規劃專案，結合 Google M
 註：請勿隨意刪除非自己所建立之行程。
 
 ## 功能說明
-
----
 
 * user-page
   * 新增、刪除行程
@@ -38,55 +34,57 @@ hit the road 主要是以 React 所建立的行程規劃專案，結合 Google M
 * explore-page
   * 查看其他人已完成的行程
 
-// 附如何使用的 GIF
-
 **登入**
 
-// 登入（用測試帳號示範）
+* 登入後即可建立規劃行程。
+
+  ![](./readmeGif/login.gif)
 
 **管理行程**
 
 * 在 `/user` 可以新增、刪除行程與選擇行程是否已完成。
 
-// 配圖
+  ![](./readmeGif/user.gif)
 
 **規劃行程**
 
 * 在 `/user` 點選新增，填寫行程名稱、地點與時間。
 
-![](./readmeGif/01_plan.gif)
+  ![](./readmeGif/01_plan.gif)
 
 * 填寫好後會進入 `/planning-page` 頁面。在此可以利用搜尋功能，找到想去的地點後，釘選至地圖上並自動新增至便利貼區域
 
-![](./readmeGif/02_search.gif)
+  ![](./readmeGif/02_search.gif)
 
 * 可以新增、修改便利貼內容。
 
-![](./readmeGif/03_editpostit.gif)
+  ![](./readmeGif/03_editpostit.gif)
+  ![](./readmeGif/04_addpostit.gif)
 
 * 將想排在同一天的景點便利貼，拖曳至行程欄中。拖曳進行程欄的便利貼就不能再移動，以提醒此便利貼的景點已經排在行程當中了。將在行程欄中的景點刪除，該景點的便利貼就可以再被拖曳。
 
-![](./readmeGif/04_addpostit.gif)
+  ![](./readmeGif/05_drag.gif)
 
 * 在行程欄中，可以新增、刪除、修改景點資訊，也可以設定出發與離開的時間（預設的開始與結束時間皆為當日 0 時）。
 
-![](./readmeGif/05_drag.gif)
+  ![](./readmeGif/06_editSchudule.gif)
 
 * 點選目的地與出發地後，點選交通工具與出發時間，按下計算便可查看交通方式與時間。確定後便可將交通方式與時間加進行程欄中。
 
-![](./readmeGif/06_editSchudule.gif)
+  ![](./readmeGif/07_direction.gif)
 
 * 透過交通時間可以再去調整評估各景點間的出發、抵達與停留時間。
 
 * 點選畫面左上角的 SAVE 按鈕以儲存目前所規劃之行程。
 
-![](./readmeGif/07_direction.gif)
+  ![](./readmeGif/08_save.gif)
 
 **參考其他人的行程**
 
 * 透過首頁的探索行程，訪客或有登入的使用者皆可以查看已完成的行程。
+ 
+  ![](./readmeGif/explore.gif)
 
-![](./readmeGif/08_save.gif)
 
 **其他**
 
@@ -95,7 +93,7 @@ hit the road 主要是以 React 所建立的行程規劃專案，結合 Google M
 * 計算交通方式可能會遇到路線有問題，可以將地點改為附近的地標重新計算。
 * 建議所選之日期選擇近一點的日期。
 
-## libraries/ npm
+## libraries
 
 ---
 
@@ -112,26 +110,4 @@ hit the road 主要是以 React 所建立的行程規劃專案，結合 Google M
 ---
 以 Express + Sequelize 開發：
 // 連後端 github
-
-
-// userpage  
-// 新增行程（建議不要選擇太久以後的）  
-// planningpage  
-  // google maps 搜尋  
-  // 釘選加到 便利貼  
-  // 修改便利貼  
-  // 便利貼拉到行程欄  
-  // 設定好大概的出發時間（會以出發時間來做排序）  
-  // 設定目的地和抵達地  
-  // 設定出發時間和交通方式 -> 確定後就會跑到行程欄上可以通勤時間  
-  // (只有大眾交通運輸會有公車/捷運等資訊)  
-  // 就可以設定目的地的開始時間  
-  // 儲存 -> 成功!  
-// 其他：  
-  // 便利貼和 marker 可以互相刪除  
-  // 刪掉從便利貼拉過去的行程便利貼就可以動  
-  // 可以直接新增便利貼  
-  // 也可以直接新增行程  
-// userpage  
-// 可以看已完成未完成的，並且可以勾選，已完成的會發布給大家看  
-// 跳回 frontpage: 探索行程的部分(路人也可以看)  
+ 
