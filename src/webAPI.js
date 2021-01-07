@@ -1,4 +1,5 @@
 const BASE_URL = "https://hit-the-road.mings.tw";
+const BASE_URL_BACKUP = "https://hit-the-road.mings.tw";
 
 export function getAllUnfinishedschedulesAPI(id) {
   return fetch(`${BASE_URL}/schedules/${id}?isFinished=0`).then((response) =>
@@ -174,4 +175,44 @@ export const getFilteredPostsAPI = (keyword) => {
 
 export const getPostsAPI = () => {
   return fetch(`${BASE_URL}/posts`).then((response) => response.json());
+};
+
+export const registerAPI = (json) => {
+  return fetch(`${BASE_URL}/register/common`, {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+    },
+    body: json,
+  }).then((response) => response.json());
+};
+
+export const FbRegisterAPI = (json) => {
+  return fetch(`${BASE_URL}/register/fb`, {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+    },
+    body: json,
+  }).then((response) => response.json());
+};
+
+export const loginAPI = (json) => {
+  return fetch(`${BASE_URL}/login/common`, {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+    },
+    body: json,
+  }).then((response) => response.json());
+};
+
+export const FbLoginAPI = (json) => {
+  return fetch(`${BASE_URL}/login/fb`, {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+    },
+    body: json,
+  }).then((response) => response.json());
 };

@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { setUserData } from "../../redux/reducers/usersReducer";
-import { useDispatch } from "react-redux";
+import {
+  login,
+  FbLogin,
+  setLoginErrorMessage,
+} from "../../redux/reducers/usersReducer";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory, Link } from "react-router-dom";
-import { setAuthTokenToLocalStorage, FBstartApp } from "../../utils";
 import {
   FormContainer,
   UserInput,
@@ -15,7 +18,6 @@ import {
 } from "../../components/UserForm";
 import { Wrapper } from "../../components/public";
 import { FacebookOutlined } from "@ant-design/icons";
-import { SERVER_URL } from "../../static/static";
 import styled from "styled-components";
 
 const Reminder = styled.div`
@@ -35,9 +37,11 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [usernameErrorMessage, setUsernameErrorMessage] = useState("");
   const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
   const dispatch = useDispatch();
   const history = useHistory();
+  const loginErrorMessage = useSelector(
+    (store) => store.users.loginErrorMessage
+  );
 
   useEffect(() => {
     if (username) {
@@ -46,9 +50,13 @@ export default function LoginPage() {
     if (password) {
       setPasswordErrorMessage("");
     }
-  }, [username, password, usernameErrorMessage, passwordErrorMessage]);
 
-  const handleOnClickLogin = () => {
+    return () => {
+      dispatch(setLoginErrorMessage(null));
+    };
+  }, [username, password, usernameErrorMessage, passwordErrorMessage]);
+  //login
+  const handleUserButtonBorderOnClick = () => {
     const message = "this field can not be empty.";
 
     if (!username) {
@@ -60,63 +68,19 @@ export default function LoginPage() {
     if (!username || !password) {
       return;
     } else {
-      const body = {
-        username,
-        password,
-      };
-      const json = JSON.stringify(body);
-      fetch(`${SERVER_URL}/login/common`, {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: json,
-      })
-        .then((response) => {
-          return response.json();
-        })
-        .then((json) => {
-          if (!json.ok) {
-            setErrorMessage(json.message);
-          } else {
-            setAuthTokenToLocalStorage(json.token);
-            dispatch(setUserData(json.userData));
-            history.push("/");
-          }
-        });
+      dispatch(login(username, password)).then((response) => {
+        if (response.ok) {
+          history.push("/");
+        }
+      });
     }
   };
 
-  const handleOnClickFBLogin = () => {
-    FBstartApp().then((res) => {
-      if (!res.ok) {
-        return setErrorMessage(res.message);
+  const handleFacebookOutlinedOnClick = () => {
+    dispatch(FbLogin()).then((response) => {
+      if (response.ok) {
+        history.push("/");
       }
-      const body = {
-        fbId: res.FBUserData.id,
-        fbName: res.FBUserData.name,
-        fbEmail: res.FBUserData.email,
-      };
-      const json = JSON.stringify(body);
-      fetch(`${SERVER_URL}/login/fb`, {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: json,
-      })
-        .then((response) => {
-          return response.json();
-        })
-        .then((json) => {
-          if (!json.ok) {
-            setErrorMessage(json.message);
-          } else {
-            setAuthTokenToLocalStorage(json.token);
-            dispatch(setUserData(json.userData));
-            history.push("/");
-          }
-        });
     });
   };
 
@@ -125,7 +89,7 @@ export default function LoginPage() {
       <FormContainer>
         <Title>please sign in</Title>
         <FacebookOutlined
-          onClick={handleOnClickFBLogin}
+          onClick={handleFacebookOutlinedOnClick}
           style={{
             position: "absolute",
             right: "10px",
@@ -155,11 +119,11 @@ export default function LoginPage() {
             <ErrorMessage>{passwordErrorMessage}</ErrorMessage>
           )}
         </UserInputContainer>
-        <UserButtonBorder onClick={handleOnClickLogin}>
+        <UserButtonBorder onClick={handleUserButtonBorderOnClick}>
           <UserButtonText>next</UserButtonText>
           <UserButtonBackground />
         </UserButtonBorder>
-        {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
+        {loginErrorMessage && <ErrorMessage>{loginErrorMessage}</ErrorMessage>}
         <Link to="/register">
           <Reminder>如果尚未註冊請先註冊。</Reminder>
         </Link>
