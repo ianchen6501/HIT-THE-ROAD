@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/HIT-THE-ROAD/static/css/main.22168c73.chunk.css",
-    "main.js": "/HIT-THE-ROAD/static/js/main.76a74771.chunk.js",
-    "main.js.map": "/HIT-THE-ROAD/static/js/main.76a74771.chunk.js.map",
+    "main.js": "/HIT-THE-ROAD/static/js/main.d4e68b50.chunk.js",
+    "main.js.map": "/HIT-THE-ROAD/static/js/main.d4e68b50.chunk.js.map",
     "runtime-main.js": "/HIT-THE-ROAD/static/js/runtime-main.0d89ce3b.js",
     "runtime-main.js.map": "/HIT-THE-ROAD/static/js/runtime-main.0d89ce3b.js.map",
     "static/css/2.e25789d4.chunk.css": "/HIT-THE-ROAD/static/css/2.e25789d4.chunk.css",
@@ -23,6 +23,6 @@
     "static/css/2.e25789d4.chunk.css",
     "static/js/2.4c84bb2c.chunk.js",
     "static/css/main.22168c73.chunk.css",
-    "static/js/main.76a74771.chunk.js"
+    "static/js/main.d4e68b50.chunk.js"
   ]
 }
