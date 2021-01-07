@@ -69,7 +69,6 @@ export default function RegisterPage() {
 
   function handleFacebookOutlinedOnClick() {
     dispatch(FbRegisterUser()).then((response) => {
-      console.log(response);
       if (response.ok) {
         history.push("/");
       }
@@ -93,7 +92,7 @@ export default function RegisterPage() {
     return () => {
       dispatch(setRegisterErrorMessage(null));
     };
-  }, [username, password, nickname, email]);
+  }, [dispatch, username, password, nickname, email]);
 
   return (
     <Wrapper $solidPlate={true}>

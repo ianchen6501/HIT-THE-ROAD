@@ -1,5 +1,5 @@
 const BASE_URL = "https://hit-the-road.mings.tw";
-const BASE_URL_BACKUP = "https://hit-the-road.mings.tw";
+// const BASE_URL_BACKUP = "https://hit-the-road.mings.tw";
 
 export function getAllUnfinishedschedulesAPI(id) {
   return fetch(`${BASE_URL}/schedules/${id}?isFinished=0`).then((response) =>

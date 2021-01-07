@@ -54,7 +54,13 @@ export default function LoginPage() {
     return () => {
       dispatch(setLoginErrorMessage(null));
     };
-  }, [username, password, usernameErrorMessage, passwordErrorMessage]);
+  }, [
+    dispatch,
+    username,
+    password,
+    usernameErrorMessage,
+    passwordErrorMessage,
+  ]);
   //login
   const handleUserButtonBorderOnClick = () => {
     const message = "this field can not be empty.";
