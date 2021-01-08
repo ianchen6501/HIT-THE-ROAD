@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getFinishPlan } from "../../redux/reducers/finishPlanReducer";
+import { useHistory } from "react-router-dom";
+import { getAuthTokenFromSessionStorage } from "../../utils";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -28,12 +30,19 @@ import {
 } from "../../components/PlanTemplate";
 
 export default function FinishPlanPage() {
+  const history = useHistory();
   const dispatch = useDispatch();
   const scheduleName = useSelector((store) => store.finishPlans.scheduleName);
   const dailyRoutines = useSelector((store) => store.finishPlans.dailyRoutines);
   const isLoading = useSelector((store) => store.finishPlans.isLoading);
   const location = useSelector((store) => store.finishPlans.location);
   const [dates, setDates] = useState([]);
+
+  useEffect(() => {
+    if (getAuthTokenFromSessionStorage("userId") === null) {
+      return history.push("/");
+    }
+  }, [history]);
 
   useEffect(() => {
     const datesTest = [];
