@@ -38,7 +38,6 @@ export const FBstartApp = async () => {
 
   async function statusChangeCallback(response) {
     console.log("statusChangeCallback");
-    console.log(response);
     // The response object is returned with a status field that lets the
     // app know the current login status of the person.
     // Full docs on the response object can be found in the documentation
@@ -48,7 +47,6 @@ export const FBstartApp = async () => {
       // testAPI();
       return await new Promise((resolve) => {
         window.FB.api("/me", { fields: "id,name,email" }, function (response) {
-          console.log(response);
           resolve({
             ok: true,
             FBUserData: response,
@@ -62,13 +60,11 @@ export const FBstartApp = async () => {
       return await new Promise((resolve) => {
         window.FB.login(
           function (response) {
-            console.log(response);
             if (response.authResponse) {
               window.FB.api(
                 "/me",
                 { fields: "id,name,email" },
                 function (response) {
-                  console.log(response);
                   resolve({
                     ok: true,
                     FBUserData: response,
@@ -97,7 +93,6 @@ export function FBdeleteApp() {
   window.FB.getLoginStatus(function (response) {
     //取得目前user是否登入FB網站
     //debug用
-    console.log(response);
     if (response.status === "connected") {
       // Logged into Facebook.
       //抓userID

@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { setAuthTokenToLocalStorage, FBstartApp } from "../../utils";
-import { setUserData } from "../../redux/reducers/usersReducer";
+import {
+  registerUser,
+  FbRegisterUser,
+  setRegisterErrorMessage,
+} from "../../redux/reducers/usersReducer";
 import {
   FormContainer,
   UserInput,
@@ -15,7 +18,6 @@ import {
 } from "../../components/UserForm";
 import { Wrapper } from "../../components/public";
 import { FacebookOutlined } from "@ant-design/icons";
-import { SERVER_URL } from "../../static/static";
 
 export default function RegisterPage() {
   const [username, setUsername] = useState("");
@@ -26,9 +28,11 @@ export default function RegisterPage() {
   const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
   const [nicknameErrorMessage, setNicknameErrorMessage] = useState("");
   const [emailErrorMessage, setEmailErrorMessage] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
   const dispatch = useDispatch();
   const history = useHistory();
+  const registerErrorMessage = useSelector(
+    (store) => store.users.registerErrorMessage
+  );
 
   function handleUserButtonOnClick() {
     const errorMessage = "this field can not be empty.";
@@ -53,66 +57,20 @@ export default function RegisterPage() {
     if (!username || !password || !nickname || !email) {
       return;
     } else {
-      const json = JSON.stringify({ username, password, nickname, email });
-      fetch(`${SERVER_URL}/register/common`, {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: json,
-      })
-        .then((result) => {
-          return result.json();
-        })
-        .then((json) => {
-          if (!json.ok) {
-            return setErrorMessage(json.message);
-          } else {
-            setAuthTokenToLocalStorage(json.token);
-            dispatch(setUserData(json.userData));
-            return history.push("/");
+      dispatch(registerUser(username, password, nickname, email)).then(
+        (response) => {
+          if (response.ok) {
+            history.push("/");
           }
-        })
-        .catch((error) => {
-          return setErrorMessage(error.toString());
-        });
+        }
+      );
     }
   }
 
   function handleFacebookOutlinedOnClick() {
-    const errorMessage = "請確認並根據指示登入fb";
-    FBstartApp().then((res) => {
-      if (!res.ok) {
-        setErrorMessage(errorMessage);
-        return;
-      } else {
-        const { id, name, email } = res.FBUserData;
-        const json = JSON.stringify({
-          fbId: id,
-          fbName: name,
-          fbEmail: email,
-        });
-        fetch(`${SERVER_URL}/register/fb`, {
-          method: "POST",
-          headers: {
-            "content-type": "application/json",
-          },
-          body: json,
-        })
-          .then((response) => {
-            return response.json();
-          })
-          .then((json) => {
-            if (!json.ok) {
-              return setErrorMessage(json.message);
-            }
-            setAuthTokenToLocalStorage(json.token);
-            dispatch(setUserData(json.userData));
-            return history.push("/");
-          })
-          .catch((error) => {
-            return setErrorMessage(error.toString());
-          });
+    dispatch(FbRegisterUser()).then((response) => {
+      if (response.ok) {
+        history.push("/");
       }
     });
   }
@@ -130,7 +88,11 @@ export default function RegisterPage() {
     if (email) {
       setEmailErrorMessage("");
     }
-  }, [username, password, nickname, email]);
+    //刪除 registerErrorMessage
+    return () => {
+      dispatch(setRegisterErrorMessage(null));
+    };
+  }, [dispatch, username, password, nickname, email]);
 
   return (
     <Wrapper $solidPlate={true}>
@@ -191,7 +153,9 @@ export default function RegisterPage() {
           <UserButtonText>next</UserButtonText>
           <UserButtonBackground />
         </UserButtonBorder>
-        {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
+        {registerErrorMessage && (
+          <ErrorMessage>{registerErrorMessage}</ErrorMessage>
+        )}
       </FormContainer>
     </Wrapper>
   );
