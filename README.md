@@ -95,8 +95,6 @@ hit the road 主要是以 React 所建立的行程規劃專案，結合 Google M
 
 ## libraries
 
----
-
 - [react-day-picker](http://react-day-picker.js.org)
 - [react-beautiful-dnd](https://github.com/atlassian/react-beautiful-dnd)
 - [google-map-react](https://github.com/google-map-react/google-map-react)
