@@ -1,70 +1,113 @@
-# Getting Started with Create React App
+# hit the road (RWD)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+hit the road 主要是以 React 所建立的行程規劃專案，結合 Google Maps 和便利貼功能，讓使用者可以先簡單紀錄必去的景點清單，再將景點排進行程欄中。在行程欄中可以計算各景點間的交通時間，有助於在行程規劃初期可以快速預估每個景點停留的時間和整體行程的規劃。另外也可以查看其他使用者已完成的行程，作為下次旅遊的行程參考。後端部分是以 Express + Sequelize 開發。
 
-## Available Scripts
 
-In the project directory, you can run:
+## DEMO
 
-### `yarn start`
+[hit the road 網址請點我](https://yunanpan.github.io/final-project/#/)
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+如果不想註冊，可以用測試帳號登入使用：
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+```
+帳號：demo01
+密碼：demo01
+```
 
-### `yarn test`
+註：請勿隨意刪除非自己所建立之行程。
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 功能說明
 
-### `yarn build`
+* user-page
+  * 新增、刪除行程
+  * 選擇行程是否已完成
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+* planning-page
+  * 在地圖上釘選景點並加入到便利貼中
+  * 新增、刪除、編輯每日行程景點景點
+  * 新增、刪除、編輯便利貼
+  * 將便利貼景點排入每日行程中
+  * 計算行程景點的交通方式與距離
+  * 新增、刪除交通資訊
+  * 儲存行程
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+* explore-page
+  * 查看其他人已完成的行程
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+**登入**
 
-### `yarn eject`
+* 登入後即可建立規劃行程。
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+  ![](./readmeGif/login.gif)
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+**管理行程**
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+* 在 `/user` 可以新增、刪除行程與選擇行程是否已完成。
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+  ![](./readmeGif/user.gif)
 
-## Learn More
+**規劃行程**
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+* 在 `/user` 點選新增，填寫行程名稱、地點與時間。
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+  ![](./readmeGif/01_plan.gif)
 
-### Code Splitting
+* 填寫好後會進入 `/planning-page` 頁面。在此可以利用搜尋功能，找到想去的地點後，釘選至地圖上並自動新增至便利貼區域
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+  ![](./readmeGif/02_search.gif)
 
-### Analyzing the Bundle Size
+* 可以新增、修改便利貼內容。
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+  ![](./readmeGif/03_editpostit.gif)
+  ![](./readmeGif/04_addpostit.gif)
 
-### Making a Progressive Web App
+* 將想排在同一天的景點便利貼，拖曳至行程欄中。拖曳進行程欄的便利貼就不能再移動，以提醒此便利貼的景點已經排在行程當中了。將在行程欄中的景點刪除，該景點的便利貼就可以再被拖曳。
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+  ![](./readmeGif/05_drag.gif)
 
-### Advanced Configuration
+* 在行程欄中，可以新增、刪除、修改景點資訊，也可以設定出發與離開的時間（預設的開始與結束時間皆為當日 0 時）。
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+  ![](./readmeGif/06_editSchudule.gif)
 
-### Deployment
+* 點選目的地與出發地後，點選交通工具與出發時間，按下計算便可查看交通方式與時間。確定後便可將交通方式與時間加進行程欄中。
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+  ![](./readmeGif/07_direction.gif)
 
-### `yarn build` fails to minify
+* 透過交通時間可以再去調整評估各景點間的出發、抵達與停留時間。
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+* 點選畫面左上角的 SAVE 按鈕以儲存目前所規劃之行程。
+
+  ![](./readmeGif/08_save.gif)
+
+**參考其他人的行程**
+
+* 透過首頁的探索行程，訪客或有登入的使用者皆可以查看已完成的行程。
+ 
+  ![](./readmeGif/explore.gif)
+
+
+**其他**
+
+* 便利貼和地圖釘選是互相連動的。
+* 可以直接新增便利貼和行程。
+* 計算交通方式可能會遇到路線有問題，可以將地點改為附近的地標重新計算。
+* 建議所選之日期選擇近一點的日期。
+
+## libraries
+
+---
+
+* [react-day-picker](http://react-day-picker.js.org)
+* [react-beautiful-dnd](https://github.com/atlassian/react-beautiful-dnd)
+* [google-map-react](https://github.com/google-map-react/google-map-react)
+* GoogleMaps / Place
+* Redux Toolkit
+* React Router
+* styled-component
+
+## 後端
+
+---
+以 Express + Sequelize 開發：
+// 連後端 github
+ 
