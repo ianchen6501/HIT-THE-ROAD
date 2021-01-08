@@ -304,7 +304,11 @@ export default function UserPage() {
     }
   }, [dispatch, userData, isChangingIsFinished, isDeleting, isLoading]);
 
-  if (!userData || !schedules || isChangingIsFinished) {
+  if (!userData) {
+    history.push("/");
+  }
+
+  if (!schedules || isChangingIsFinished) {
     return <LoadingPage />;
   }
 
