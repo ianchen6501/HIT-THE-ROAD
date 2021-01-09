@@ -8,17 +8,17 @@ import { useDispatch, useSelector } from "react-redux";
 import frontPageIcon01 from "../../static/frontpage_icon-01.jpg";
 import frontPageIcon02 from "../../static/frontpage_icon-02.jpg";
 import frontPageIcon03 from "../../static/frontpage_icon-03.jpg";
-import { MEDIA_QUERY_LG } from "../../constants/break_point";
+import {
+  MEDIA_QUERY_LG,
+  MEDIA_QUERY_SM,
+  MEDIA_QUERY_MD,
+} from "../../constants/break_point";
 
-const Heading = styled.h1`
-  display: inline-block;
-  position: relative;
-  margin-bottom: 0px;
-  padding-top: 30px;
-  padding-bottom: 30px;
-  left: 50%;
-  transform: translate(-50%, 0);
+const Heading = styled.div`
+  margin: 60px auto 30px;
+  text-align: center;
   font-weight: bolder;
+  font-size: ${(props) => props.theme.titles.h5};
   color: ${(props) => props.theme.secondaryColors.secondaryDarker};
 `;
 
@@ -26,29 +26,46 @@ const BannerContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap;
-  padding: 0px;
 
-  ${MEDIA_QUERY_LG} {
+  ${MEDIA_QUERY_SM} {
     flex-direction: column;
   }
 `;
 
 const PostsContainer = styled.div`
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+  ${MEDIA_QUERY_SM} {
+    flex-direction: column;
+    align-items: center;
+  }
 `;
 
 const IntroContainer = styled.div`
-  height: auto;
   width: 300px;
   display: flex;
   flex-direction: column;
+  border-radius: 10px;
   box-shadow: 0.5px 0.5px 3px -1px;
 
+  & + & {
+    margin-left: 5px;
+  }
+
   ${MEDIA_QUERY_LG} {
-    margin: 10px 0px;
+    width: 240px;
+  }
+
+  ${MEDIA_QUERY_MD} {
+    width: 200px;
+  }
+
+  ${MEDIA_QUERY_SM} {
+    & + & {
+      margin-top: 10px;
+    }
   }
 `;
 
@@ -75,37 +92,64 @@ const IntroImage = styled.div`
     `
     background-image: url(${frontPageIcon03});
   `}
+
+  ${MEDIA_QUERY_LG} {
+    height: 200px;
+  }
+
+  ${MEDIA_QUERY_MD} {
+    height: 140px;
+  }
 `;
 
 const IntroTitle = styled.div`
-  height: 50px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: ${(props) => props.theme.titles.h4};
+  width: 120px;
+  margin: 10px auto 0px;
+  border-bottom: 1px solid ${(props) => props.theme.primaryColors.primaryDarker};
+  font-size: ${(props) => props.theme.titles.h6};
+  text-align: center;
   font-weight: bold;
+  color: ${(props) => props.theme.primaryColors.primaryDarker};
+
+  ${MEDIA_QUERY_MD} {
+    font-size: ${(props) => props.theme.fontSizes.medium};
+  }
 `;
 
 const IntroContent = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  min-height: 120px;
   padding: 15px 20px;
+  word-break: break-all;
+  text-align: justify;
   font-weight: bold;
+  color: ${(props) => props.theme.primaryColors.primaryDarker};
+
+  ${MEDIA_QUERY_MD} {
+    padding: 5px 20px;
+    min-height: 100px;
+    font-size: ${(props) => props.theme.fontSizes.small};
+    line-height: ${(props) => props.theme.fontSizes.medium};
+  }
 `;
 
-const MoreTag = styled.div`
-  margin-bottom: 30px;
+const MoreTag = styled(Link)`
+  display: block;
+  margin: 30px auto;
   padding: 2px 5px;
+  width: 200px;
   border-radius: 5px;
   font-size: ${(props) => props.theme.fontSizes.small};
   border: 1px solid ${(props) => props.theme.secondaryColors.secondaryDarker};
   color: ${(props) => props.theme.secondaryColors.secondaryDarker};
+  text-align: center;
   font-weight: bold;
   cursor: pointer;
+  transition: color 0.5s ease, background 1s ease;
 
   &:hover {
     box-shadow: 0 1px 2px grey;
+    color: ${(props) => props.theme.secondaryColors.secondaryLighter};
+    background: ${(props) => props.theme.secondaryColors.secondaryDarker};
   }
 `;
 
@@ -152,11 +196,10 @@ export default function HomePage() {
             {postsData.slice(0, 5).map((post, index) => (
               <Post postData={post} key={index}></Post>
             ))}
-            <Link to={"/explore"}>
-              <MoreTag>more</MoreTag>
-            </Link>
           </PostsContainer>
         )}
+        <MoreTag to={"/explore"}>more</MoreTag>
+        <Heading>依地區搜尋</Heading>
       </Wrapper>
     </>
   );
