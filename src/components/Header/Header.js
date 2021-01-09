@@ -122,18 +122,17 @@ const NavbarList = styled.div`
   margin-right: 10px;
 
   ${MEDIA_QUERY_SM} {
-    display: ${(props) => (props.$isNavbarListShow ? "block" : "none")};
     flex-direction: column;
     position: absolute;
     top: ${(props) => props.theme.heights.header};
-    left: 0px;
-    margin-left: 10px;
+    left: ${(props) => (props.$isNavbarListShow ? "0px" : "-100%")};
     padding-left: 5px;
     padding-right: 5px;
     width: 100px;
     text-align: center;
     background: ${(props) => props.theme.secondaryColors.secondaryLighter};
     box-shadow: -3px 3px 3px grey;
+    transition: left 1s ease;
   }
 `;
 
@@ -228,26 +227,48 @@ export default function Header({ isCheckedLogin }) {
               onClick={() => setIsNavbarListShow(!isNavbarListShow)}
             />
             <NavbarList $isNavbarListShow={isNavbarListShow}>
-              <Nav to="/explore" $active={location.pathname === "/user"}>
+              <Nav
+                to="/explore"
+                $active={location.pathname === "/user"}
+                onClick={() => setIsNavbarListShow(false)}
+              >
                 探索行程
               </Nav>
               {userData && (
-                <Nav to="/user" $active={location.pathname === "/user"}>
+                <Nav
+                  to="/user"
+                  $active={location.pathname === "/user"}
+                  onClick={() => setIsNavbarListShow(false)}
+                >
                   編輯行程
                 </Nav>
               )}
               {!userData && (
-                <Nav to="/login" $active={location.pathname === "/login"}>
+                <Nav
+                  to="/login"
+                  $active={location.pathname === "/login"}
+                  onClick={() => setIsNavbarListShow(false)}
+                >
                   登入
                 </Nav>
               )}
               {!userData && (
-                <Nav to="/register" $active={location.pathname === "/register"}>
+                <Nav
+                  to="/register"
+                  $active={location.pathname === "/register"}
+                  onClick={() => setIsNavbarListShow(false)}
+                >
                   註冊
                 </Nav>
               )}
               {userData && (
-                <Nav to="/" onClick={() => handleLogout()}>
+                <Nav
+                  to="/"
+                  onClick={() => {
+                    setIsNavbarListShow(false);
+                    handleLogout();
+                  }}
+                >
                   登出
                 </Nav>
               )}
