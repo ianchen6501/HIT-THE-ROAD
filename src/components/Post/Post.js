@@ -4,12 +4,12 @@ import { useHistory } from "react-router-dom";
 import { MEDIA_QUERY_MD } from "../../constants/break_point";
 
 const Container = styled.div`
-  width: 49%;
+  width: calc(50% - 5px);
   display: flex;
   flex-direction: column;
   margin-bottom: 10px;
   border: none;
-  border-radius: 5px;
+  border-radius: 20px;
   background: ${(props) => props.theme.primaryColors.primaryLighter};
   transition: all 0.5s ease;
 
