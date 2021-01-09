@@ -15,7 +15,7 @@ import {
 } from "../../constants/break_point";
 
 const Heading = styled.div`
-  margin: 20px auto;
+  margin: 60px auto 30px;
   text-align: center;
   font-weight: bolder;
   font-size: ${(props) => props.theme.titles.h5};
@@ -34,12 +34,16 @@ const BannerContainer = styled.div`
 
 const PostsContainer = styled.div`
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+  ${MEDIA_QUERY_SM} {
+    flex-direction: column;
+    align-items: center;
+  }
 `;
 
 const IntroContainer = styled.div`
-  height: auto;
   width: 300px;
   display: flex;
   flex-direction: column;
@@ -99,46 +103,53 @@ const IntroImage = styled.div`
 `;
 
 const IntroTitle = styled.div`
-  margin-top: 10px;
+  width: 120px;
+  margin: 10px auto 0px;
+  border-bottom: 1px solid ${(props) => props.theme.primaryColors.primaryDarker};
   font-size: ${(props) => props.theme.titles.h6};
   text-align: center;
   font-weight: bold;
+  color: ${(props) => props.theme.primaryColors.primaryDarker};
 
   ${MEDIA_QUERY_MD} {
-    font-size: ${(props) => props.theme.fontSizes.small};
+    font-size: ${(props) => props.theme.fontSizes.medium};
   }
 `;
 
 const IntroContent = styled.div`
   min-height: 120px;
   padding: 15px 20px;
-  font-weight: bold;
   word-break: break-all;
   text-align: justify;
+  font-weight: bold;
+  color: ${(props) => props.theme.primaryColors.primaryDarker};
 
   ${MEDIA_QUERY_MD} {
     padding: 5px 20px;
-    font-size: ${(props) => props.theme.fontSizes.extraSmall};
     min-height: 100px;
-  }
-
-  ${MEDIA_QUERY_SM} {
-    min-height: 80px;
+    font-size: ${(props) => props.theme.fontSizes.small};
+    line-height: ${(props) => props.theme.fontSizes.medium};
   }
 `;
 
-const MoreTag = styled.div`
-  margin-bottom: 30px;
+const MoreTag = styled(Link)`
+  display: block;
+  margin: 30px auto;
   padding: 2px 5px;
+  width: 200px;
   border-radius: 5px;
   font-size: ${(props) => props.theme.fontSizes.small};
   border: 1px solid ${(props) => props.theme.secondaryColors.secondaryDarker};
   color: ${(props) => props.theme.secondaryColors.secondaryDarker};
+  text-align: center;
   font-weight: bold;
   cursor: pointer;
+  transition: color 0.5s ease, background 1s ease;
 
   &:hover {
     box-shadow: 0 1px 2px grey;
+    color: ${(props) => props.theme.secondaryColors.secondaryLighter};
+    background: ${(props) => props.theme.secondaryColors.secondaryDarker};
   }
 `;
 
@@ -185,11 +196,10 @@ export default function HomePage() {
             {postsData.slice(0, 5).map((post, index) => (
               <Post postData={post} key={index}></Post>
             ))}
-            <Link to={"/explore"}>
-              <MoreTag>more</MoreTag>
-            </Link>
           </PostsContainer>
         )}
+        <MoreTag to={"/explore"}>more</MoreTag>
+        <Heading>依地區搜尋</Heading>
       </Wrapper>
     </>
   );

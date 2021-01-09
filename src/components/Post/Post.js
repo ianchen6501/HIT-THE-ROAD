@@ -3,17 +3,19 @@ import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 import { MEDIA_QUERY_MD } from "../../constants/break_point";
 
-const PostContainer = styled.div`
-  width: 100%;
-  position: relative;
+const Container = styled.div`
+  width: 49%;
   display: flex;
-  align-items: center;
-  margin: 20px auto;
-  box-shadow: 0.5px 0.5px 3px -1px;
-  transition: background 0.2s;
+  flex-direction: column;
+  margin-bottom: 10px;
+  border: none;
+  border-radius: 5px;
+  background: ${(props) => props.theme.primaryColors.primaryLighter};
+  transition: all 0.5s ease;
 
   &:hover {
     background: ${(props) => props.theme.basicColors.white};
+    box-shadow: 0px 2px 5px grey;
   }
 
   ${MEDIA_QUERY_MD} {
@@ -21,93 +23,79 @@ const PostContainer = styled.div`
   }
 `;
 
-const PostRightContainer = styled.div`
+const PostContainer = styled.div`
   display: flex;
-  height: 100%;
   width: 100%;
   padding: 15px;
   justify-content: space-between;
-
-  ${MEDIA_QUERY_MD} {
-    flex-direction: column;
-  }
-`;
-
-// const Image = styled.div`
-//   height: 100%;
-//   width: 25%;
-//   background: ${(props) => props.theme.secondaryColors.secondary};
-//   background-position: center;
-//   background-repeat: no-repeat;
-//   background-size: cover;
-// `;
-
-const TitleContainer = styled.div`
-  position: relative;
-  display: flex;
-  align-items: center;
 `;
 
 const Title = styled.div`
-  font-size: ${(props) => props.theme.titles.h4};
+  padding: 5px 0;
+  font-size: ${(props) => props.theme.fontSizes.medium};
   font-weight: bold;
-  cursor: pointer;
   overflow: hidden;
   text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
-
-  &:hover {
-    color: ${(props) => props.theme.primaryColors.primary};
-  }
+  color: ${(props) => props.theme.primaryColors.primaryDarker};
 `;
 
 const ContentLeftContainer = styled.div`
   width: 80%;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  cursor: pointer;
 `;
 
 const ContentRightContainer = styled.div`
   position: relative;
   padding: 5px 0px 0px 0px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: flex-end;
-
-  ${MEDIA_QUERY_MD} {
-    border-top: 0.5px solid
-      ${(props) => props.theme.secondaryColors.secondaryDarker};
-  }
 `;
 
 const Dates = styled.div`
-  font-size: ${(props) => props.theme.fontSizes.small};
+  font-size: ${(props) => props.theme.fontSizes.extraSmall};
+  line-height: ${(props) => props.theme.fontSizes.extraSmall};
   font-weight: bold;
+  color: ${(props) => props.theme.primaryColors.primary};
 `;
 
 const Location = styled.div`
+  padding: 5px;
+  border-radius: 10px;
+  background: ${(props) => props.theme.primaryColors.primaryDarker};
+  color: ${(props) => props.theme.primaryColors.primaryLighter};
   font-size: ${(props) => props.theme.fontSizes.small};
   font-weight: bold;
 `;
 
-// const HeadSticker = styled.div`
-//   width: 60px;
-//   height: 60px;
-//   border-radius: 60px;
-//   background: ${(props) => props.theme.secondaryColors.secondary};
-// `;
-
 const Arthur = styled.div`
-  font-size: ${(props) => props.theme.fontSizes.small};
+  margin-top: 5px;
+  font-size: ${(props) => props.theme.fontSizes.extraSmall};
   font-weight: bold;
+  color: ${(props) => props.theme.primaryColors.primary};
+`;
+
+const HashtagContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 10px 10px;
+`;
+
+const Hashtag = styled.div`
+  margin: 2.5px;
+  padding: 2px;
+  color: white;
+  background: ${(props) => props.theme.primaryColors.primaryDark};
+  border: none;
+  border-radius: 5px;
 `;
 
 export default function Post({ postData }) {
   const history = useHistory();
+  const hashtags = postData.dailyRoutines[postData.dateRange.start];
+  let hashtagsArr = [];
+  hashtags
+    .filter((hashtag) => hashtag.category !== "hotel")
+    .map((filterHashtag) => hashtagsArr.push(filterHashtag.location));
 
   function changeMillisecondsToLocalDate(milliseconds) {
     const day = new Date(milliseconds).getDate();
@@ -131,25 +119,27 @@ export default function Post({ postData }) {
   const userId = postData.userId;
 
   return (
-    <PostContainer>
-      {/* <Image /> */}
-      <PostRightContainer>
-        <ContentLeftContainer>
-          <TitleContainer>
-            <Title onClick={() => handleTitleOnClick(id, userId)}>
-              {title}
-            </Title>
-          </TitleContainer>
-          <Location>{location}</Location>
+    <Container>
+      <PostContainer>
+        {/* <Image /> */}
+        <ContentLeftContainer onClick={() => handleTitleOnClick(id, userId)}>
+          <Title>{title}</Title>
           <Dates>
             {startDate} - {endDate}
           </Dates>
+          <Arthur>{arthur}</Arthur>
         </ContentLeftContainer>
         <ContentRightContainer>
           {/* <HeadSticker /> */}
-          <Arthur>{arthur}</Arthur>
+          <Location>{location}</Location>
         </ContentRightContainer>
-      </PostRightContainer>
-    </PostContainer>
+      </PostContainer>
+      <HashtagContainer>
+        {hashtagsArr.length > 0 &&
+          hashtagsArr.map((hashtag, index) => (
+            <Hashtag key={index}>{hashtag}</Hashtag>
+          ))}
+      </HashtagContainer>
+    </Container>
   );
 }
