@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { Wrapper } from "../../components/public";
+import { FormWrapper } from "../../components/public";
 import {
   FormContainer,
   UserInput,
@@ -8,6 +8,7 @@ import {
   UserButtonBackground,
   UserButtonText,
   ErrorMessage,
+  UserButtonContainer,
 } from "../../components/UserForm";
 
 import DatePicker from "../../components/DatePicker";
@@ -42,8 +43,16 @@ const SubTitle = styled.div`
 const Select = styled.select`
   width: 100%;
   height: 50px;
+  max-height: 100px;
   border: 1px solid ${(props) => props.theme.secondaryColors.secondaryLight};
+  border-radius: 50px;
+  padding-left: 25px;
   font-size: ${(props) => props.theme.fontSizes.medium};
+  overflow: scroll;
+
+  &:focus {
+    outline: none;
+  }
 `;
 
 const SubContainer = styled.div`
@@ -102,7 +111,6 @@ export default function CreatePage() {
   const [endDate, setEndDate] = useState(
     new Date(currentYear, currentMonth, currentDate).getTime()
   );
-  // const [errorMessage, setErrorMessage] = useState("");
   const [scheduleNameErrorMessage, setScheduleNameErrorMessage] = useState("");
   const userData = useSelector((store) => store.users.userData);
   const createErrorMessage = useSelector(
@@ -129,7 +137,7 @@ export default function CreatePage() {
 
   if (userData) {
     return (
-      <Wrapper $solidPlate={true}>
+      <FormWrapper $solidPlate={true}>
         <FormContainer style={FormContainerStyle}>
           <Title>來趟新的旅行吧!</Title>
           <SubContainer>
@@ -149,6 +157,7 @@ export default function CreatePage() {
             <Select
               value={location}
               onChange={(event) => setLocation(event.target.value)}
+              name={"location"}
             >
               {destinationSelects.map((select) => (
                 <option value={select} key={select}>
@@ -167,17 +176,17 @@ export default function CreatePage() {
               setEndDate={setEndDate}
             />
           </SubContainer>
-          <div onClick={handleSubmitSchedule}>
+          <UserButtonContainer onClick={handleSubmitSchedule}>
             <UserButtonBorder style={{ zIndex: "0" }}>
               <UserButtonText>next</UserButtonText>
               <UserButtonBackground />
             </UserButtonBorder>
-          </div>
-          {createErrorMessage && (
-            <ErrorMessage>{createErrorMessage}</ErrorMessage>
-          )}
+            {createErrorMessage && (
+              <ErrorMessage>{createErrorMessage}</ErrorMessage>
+            )}
+          </UserButtonContainer>
         </FormContainer>
-      </Wrapper>
+      </FormWrapper>
     );
   }
 }

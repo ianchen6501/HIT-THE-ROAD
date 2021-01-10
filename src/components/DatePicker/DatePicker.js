@@ -31,7 +31,7 @@ export default function Example({
 }) {
   return (
     <Container>
-      <DatePickerContainer>
+      <DatePickerContainer className="DatePickerContainer">
         <DatePicker
           className="DatePicker"
           dateFormat="yyyy/MM/dd"
@@ -43,7 +43,7 @@ export default function Example({
           endDate={new Date(endDate)}
         />
       </DatePickerContainer>
-      <DatePickerContainer>
+      <DatePickerContainer className="DatePickerContainer">
         <DatePicker
           className="DatePicker"
           dateFormat="yyyy/MM/dd"
