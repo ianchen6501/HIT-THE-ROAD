@@ -125,8 +125,9 @@ export default function Post({ postData }) {
   const arthur = postData.User.nickname
     ? postData.User.nickname
     : postData.User.fbName;
-  const startDate = changeMillisecondsToLocalDate(postData.dateRange.start);
-  const endDate = changeMillisecondsToLocalDate(postData.dateRange.end);
+  const dateRange = postData.dateRange;
+  const startDate = changeMillisecondsToLocalDate(dateRange.start);
+  const endDate = changeMillisecondsToLocalDate(dateRange.end);
   const id = postData.id;
   const userId = postData.userId;
 
