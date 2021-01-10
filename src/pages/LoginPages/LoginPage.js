@@ -5,32 +5,70 @@ import {
   setLoginErrorMessage,
 } from "../../redux/reducers/usersReducer";
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory, Link } from "react-router-dom";
+import { useHistory, Link, useLocation } from "react-router-dom";
 import {
   FormContainer,
   UserInput,
   Title,
   UserInputContainer,
+  UserButtonContainer,
   UserButtonBorder,
   UserButtonBackground,
   UserButtonText,
   ErrorMessage,
 } from "../../components/UserForm";
-import { Wrapper } from "../../components/public";
+import { FormWrapper } from "../../components/public";
 import { FacebookOutlined } from "@ant-design/icons";
 import styled from "styled-components";
+import { MEDIA_QUERY_MD, MEDIA_QUERY_EXSM } from "../../constants/break_point";
 
-const Reminder = styled.div`
+const ReminderContainer = styled.div`
+  width: 480px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20px;
+
+  ${MEDIA_QUERY_MD} {
+    width: 360px;
+  }
+
+  ${MEDIA_QUERY_EXSM} {
+    width: 225px;
+  }
+`;
+
+const RegisterReminder = styled.div`
+  display: flex;
+  border-bottom: 1px solid
+    ${(props) => props.theme.secondaryColors.secondaryDarker};
+  font-size: ${(props) => props.theme.fontSizes.small};
+  font-weight: 800;
+`;
+
+const RegisterLink = styled.div`
+  color: ${(props) => props.theme.primaryColors.primary};
+  font-size: ${(props) => props.theme.fontSizes.small};
+  font-weight: 800;
+`;
+
+const DemoAcountReminder = styled.div`
   position: relative;
   width: fit-content;
-  margin: 0px auto;
-  padding: 6px 10px;
-  border-radius: 5px;
+  margin-top: 20px;
+  border: 1px solid ${(props) => props.theme.secondaryColors.secondaryDarker};
+  border-radius: 10px;
+  padding: 10px;
   color: ${(props) => props.theme.secondaryColors.secondaryDarker};
-  font-size: ${(props) => props.theme.fontSizes.medium};
+  font-size: ${(props) => props.theme.fontSizes.small};
   font-weight: 800;
-  background: ${(props) => props.theme.primaryColors.primaryLighter};
 `;
+
+const FacebookOutlinedStyle = {
+  transform: "scale(1.2)",
+  cursor: "pointer",
+};
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
@@ -39,9 +77,12 @@ export default function LoginPage() {
   const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
   const dispatch = useDispatch();
   const history = useHistory();
+  const location = useLocation();
   const loginErrorMessage = useSelector(
     (store) => store.users.loginErrorMessage
   );
+  const userData = useSelector((store) => store.users.userData);
+  console.log(location);
 
   useEffect(() => {
     if (username) {
@@ -90,20 +131,14 @@ export default function LoginPage() {
     });
   };
 
+  if (userData) {
+    history.push("/");
+  }
+
   return (
-    <Wrapper $solidPlate={true}>
+    <FormWrapper $solidPlate={true}>
       <FormContainer>
         <Title>please sign in</Title>
-        <FacebookOutlined
-          onClick={handleFacebookOutlinedOnClick}
-          style={{
-            position: "absolute",
-            right: "10px",
-            top: "10px",
-            transform: "scale(1.2)",
-            cursor: "pointer",
-          }}
-        />
         <UserInputContainer>
           <UserInput
             placeholder={"USERNAME"}
@@ -125,15 +160,36 @@ export default function LoginPage() {
             <ErrorMessage>{passwordErrorMessage}</ErrorMessage>
           )}
         </UserInputContainer>
-        <UserButtonBorder onClick={handleUserButtonBorderOnClick}>
-          <UserButtonText>next</UserButtonText>
-          <UserButtonBackground />
-        </UserButtonBorder>
-        {loginErrorMessage && <ErrorMessage>{loginErrorMessage}</ErrorMessage>}
-        <Link to="/register">
-          <Reminder>如果尚未註冊請先註冊。</Reminder>
-        </Link>
+        <UserButtonContainer>
+          <UserButtonBorder onClick={handleUserButtonBorderOnClick}>
+            <UserButtonText>next</UserButtonText>
+            <UserButtonBackground />
+          </UserButtonBorder>
+          {loginErrorMessage && (
+            <ErrorMessage>{loginErrorMessage}</ErrorMessage>
+          )}
+        </UserButtonContainer>
+        <FacebookOutlined
+          onClick={handleFacebookOutlinedOnClick}
+          style={FacebookOutlinedStyle}
+        />
+        <ReminderContainer>
+          <RegisterReminder>
+            還沒有帳戶嗎?
+            <Link to="/register">
+              <RegisterLink>註冊</RegisterLink>
+            </Link>
+          </RegisterReminder>
+          <DemoAcountReminder>
+            測試帳號
+            <br />
+            username: demo01
+            <br />
+            password: demo01
+            <br />
+          </DemoAcountReminder>
+        </ReminderContainer>
       </FormContainer>
-    </Wrapper>
+    </FormWrapper>
   );
 }

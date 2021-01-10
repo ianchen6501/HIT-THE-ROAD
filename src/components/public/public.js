@@ -17,6 +17,21 @@ export const Wrapper = styled.div`
   }
 `;
 
+export const FormWrapper = styled.div`
+  position: relative;
+  height: 100vh;
+  min-height: 100vh;
+  margin: 0 auto;
+  padding-top: ${(props) =>
+    props.$atHomepage ? "0" : props.theme.heights.header};
+  padding-bottom: ${(props) => props.theme.heights.footer};
+  background: ${(props) => props.theme.basicColors.grayLighter};
+
+  ${MEDIA_QUERY_SM} {
+    width: 100vw;
+  }
+`;
+
 const LoadingContainer = styled.div`
   position: relative;
   min-height: 100vh;
@@ -26,6 +41,7 @@ const LoadingContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  background: ${(props) => props.theme.primaryColors.primary}
   font-size: ${(props) => props.theme.titles.h4};
   color: ${(props) => props.theme.secondaryColors.secondaryDarker};
 `;

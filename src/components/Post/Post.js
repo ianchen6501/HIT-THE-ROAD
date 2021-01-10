@@ -5,6 +5,7 @@ import { MEDIA_QUERY_MD } from "../../constants/break_point";
 
 const Container = styled.div`
   width: calc(50% - 5px);
+  height: fit-content;
   display: flex;
   flex-direction: column;
   margin-bottom: 10px;
@@ -113,8 +114,9 @@ export default function Post({ postData }) {
   const arthur = postData.User.nickname
     ? postData.User.nickname
     : postData.User.fbName;
-  const startDate = changeMillisecondsToLocalDate(postData.dateRange.start);
-  const endDate = changeMillisecondsToLocalDate(postData.dateRange.end);
+  const dateRange = postData.dateRange;
+  const startDate = changeMillisecondsToLocalDate(dateRange.start);
+  const endDate = changeMillisecondsToLocalDate(dateRange.end);
   const id = postData.id;
   const userId = postData.userId;
 
