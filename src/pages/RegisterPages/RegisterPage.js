@@ -39,6 +39,7 @@ export default function RegisterPage() {
   const registerErrorMessage = useSelector(
     (store) => store.users.registerErrorMessage
   );
+  const userData = useSelector((store) => store.users.userData);
 
   function handleUserButtonOnClick() {
     const errorMessage = "this field can not be empty.";
@@ -99,6 +100,10 @@ export default function RegisterPage() {
       dispatch(setRegisterErrorMessage(null));
     };
   }, [dispatch, username, password, nickname, email]);
+
+  if (userData) {
+    history.push("/");
+  }
 
   return (
     <FormWrapper $solidPlate={true}>

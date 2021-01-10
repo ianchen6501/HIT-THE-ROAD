@@ -5,7 +5,7 @@ import {
   setLoginErrorMessage,
 } from "../../redux/reducers/usersReducer";
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory, Link } from "react-router-dom";
+import { useHistory, Link, useLocation } from "react-router-dom";
 import {
   FormContainer,
   UserInput,
@@ -20,11 +20,7 @@ import {
 import { FormWrapper } from "../../components/public";
 import { FacebookOutlined } from "@ant-design/icons";
 import styled from "styled-components";
-import {
-  MEDIA_QUERY_MD,
-  MEDIA_QUERY_SM,
-  MEDIA_QUERY_EXSM,
-} from "../../constants/break_point";
+import { MEDIA_QUERY_MD, MEDIA_QUERY_EXSM } from "../../constants/break_point";
 
 const ReminderContainer = styled.div`
   width: 480px;
@@ -81,9 +77,12 @@ export default function LoginPage() {
   const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
   const dispatch = useDispatch();
   const history = useHistory();
+  const location = useLocation();
   const loginErrorMessage = useSelector(
     (store) => store.users.loginErrorMessage
   );
+  const userData = useSelector((store) => store.users.userData);
+  console.log(location);
 
   useEffect(() => {
     if (username) {
@@ -131,6 +130,10 @@ export default function LoginPage() {
       }
     });
   };
+
+  if (userData) {
+    history.push("/");
+  }
 
   return (
     <FormWrapper $solidPlate={true}>
