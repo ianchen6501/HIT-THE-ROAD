@@ -5,6 +5,7 @@ import { MEDIA_QUERY_MD } from "../../constants/break_point";
 
 const Container = styled.div`
   width: calc(50% - 5px);
+  height: fit-content;
   display: flex;
   flex-direction: column;
   margin-bottom: 10px;

@@ -10,6 +10,7 @@ const theme = {
   basicColors: {
     white: "#fff5f6",
     black: "#000000",
+    grayLighter: "#e8e8e8",
   },
 
   primaryColors: {

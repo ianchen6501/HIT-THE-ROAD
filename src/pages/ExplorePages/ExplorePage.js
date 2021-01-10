@@ -5,6 +5,7 @@ import { getPosts, getFilteredPosts } from "../../redux/reducers/postsReducer";
 import { Wrapper } from "../../components/public";
 import Post from "../../components/Post";
 import Paginator from "../../components/Paginator";
+import { MEDIA_QUERY_MD } from "../../constants/break_point";
 
 const FilterContainer = styled.div`
   margin-top: 30px;
@@ -36,7 +37,14 @@ const KeywordFilter = styled.div`
 `;
 
 const PostsContainer = styled.div`
-  min-height: 450px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  min-height: 400px;
+
+  ${MEDIA_QUERY_MD} {
+    justify-content: center;
+  }
 `;
 
 export default function ExplorePage() {
@@ -44,7 +52,7 @@ export default function ExplorePage() {
   const posts = useSelector((store) => store.posts.posts);
   const [filter, setFilter] = useState("全部");
   const [currentPage, setCurrentPage] = useState(1);
-  const limit = 3;
+  const limit = 4;
   //假的 filter 資料，之後從資料庫拿
   const keywords = [
     "全部",

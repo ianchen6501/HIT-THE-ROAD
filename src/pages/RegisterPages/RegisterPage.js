@@ -11,13 +11,19 @@ import {
   UserInput,
   Title,
   UserInputContainer,
+  UserButtonContainer,
   UserButtonBorder,
   UserButtonBackground,
   UserButtonText,
   ErrorMessage,
 } from "../../components/UserForm";
-import { Wrapper } from "../../components/public";
+import { FormWrapper } from "../../components/public";
 import { FacebookOutlined } from "@ant-design/icons";
+
+const FacebookOutlinedStyle = {
+  transform: "scale(1.2)",
+  cursor: "pointer",
+};
 
 export default function RegisterPage() {
   const [username, setUsername] = useState("");
@@ -95,19 +101,9 @@ export default function RegisterPage() {
   }, [dispatch, username, password, nickname, email]);
 
   return (
-    <Wrapper $solidPlate={true}>
+    <FormWrapper $solidPlate={true}>
       <FormContainer>
         <Title>please sign up</Title>
-        <FacebookOutlined
-          onClick={handleFacebookOutlinedOnClick}
-          style={{
-            position: "absolute",
-            right: "10px",
-            top: "10px",
-            transform: "scale(1.2)",
-            cursor: "pointer",
-          }}
-        />
         <UserInputContainer>
           <UserInput
             placeholder={"USERNAME"}
@@ -149,14 +145,20 @@ export default function RegisterPage() {
             <ErrorMessage>{emailErrorMessage}</ErrorMessage>
           )}
         </UserInputContainer>
-        <UserButtonBorder onClick={() => handleUserButtonOnClick()}>
-          <UserButtonText>next</UserButtonText>
-          <UserButtonBackground />
-        </UserButtonBorder>
-        {registerErrorMessage && (
-          <ErrorMessage>{registerErrorMessage}</ErrorMessage>
-        )}
+        <UserButtonContainer>
+          <UserButtonBorder onClick={() => handleUserButtonOnClick()}>
+            <UserButtonText>next</UserButtonText>
+            <UserButtonBackground />
+          </UserButtonBorder>
+          {registerErrorMessage && (
+            <ErrorMessage>{registerErrorMessage}</ErrorMessage>
+          )}
+        </UserButtonContainer>
+        <FacebookOutlined
+          onClick={handleFacebookOutlinedOnClick}
+          style={FacebookOutlinedStyle}
+        />
       </FormContainer>
-    </Wrapper>
+    </FormWrapper>
   );
 }
