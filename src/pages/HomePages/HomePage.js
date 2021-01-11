@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Wrapper } from "../../components/public";
-import { useLocation, Link } from "react-router-dom";
+import { useLocation, Link, useHistory } from "react-router-dom";
 import Post from "../../components/Post";
-import { getPosts } from "../../redux/reducers/postsReducer";
+import { getPosts, setPosts } from "../../redux/reducers/postsReducer";
 import { useDispatch, useSelector } from "react-redux";
 import frontPageIcon01 from "../../static/frontpage_icon-01.jpg";
 import frontPageIcon02 from "../../static/frontpage_icon-02.jpg";
@@ -176,6 +176,7 @@ const MoreTag = styled(Link)`
   }
 `;
 
+// 1 layout
 const AreaSectionWrapper = styled.div`
   position: relative;
 
@@ -304,6 +305,42 @@ const CityInfo = styled.div`
     width: 180px;
     background: rgb(255, 255, 255, 0.5);
   }
+`
+
+// 2 master
+const ExploreDirectorContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 20px auto;
+  border-radius: 10px;
+  padding: 12px 8px;
+  background-color: ${(props) => props.theme.primaryColors.primaryLighter};
+
+  ${MEDIA_QUERY_SM} {
+    width: 80vw;
+  }
+`;
+
+const ExploreDirector = styled.button`
+  display: block;
+  padding: 2px 5px;
+  border-radius: 5px;
+  font-size: ${(props) => props.theme.fontSizes.small};
+  margin: 5px;
+  border: 1px solid white;
+  color: ${(props) => props.theme.secondaryColors.secondaryDarker};
+  text-align: center;
+  font-weight: bold;
+  cursor: pointer;
+  background: ${(props) => props.theme.secondaryColors.secondaryLighter};
+  transition: color 0.5s ease, background 1s ease;
+
+  &:hover {
+    box-shadow: 0 1px 2px grey;
+    color: ${(props) => props.theme.secondaryColors.secondaryLighter};
+    background: ${(props) => props.theme.secondaryColors.secondaryDarker};
+  }
 `;
 
 export default function HomePage() {
@@ -411,9 +448,18 @@ export default function HomePage() {
     ],
   ];
 
+  const history = useHistory();
+  const locations = useSelector((store) => store.schedules.scheduleLocations);
+
+
   useEffect(() => {
     dispatch(getPosts());
   }, [dispatch]);
+
+  function handleExploreDirectorOnClick(location) {
+    dispatch(setPosts(null));
+    history.push(`/explore/location/${location}`);
+  }
 
   return (
     <>
@@ -446,12 +492,27 @@ export default function HomePage() {
         <Heading>探索別人的旅程</Heading>
         {postsData && (
           <PostsContainer>
-            {postsData.slice(0, 5).map((post, index) => (
+            {postsData.slice(0, 4).map((post, index) => (
               <Post postData={post} key={index}></Post>
             ))}
           </PostsContainer>
         )}
-        <MoreTag to={"/explore"}>more</MoreTag>
+
+        <MoreTag to={"/explore/全部"}>more</MoreTag>
+        <Heading>依地區搜尋不同旅程</Heading>
+        <ExploreDirectorContainer>
+          {locations.map((location) => {
+            return (
+              <ExploreDirector
+                key={location}
+                onClick={() => handleExploreDirectorOnClick(location)}
+              >
+                {location}
+              </ExploreDirector>
+            );
+          })}
+        </ExploreDirectorContainer>
+
       </Wrapper>
       <AreaHeading>依地區搜尋</AreaHeading>
       <AreaSectionWrapper>
