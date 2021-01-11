@@ -47,13 +47,28 @@ const PostsContainer = styled.div`
   }
 `;
 
+const Reminder = styled.div`
+  position: absolute;
+  display: inline-block;
+  width: 200px;
+  height: 50px;
+  left: 50%;
+  top: 50%;
+  border-radius: 10px;
+  transform: translate(-50%, -50%);
+  background: ${(props) => props.theme.basicColors.white};
+  line-height: 50px;
+  text-align: center;
+  color: ${(props) => props.theme.secondaryColors.secondaryDarker};
+  font-weight: bold;
+`;
+
 export default function ExplorePage() {
   const dispatch = useDispatch();
   const posts = useSelector((store) => store.posts.posts);
   const [filter, setFilter] = useState("全部");
   const [currentPage, setCurrentPage] = useState(1);
   const limit = 4;
-  //假的 filter 資料，之後從資料庫拿
   const keywords = [
     "全部",
     "台北",
@@ -98,10 +113,12 @@ export default function ExplorePage() {
         ))}
       </FilterContainer>
       <PostsContainer>
+        {posts && posts.length === 0 && <Reminder>還沒有此地區的行程</Reminder>}
         {posts &&
+          posts.length > 0 &&
           posts
             .slice((currentPage - 1) * limit, currentPage * limit)
-            .map((post, index) => <Post postData={post} key={index}></Post>)}
+            .map((post, index) => <Post postData={post} key={index} />)}
       </PostsContainer>
       <Paginator
         posts={posts}
