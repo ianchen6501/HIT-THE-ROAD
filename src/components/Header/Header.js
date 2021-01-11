@@ -228,7 +228,7 @@ export default function Header({ isCheckedLogin }) {
             />
             <NavbarList $isNavbarListShow={isNavbarListShow}>
               <Nav
-                to="/explore"
+                to="/explore/全部"
                 $active={location.pathname === "/user"}
                 onClick={() => setIsNavbarListShow(false)}
               >

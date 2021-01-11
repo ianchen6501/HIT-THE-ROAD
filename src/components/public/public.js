@@ -41,7 +41,7 @@ const LoadingContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background: ${(props) => props.theme.primaryColors.primary}
+  background: transparent;
   font-size: ${(props) => props.theme.titles.h4};
   color: ${(props) => props.theme.secondaryColors.secondaryDarker};
 `;
