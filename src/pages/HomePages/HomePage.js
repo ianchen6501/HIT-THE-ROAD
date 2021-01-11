@@ -30,6 +30,7 @@ import {
   MEDIA_QUERY_LG,
   MEDIA_QUERY_SM,
   MEDIA_QUERY_MD,
+  MEDIA_QUERY_EXMD,
 } from "../../constants/break_point";
 
 const Heading = styled.div`
@@ -38,6 +39,10 @@ const Heading = styled.div`
   font-weight: bolder;
   font-size: ${(props) => props.theme.titles.h5};
   color: ${(props) => props.theme.secondaryColors.secondaryDarker};
+`;
+
+const AreaHeading = styled(Heading)`
+  margin: 10px auto;
 `;
 
 const BannerContainer = styled.div`
@@ -173,7 +178,6 @@ const MoreTag = styled(Link)`
 
 const AreaSectionWrapper = styled.div`
   position: relative;
-  top: -60px;
 
   &:after {
     content: "";
@@ -184,6 +188,15 @@ const AreaSectionWrapper = styled.div`
     height: 360px;
     background: ${(props) => props.theme.primaryColors.primaryLighter};
     opacity: 0.5;
+
+    ${MEDIA_QUERY_EXMD} {
+      top: 20px;
+      height: 520px;
+    }
+
+    ${MEDIA_QUERY_SM} {
+      display: none;
+    }
   }
 `;
 
@@ -200,6 +213,13 @@ const CityWrapper = styled.div`
   padding: 60px 0;
   display: flex;
   flex-wrap: wrap;
+  justify-content: space-around;
+
+  ${MEDIA_QUERY_EXMD} {
+    position: relative;
+    top: -20px;
+    flex-direction: column;
+  }
 `;
 
 const MapImageWrapper = styled.div`
@@ -207,6 +227,16 @@ const MapImageWrapper = styled.div`
   height: 480px;
   position: relative;
   top: -40px;
+
+  ${MEDIA_QUERY_EXMD} {
+    top: 10px;
+  }
+
+  ${MEDIA_QUERY_SM} {
+    position: absolute;
+    right: -60px;
+    width: 160px;
+  }
 `;
 
 const TaiwanImage = styled.img`
@@ -221,6 +251,17 @@ const CityInfoWrapper = styled.div`
   flex-direction: column;
   margin-right: 10px;
   width: 200px;
+  z-index: 3;
+
+  ${MEDIA_QUERY_LG} {
+    width: 160px;
+  }
+
+  ${MEDIA_QUERY_EXMD} {
+    & + & {
+      margin-top: 2px;
+    }
+  }
 `;
 
 const City = styled.div`
@@ -238,14 +279,18 @@ const City = styled.div`
     color: ${(props) => props.theme.primaryColors.primaryLighter};
     background: ${(props) => props.theme.primaryColors.primaryDark};
   }
+
+  ${MEDIA_QUERY_EXMD} {
+    font-size: ${(props) => props.theme.fontSizes.small};
+  }
 `;
 
 const CityInfo = styled.div`
   position: absolute;
-  left: 70px;
-  top: 10px;
+  left: 65px;
+  top: -30px;
   width: 120px;
-  z-index: 1;
+  z-index: 3;
   border: 2px solid ${(props) => props.theme.secondaryColors.secondaryDarker};
   border-radius: 5px;
   padding: 5px;
@@ -253,6 +298,12 @@ const CityInfo = styled.div`
   background: white;
   text-align: justify;
   word-break: break-all;
+
+  ${MEDIA_QUERY_EXMD} {
+    left: 75px;
+    width: 180px;
+    background: rgb(255, 255, 255, 0.5);
+  }
 `;
 
 export default function HomePage() {
@@ -350,7 +401,7 @@ export default function HomePage() {
       "宜蘭",
       "yilan",
       yilan,
-      "拉近與臺北不到50分鐘的時間，可細心品嚐自然環境的生態旅遊、養生的冷溫泉、豐沛的海洋遊憩資源，油綠的田園、悠閒漫活的生活。",
+      "與臺北不到 50 分鐘，可細心品嚐自然環境的生態旅遊、豐沛的海洋遊憩資源，油綠的田園、悠閒漫活的生活。",
     ],
     [
       "南投",
@@ -401,8 +452,8 @@ export default function HomePage() {
           </PostsContainer>
         )}
         <MoreTag to={"/explore"}>more</MoreTag>
-        <Heading>依地區搜尋</Heading>
       </Wrapper>
+      <AreaHeading>依地區搜尋</AreaHeading>
       <AreaSectionWrapper>
         <AreaSection>
           <CityWrapper>
