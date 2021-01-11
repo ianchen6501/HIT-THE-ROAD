@@ -176,24 +176,23 @@ const LeftContainer = styled.div`
 
 const HeaderSlogan = styled.div`
   position: relative;
-  top: -40px;
-  display: flex;
-  align-items: center;
-  margin-top: 20px;
+  top: -50px;
   padding: 15px 25px;
-  border: solid 3px ${(props) => props.theme.basicColors.white};
-  font-size: ${(props) => props.theme.titles.h3};
+  width: 290px;
+  border: 2px solid transparent;
+  background: rgb(255, 255, 255, 0.5);
+  border-radius: 10px;
+  text-align: center;
+  font-size: ${(props) => props.theme.titles.h4};
   font-weight: bold;
-  color: ${(props) => props.theme.basicColors.white};
+  color: ${(props) => props.theme.secondaryColors.secondaryLight};
   cursor: pointer;
-  transition: border 1s;
+  transition: all 1s ease;
 
   &:hover {
-    animation: Gradient linear;
-    animation-duration: 1s;
-    animation-iteration-count: infinite;
-
-    border: 3px solid transparent;
+    background: rgb(255, 255, 255, 0.1);
+    border: 2px solid white;
+    color: ${(props) => props.theme.secondaryColors.secondary};
   }
 `;
 

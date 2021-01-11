@@ -48,6 +48,22 @@ const PostsContainer = styled.div`
   }
 `;
 
+const Reminder = styled.div`
+  position: absolute;
+  display: inline-block;
+  width: 200px;
+  height: 50px;
+  left: 50%;
+  top: 50%;
+  border-radius: 10px;
+  transform: translate(-50%, -50%);
+  background: ${(props) => props.theme.basicColors.white};
+  line-height: 50px;
+  text-align: center;
+  color: ${(props) => props.theme.secondaryColors.secondaryDarker};
+  font-weight: bold;
+`;
+
 export default function ExplorePage() {
   const dispatch = useDispatch();
   const history = useHistory();
@@ -57,7 +73,7 @@ export default function ExplorePage() {
   const posts = useSelector((store) => store.posts.posts);
   const locations = useSelector((store) => store.schedules.scheduleLocations);
   const limit = 4;
-  console.log(slug);
+
   useEffect(() => {
     setFilter(slug);
     dispatch(getFilteredPosts(slug));

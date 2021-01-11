@@ -79,11 +79,15 @@ const HashtagContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
   margin: 0 10px 10px;
+  height: 60px;
+
+  overflow: hidden;
 `;
 
 const Hashtag = styled.div`
   margin: 2.5px;
   padding: 2px;
+  height: 24px;
   color: white;
   background: ${(props) => props.theme.primaryColors.primaryDark};
   border: none;
