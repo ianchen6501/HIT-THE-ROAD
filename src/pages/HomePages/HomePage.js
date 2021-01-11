@@ -155,11 +155,16 @@ const MoreTag = styled(Link)`
 
 const ExploreDirectorContainer = styled.div`
   display: flex;
-  justify-content: space-around;
-  margin-bottom: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 20px auto;
   border-radius: 10px;
-  padding: 20px 10px;
+  padding: 12px 8px;
   background-color: ${(props) => props.theme.primaryColors.primaryLighter};
+
+  ${MEDIA_QUERY_SM} {
+    width: 80vw;
+  }
 `;
 
 const ExploreDirector = styled.button`
@@ -167,6 +172,7 @@ const ExploreDirector = styled.button`
   padding: 2px 5px;
   border-radius: 5px;
   font-size: ${(props) => props.theme.fontSizes.small};
+  margin: 5px;
   border: 1px solid white;
   color: ${(props) => props.theme.secondaryColors.secondaryDarker};
   text-align: center;
