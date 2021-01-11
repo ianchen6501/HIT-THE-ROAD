@@ -105,7 +105,9 @@ export default function ExplorePage() {
           ))}
         </FilterContainer>
         <PostsContainer>
+          {posts && posts.length === 0 && <Reminder>此地區尚無行程</Reminder>}
           {posts &&
+            posts.length > 0 &&
             posts
               .slice((currentPage - 1) * limit, currentPage * limit)
               .map((post, index) => <Post postData={post} key={index}></Post>)}

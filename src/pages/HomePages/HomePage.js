@@ -305,43 +305,43 @@ const CityInfo = styled.div`
     width: 180px;
     background: rgb(255, 255, 255, 0.5);
   }
-`
+`;
 
 // 2 master
-const ExploreDirectorContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin: 20px auto;
-  border-radius: 10px;
-  padding: 12px 8px;
-  background-color: ${(props) => props.theme.primaryColors.primaryLighter};
+// const ExploreDirectorContainer = styled.div`
+//   display: flex;
+//   justify-content: center;
+//   flex-wrap: wrap;
+//   margin: 20px auto;
+//   border-radius: 10px;
+//   padding: 12px 8px;
+//   background-color: ${(props) => props.theme.primaryColors.primaryLighter};
 
-  ${MEDIA_QUERY_SM} {
-    width: 80vw;
-  }
-`;
+//   ${MEDIA_QUERY_SM} {
+//     width: 80vw;
+//   }
+// `;
 
-const ExploreDirector = styled.button`
-  display: block;
-  padding: 2px 5px;
-  border-radius: 5px;
-  font-size: ${(props) => props.theme.fontSizes.small};
-  margin: 5px;
-  border: 1px solid white;
-  color: ${(props) => props.theme.secondaryColors.secondaryDarker};
-  text-align: center;
-  font-weight: bold;
-  cursor: pointer;
-  background: ${(props) => props.theme.secondaryColors.secondaryLighter};
-  transition: color 0.5s ease, background 1s ease;
+// const ExploreDirector = styled.button`
+//   display: block;
+//   padding: 2px 5px;
+//   border-radius: 5px;
+//   font-size: ${(props) => props.theme.fontSizes.small};
+//   margin: 5px;
+//   border: 1px solid white;
+//   color: ${(props) => props.theme.secondaryColors.secondaryDarker};
+//   text-align: center;
+//   font-weight: bold;
+//   cursor: pointer;
+//   background: ${(props) => props.theme.secondaryColors.secondaryLighter};
+//   transition: color 0.5s ease, background 1s ease;
 
-  &:hover {
-    box-shadow: 0 1px 2px grey;
-    color: ${(props) => props.theme.secondaryColors.secondaryLighter};
-    background: ${(props) => props.theme.secondaryColors.secondaryDarker};
-  }
-`;
+//   &:hover {
+//     box-shadow: 0 1px 2px grey;
+//     color: ${(props) => props.theme.secondaryColors.secondaryLighter};
+//     background: ${(props) => props.theme.secondaryColors.secondaryDarker};
+//   }
+// `;
 
 export default function HomePage() {
   const location = useLocation();
@@ -449,8 +449,7 @@ export default function HomePage() {
   ];
 
   const history = useHistory();
-  const locations = useSelector((store) => store.schedules.scheduleLocations);
-
+  // const locations = useSelector((store) => store.schedules.scheduleLocations);
 
   useEffect(() => {
     dispatch(getPosts());
@@ -498,9 +497,9 @@ export default function HomePage() {
           </PostsContainer>
         )}
 
-        <MoreTag to={"/explore/全部"}>more</MoreTag>
-        <Heading>依地區搜尋不同旅程</Heading>
-        <ExploreDirectorContainer>
+        <MoreTag to={"/explore/location/全部"}>more</MoreTag>
+
+        {/* <ExploreDirectorContainer>
           {locations.map((location) => {
             return (
               <ExploreDirector
@@ -511,10 +510,9 @@ export default function HomePage() {
               </ExploreDirector>
             );
           })}
-        </ExploreDirectorContainer>
-
+        </ExploreDirectorContainer> */}
       </Wrapper>
-      <AreaHeading>依地區搜尋</AreaHeading>
+      <AreaHeading>依地區搜尋不同旅程</AreaHeading>
       <AreaSectionWrapper>
         <AreaSection>
           <CityWrapper>
@@ -523,6 +521,7 @@ export default function HomePage() {
                 <City
                   onMouseOver={() => setAreaHoverAt(keyword[1])}
                   onMouseLeave={() => setAreaHoverAt()}
+                  onClick={() => handleExploreDirectorOnClick(keyword[0])}
                 >
                   {keyword[0]}
                 </City>
