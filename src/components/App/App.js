@@ -52,7 +52,7 @@ function App({ FBstartApp, FBdeleteApp }) {
           <Route exact path="/user">
             <UserPage />
           </Route>
-          <Route exact path="/explore/:slug">
+          <Route exact path="/explore/location/:slug">
             <ExpolorePage />
           </Route>
           <Route path="/planning-page">

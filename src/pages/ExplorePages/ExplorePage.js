@@ -57,7 +57,7 @@ export default function ExplorePage() {
   const posts = useSelector((store) => store.posts.posts);
   const locations = useSelector((store) => store.schedules.scheduleLocations);
   const limit = 4;
-
+  console.log(slug);
   useEffect(() => {
     setFilter(slug);
     dispatch(getFilteredPosts(slug));
@@ -69,7 +69,7 @@ export default function ExplorePage() {
 
   function handleFilterOnClick(location) {
     setFilter(location);
-    history.push(`/explore/${location}`);
+    history.push(`/explore/location/${location}`);
   }
 
   if (!filter || !posts) {

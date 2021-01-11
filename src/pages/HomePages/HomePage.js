@@ -201,7 +201,7 @@ export default function HomePage() {
 
   function handleExploreDirectorOnClick(location) {
     dispatch(setPosts(null));
-    history.push(`/explore/${location}`);
+    history.push(`/explore/location/${location}`);
   }
 
   return (
