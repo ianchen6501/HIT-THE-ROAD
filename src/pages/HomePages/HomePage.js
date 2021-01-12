@@ -33,7 +33,6 @@ import {
   MEDIA_QUERY_EXMD,
 } from "../../constants/break_point";
 
-// TODO:
 const Heading = styled.div`
   position: relative;
   display: flex;
@@ -253,14 +252,16 @@ const CityWrapper = styled.div`
   }
 `;
 
+// TODO: 切白邊
 const MapImageWrapper = styled.div`
-  min-width: 320px;
+  min-width: 280px;
   height: 480px;
   position: relative;
-  top: -40px;
+  top: -20px;
+  overflow: hidden;
 
   ${MEDIA_QUERY_EXMD} {
-    top: 10px;
+    top: 40px;
   }
 
   ${MEDIA_QUERY_SM} {
@@ -272,8 +273,10 @@ const MapImageWrapper = styled.div`
 
 const TaiwanImage = styled.img`
   position: absolute;
-  top: 0;
+  top: -40px;
   right: 0;
+  margin-right: -5%;
+  width: 320px;
 `;
 
 const CityInfoWrapper = styled.div`
@@ -320,7 +323,7 @@ const CityInfo = styled.div`
   position: absolute;
   left: 65px;
   top: -30px;
-  width: 120px;
+  width: 110px;
   z-index: 3;
   border: 2px solid ${(props) => props.theme.secondaryColors.secondaryDarker};
   border-radius: 5px;
@@ -530,7 +533,11 @@ export default function HomePage() {
                 style={{
                   display: areaHoverAt === `${keyword[1]}` ? "block" : "none",
                   position: "absolute",
+                  top: "-40px",
+                  right: 0,
                   zIndex: "1",
+                  marginRight: "-5%",
+                  width: "320px",
                 }}
               />
             ))}
