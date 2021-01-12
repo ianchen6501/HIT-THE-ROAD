@@ -5,6 +5,9 @@ import { useLocation, Link, useHistory } from "react-router-dom";
 import Post from "../../components/Post";
 import { getPosts, setPosts } from "../../redux/reducers/postsReducer";
 import { useDispatch, useSelector } from "react-redux";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowUp } from "@fortawesome/free-solid-svg-icons";
+
 import frontPageIcon01 from "../../static/frontpage_icon-01.jpg";
 import frontPageIcon02 from "../../static/frontpage_icon-02.jpg";
 import frontPageIcon03 from "../../static/frontpage_icon-03.jpg";
@@ -90,9 +93,8 @@ const PostsContainer = styled.div`
   flex-wrap: wrap;
   justify-content: space-between;
 
-  ${MEDIA_QUERY_SM} {
-    flex-direction: column;
-    align-items: center;
+  ${MEDIA_QUERY_MD} {
+    justify-content: center;
   }
 `;
 
@@ -252,7 +254,6 @@ const CityWrapper = styled.div`
   }
 `;
 
-// TODO: 切白邊
 const MapImageWrapper = styled.div`
   min-width: 280px;
   height: 480px;
@@ -266,8 +267,8 @@ const MapImageWrapper = styled.div`
 
   ${MEDIA_QUERY_SM} {
     position: absolute;
-    right: -60px;
-    width: 160px;
+    right: -40px;
+    width: 120px;
   }
 `;
 
@@ -277,6 +278,10 @@ const TaiwanImage = styled.img`
   right: 0;
   margin-right: -5%;
   width: 320px;
+
+  ${MEDIA_QUERY_SM} {
+    width: 300px;
+  }
 `;
 
 const CityInfoWrapper = styled.div`
@@ -340,12 +345,34 @@ const CityInfo = styled.div`
   }
 `;
 
+const GoTopButton = styled.button`
+  position: fixed;
+  z-index: 5;
+  bottom: 50px;
+  right: 50px;
+  width: 50px;
+  height: 50px;
+  border: none;
+  border-radius: 50%;
+  background: ${(props) => props.theme.primaryColors.primaryDark};
+  box-shadow: 2px 2px 2px grey;
+  color: ${(props) => props.theme.basicColors.white};
+  font-size: ${(props) => props.theme.fontSizes.large};
+  transition: all 0.5s ease;
+
+  &:hover {
+    bottom: 52px;
+    box-shadow: 2px 2px 5px grey;
+  }
+`;
+
 export default function HomePage() {
   const location = useLocation();
   const dispatch = useDispatch();
   const history = useHistory();
   const postsData = useSelector((store) => store.posts.posts);
   const [areaHoverAt, setAreaHoverAt] = useState();
+  const [goTopButtonShow, setGoTopButtonShow] = useState(false);
 
   const keywords = [
     [
@@ -455,6 +482,25 @@ export default function HomePage() {
     history.push(`/explore/location/${location}`);
   }
 
+  window.onscroll = function () {
+    if (
+      document.body.scrollTop > 20 ||
+      document.documentElement.scrollTop > 20
+    ) {
+      setGoTopButtonShow(true);
+    } else {
+      setGoTopButtonShow(false);
+    }
+  };
+
+  function handleTopButtonClick() {
+    window.scrollTo({
+      top: 10,
+      left: 0,
+      behavior: "smooth",
+    });
+  }
+
   return (
     <>
       <Wrapper $atHomepage={location.pathname === "/"}>
@@ -545,6 +591,11 @@ export default function HomePage() {
           </MapImageWrapper>
         </AreaSection>
       </AreaSectionWrapper>
+      {goTopButtonShow && (
+        <GoTopButton onClick={handleTopButtonClick}>
+          <FontAwesomeIcon icon={faArrowUp} />
+        </GoTopButton>
+      )}
     </>
   );
 }
