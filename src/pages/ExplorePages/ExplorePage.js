@@ -8,25 +8,65 @@ import Paginator from "../../components/Paginator";
 import { MEDIA_QUERY_MD } from "../../constants/break_point";
 import { useHistory, useParams } from "react-router-dom";
 
+const Heading = styled.div`
+  margin-top: 30px;
+  text-align: center;
+  font-weight: bolder;
+  font-size: ${(props) => props.theme.titles.h5};
+  color: ${(props) => props.theme.secondaryColors.secondaryDarker};
+
+  &::before {
+    content: "";
+    padding-left: 15px;
+    border-left: solid 5px
+      ${(props) => props.theme.secondaryColors.secondaryDarker};
+  }
+
+  ${MEDIA_QUERY_MD} {
+    font-size: ${(props) => props.theme.titles.h6};
+  }
+`;
+
 const FilterContainer = styled.div`
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-content: stretch;
+  flex-wrap: wrap;
   margin-top: 30px;
   margin-bottom: 30px;
+  border-radius: 10px;
+  padding: 10px 30px 0px 30px;
+  background: ${(props) => props.theme.secondaryColors.secondaryLighter};
+
+  ${MEDIA_QUERY_MD} {
+    width: 80%;
+  }
 `;
 
 const LocationFilter = styled.div`
-  display: inline-block;
+  display: relative;
+  width: fit-content;
   margin-bottom: 10px;
-  margin-left: 20px;
-  border: solid 1px ${(props) => props.theme.primaryColors.primaryLight};
+  margin-left: 10px;
+  margin-right: 10px;
+  border: solid 1px ${(props) => props.theme.secondaryColors.secondary};
   border-radius: 13px;
   padding: 4px 8px;
   color: ${(props) => props.theme.primaryColors.dark};
-  font-size: ${(props) => props.theme.fontSizes.medium};
+  font-size: ${(props) => props.theme.fontSizes.small};
+  box-shadow: 0.2px 0.2px 5px -3px;
   transition: transform 0.1s ease-out;
+  background: white;
   cursor: pointer;
 
   &:hover {
-    transform: scale(1.02);
+    transform: scale(1.05);
+    font-weight: 700;
+    border: solid 1.5px ${(props) => props.theme.secondaryColors.secondary};
   }
 
   &:visited {
@@ -34,7 +74,17 @@ const LocationFilter = styled.div`
   }
 
   ${(props) =>
-    props.$active && `background: ${props.theme.primaryColors.primaryLighter};`}
+    props.$active &&
+    `
+      background: ${props.theme.secondaryColors.secondary};
+      color: white;
+  `}
+
+  ${MEDIA_QUERY_MD} {
+    font-size: ${(props) => props.theme.fontSizes.extraSmall};
+    margin-left: 5px;
+    margin-right: 5px;
+  }
 `;
 
 const PostsContainer = styled.div`
@@ -93,6 +143,7 @@ export default function ExplorePage() {
   } else {
     return (
       <Wrapper>
+        <Heading>按地區搜尋</Heading>
         <FilterContainer>
           {locations.map((location, index) => (
             <LocationFilter
