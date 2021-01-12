@@ -152,7 +152,6 @@ const CheckBoxLabel = styled.label`
 
 const Container = styled.div`
   display: flex;
-  padding-top: ${(props) => props.theme.heights.header};
   min-height: 100vh;
 
   background: ${(props) => props.theme.primaryColors.primaryLighter};
