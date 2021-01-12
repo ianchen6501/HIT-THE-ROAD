@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Link, useLocation } from "react-router-dom";
 import logo from "../../static/logo_static.svg";
@@ -8,6 +8,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { deleteAuthTokenFromLocalStorage } from "../../utils";
 import { setUserData } from "../../redux/reducers/usersReducer";
 import { MEDIA_QUERY_SM } from "../../constants/break_point";
+
+import one from "../../static/header/one.jpg";
+import two from "../../static/header/two.JPG";
+import three from "../../static/header/three.jpg";
 
 const HeaderContainer = styled.div`
   position: ${(props) => (props.$atHomepage ? `relative` : `fixed`)};
@@ -27,10 +31,6 @@ const HeaderContainer = styled.div`
   padding: 0px, 30px;
   ${(props) => props.$atHomepage && `padding-top: 30px`};
   z-index: 2;
-  background: linear-gradient(
-    ${(props) => props.theme.primaryColors.primaryLight},
-    ${(props) => props.theme.secondaryColors.secondaryLighter}
-  );
   box-shadow: 0px 2px 2px grey;
 
   ${MEDIA_QUERY_SM} {
@@ -176,11 +176,11 @@ const LeftContainer = styled.div`
 
 const HeaderSlogan = styled.div`
   position: relative;
-  top: -50px;
+  top: -80px;
   padding: 15px 25px;
   width: 290px;
   border: 2px solid transparent;
-  background: rgb(255, 255, 255, 0.5);
+  background: rgb(255, 255, 255, 0.8);
   border-radius: 10px;
   text-align: center;
   font-size: ${(props) => props.theme.titles.h4};
@@ -192,8 +192,33 @@ const HeaderSlogan = styled.div`
   &:hover {
     background: rgb(255, 255, 255, 0.1);
     border: 2px solid white;
-    color: ${(props) => props.theme.secondaryColors.secondary};
+    color: rgb(255, 255, 255);
   }
+`;
+
+const LogoWrapper = styled.div`
+  position: relative;
+  top: -60px;
+`;
+
+const Slide = styled.div`
+  position: relative;
+  width: 100%;
+  height: 100%;
+`;
+
+const SlideImg = styled.img`
+  display: ${(props) => (props.$currentSlide ? "block" : "none")};
+  position: absolute;
+  top: -${(props) => props.theme.heights.header};
+  width: 100%;
+  height: calc(
+    ${(props) => props.theme.heights.homepageHeader} +
+      ${(props) => props.theme.heights.footer}
+  );
+  object-fit: cover;
+  z-index: -1;
+  transition: all 0.5s ease;
 `;
 
 export default function Header({ isCheckedLogin }) {
@@ -201,6 +226,17 @@ export default function Header({ isCheckedLogin }) {
   const location = useLocation();
   const userData = useSelector((store) => store.users.userData);
   const [isNavbarListShow, setIsNavbarListShow] = useState(false);
+  const [currentSlide, setCurrentSlide] = useState(1);
+
+  useEffect(() => {
+    setTimeout(function () {
+      if (currentSlide > 2) {
+        setCurrentSlide(1);
+      } else {
+        setCurrentSlide(currentSlide + 1);
+      }
+    }, 5000);
+  }, [currentSlide]);
 
   function handleLogout() {
     deleteAuthTokenFromLocalStorage();
@@ -209,6 +245,11 @@ export default function Header({ isCheckedLogin }) {
 
   return (
     <HeaderContainer $atHomepage={location.pathname === "/"}>
+      <Slide>
+        <SlideImg $currentSlide={currentSlide === 1} src={one} alt="1" />
+        <SlideImg $currentSlide={currentSlide === 2} src={two} alt="2" />
+        <SlideImg $currentSlide={currentSlide === 3} src={three} alt="3" />
+      </Slide>
       <HeaderUpContainer $atHomepage={location.pathname === "/"}>
         <LeftContainer>
           {location.pathname === "/" && (
@@ -276,7 +317,7 @@ export default function Header({ isCheckedLogin }) {
         )}
       </HeaderUpContainer>
       {location.pathname === "/" && (
-        <>
+        <LogoWrapper>
           <LogoSVG
             className="LogoSVG"
             stroke="#DB7290"
@@ -286,7 +327,7 @@ export default function Header({ isCheckedLogin }) {
           <Link to={userData ? "/create" : "/login"}>
             <HeaderSlogan>開始探索旅程</HeaderSlogan>
           </Link>
-        </>
+        </LogoWrapper>
       )}
     </HeaderContainer>
   );
