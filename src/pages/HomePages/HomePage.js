@@ -34,15 +34,45 @@ import {
 } from "../../constants/break_point";
 
 const Heading = styled.div`
+  position: relative;
+  display: flex;
   margin: 60px auto 30px;
-  text-align: center;
-  font-weight: bolder;
-  font-size: ${(props) => props.theme.titles.h5};
-  color: ${(props) => props.theme.secondaryColors.secondaryDarker};
+  ${MEDIA_QUERY_SM} {
+    display: block;
+    text-align: center;
+  }
+
+  & h3 {
+    font-weight: bolder;
+    font-size: ${(props) => props.theme.titles.h5};
+    color: ${(props) => props.theme.secondaryColors.secondaryDarker};
+    background: white;
+
+    &:before {
+      content: "";
+      margin-right: 5px;
+      border-left: 10px solid
+        ${(props) => props.theme.secondaryColors.secondary};
+    }
+  }
+
+  & div {
+    position: relative;
+    top: calc(${(props) => props.theme.titles.h5} / 1.5);
+    flex: 1;
+    margin-left: 20px;
+    border-top: 2px solid
+      ${(props) => props.theme.secondaryColors.secondaryLight};
+
+    ${MEDIA_QUERY_SM} {
+      display: none;
+    }
+  }
 `;
 
 const AreaHeading = styled(Heading)`
   margin: 10px auto;
+  width: 75vw;
 `;
 
 const BannerContainer = styled.div`
@@ -176,7 +206,6 @@ const MoreTag = styled(Link)`
   }
 `;
 
-// 1 layout
 const AreaSectionWrapper = styled.div`
   position: relative;
 
@@ -223,14 +252,16 @@ const CityWrapper = styled.div`
   }
 `;
 
+// TODO: 切白邊
 const MapImageWrapper = styled.div`
-  min-width: 320px;
+  min-width: 280px;
   height: 480px;
   position: relative;
-  top: -40px;
+  top: -20px;
+  overflow: hidden;
 
   ${MEDIA_QUERY_EXMD} {
-    top: 10px;
+    top: 40px;
   }
 
   ${MEDIA_QUERY_SM} {
@@ -242,8 +273,10 @@ const MapImageWrapper = styled.div`
 
 const TaiwanImage = styled.img`
   position: absolute;
-  top: 0;
+  top: -40px;
   right: 0;
+  margin-right: -5%;
+  width: 320px;
 `;
 
 const CityInfoWrapper = styled.div`
@@ -290,7 +323,7 @@ const CityInfo = styled.div`
   position: absolute;
   left: 65px;
   top: -30px;
-  width: 120px;
+  width: 110px;
   z-index: 3;
   border: 2px solid ${(props) => props.theme.secondaryColors.secondaryDarker};
   border-radius: 5px;
@@ -307,45 +340,10 @@ const CityInfo = styled.div`
   }
 `;
 
-// 2 master
-// const ExploreDirectorContainer = styled.div`
-//   display: flex;
-//   justify-content: center;
-//   flex-wrap: wrap;
-//   margin: 20px auto;
-//   border-radius: 10px;
-//   padding: 12px 8px;
-//   background-color: ${(props) => props.theme.primaryColors.primaryLighter};
-
-//   ${MEDIA_QUERY_SM} {
-//     width: 80vw;
-//   }
-// `;
-
-// const ExploreDirector = styled.button`
-//   display: block;
-//   padding: 2px 5px;
-//   border-radius: 5px;
-//   font-size: ${(props) => props.theme.fontSizes.small};
-//   margin: 5px;
-//   border: 1px solid white;
-//   color: ${(props) => props.theme.secondaryColors.secondaryDarker};
-//   text-align: center;
-//   font-weight: bold;
-//   cursor: pointer;
-//   background: ${(props) => props.theme.secondaryColors.secondaryLighter};
-//   transition: color 0.5s ease, background 1s ease;
-
-//   &:hover {
-//     box-shadow: 0 1px 2px grey;
-//     color: ${(props) => props.theme.secondaryColors.secondaryLighter};
-//     background: ${(props) => props.theme.secondaryColors.secondaryDarker};
-//   }
-// `;
-
 export default function HomePage() {
   const location = useLocation();
   const dispatch = useDispatch();
+  const history = useHistory();
   const postsData = useSelector((store) => store.posts.posts);
   const [areaHoverAt, setAreaHoverAt] = useState();
 
@@ -448,9 +446,6 @@ export default function HomePage() {
     ],
   ];
 
-  const history = useHistory();
-  // const locations = useSelector((store) => store.schedules.scheduleLocations);
-
   useEffect(() => {
     dispatch(getPosts());
   }, [dispatch]);
@@ -463,7 +458,10 @@ export default function HomePage() {
   return (
     <>
       <Wrapper $atHomepage={location.pathname === "/"}>
-        <Heading>網站簡介</Heading>
+        <Heading>
+          <h3>網站簡介</h3>
+          <div></div>
+        </Heading>
         <BannerContainer>
           <IntroContainer>
             <IntroImage $01={true}></IntroImage>
@@ -488,7 +486,10 @@ export default function HomePage() {
             </IntroContent>
           </IntroContainer>
         </BannerContainer>
-        <Heading>探索別人的旅程</Heading>
+        <Heading>
+          <h3>探索別人的旅程</h3>
+          <div></div>
+        </Heading>
         {postsData && (
           <PostsContainer>
             {postsData.slice(0, 4).map((post, index) => (
@@ -498,21 +499,11 @@ export default function HomePage() {
         )}
 
         <MoreTag to={"/explore/location/全部"}>more</MoreTag>
-
-        {/* <ExploreDirectorContainer>
-          {locations.map((location) => {
-            return (
-              <ExploreDirector
-                key={location}
-                onClick={() => handleExploreDirectorOnClick(location)}
-              >
-                {location}
-              </ExploreDirector>
-            );
-          })}
-        </ExploreDirectorContainer> */}
       </Wrapper>
-      <AreaHeading>依地區搜尋不同旅程</AreaHeading>
+      <AreaHeading>
+        <h3>依地區搜尋不同旅程</h3>
+        <div></div>
+      </AreaHeading>
       <AreaSectionWrapper>
         <AreaSection>
           <CityWrapper>
@@ -542,7 +533,11 @@ export default function HomePage() {
                 style={{
                   display: areaHoverAt === `${keyword[1]}` ? "block" : "none",
                   position: "absolute",
+                  top: "-40px",
+                  right: 0,
                   zIndex: "1",
+                  marginRight: "-5%",
+                  width: "320px",
                 }}
               />
             ))}
