@@ -58,6 +58,15 @@ const HeaderContainer = styled.div`
   }
 `;
 
+const HeaderOverSensor = styled.div`
+  position: absolute;
+  height: 5px;
+  width: calc(100% - 55px);
+  left: 55px;
+  background: transparent;
+  z-index: 3;
+`;
+
 const HeaderUpContainer = styled.div`
   position: relative;
   width: 100%;
@@ -274,10 +283,10 @@ export default function Header({ isCheckedLogin }) {
     <HeaderContainer
       $atHomepage={location.pathname === "/"}
       $atPlanningPage={location.pathname === "/planning-page"}
-      onMouseOver={() => setOnMouseOver(true)}
-      onMouseOut={() => setOnMouseOver(false)}
+      onMouseLeave={() => setOnMouseOver(false)}
       $mouseOver={onMouseOver}
     >
+      <HeaderOverSensor onMouseOver={() => setOnMouseOver(true)} />
       {location.pathname === "/" && (
         <Slide>
           <SlideImg $currentSlide={currentSlide === 1} src={one} alt="1" />
