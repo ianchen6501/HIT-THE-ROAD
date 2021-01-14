@@ -10,11 +10,17 @@ import { setUserData } from "../../redux/reducers/usersReducer";
 import { MEDIA_QUERY_SM } from "../../constants/break_point";
 
 import one from "../../static/header/one.jpg";
-import two from "../../static/header/two.JPG";
+import two from "../../static/header/two.jpg";
 import three from "../../static/header/three.jpg";
 
 const HeaderContainer = styled.div`
-  position: ${(props) => (props.$atHomepage ? `relative` : `fixed`)};
+  ${(props) =>
+    props.$atPlanningPage && props.$mouseOver
+      ? "position: relative"
+      : "position: fixed"}};
+  ${(props) =>
+    !props.$atHomepage && !props.$atPlanningPage && "position: relative"};
+  ${(props) => props.$atHomepage && "position: relative;"}
   height: ${(props) =>
     props.$atHomepage
       ? props.theme.heights.homepageHeader
@@ -31,19 +37,48 @@ const HeaderContainer = styled.div`
   padding: 0px, 30px;
   ${(props) => props.$atHomepage && `padding-top: 30px`};
   z-index: 2;
-  box-shadow: 0px 2px 2px grey;
+  ${(props) =>
+    props.$atPlanningPage && props.$mouseOver
+      ? "box-shadow: 0px 2px 2px grey"
+      : ""}};
+  ${(props) => !props.$atPlanningPage && "box-shadow: 0px 2px 2px grey"};
+  ${(props) => props.$atHomepage && "background: transparent"};
+  ${(props) => props.$atPlanningPage && "background: transparent"};
+  ${(props) =>
+    !props.$atHomepage &&
+    !props.$atPlanningPage &&
+    `background: ${props.theme.secondaryColors.secondaryLighter}`};
+  ${(props) =>
+    props.$atPlanningPage &&
+    props.$mouseOver &&
+    `background: ${props.theme.secondaryColors.secondaryLighter}`};
 
   ${MEDIA_QUERY_SM} {
     width: 100vw;
   }
 `;
 
+const HeaderOverSensor = styled.div`
+  position: absolute;
+  height: 5px;
+  width: calc(100% - 55px);
+  left: 55px;
+  background: transparent;
+  z-index: 3;
+`;
+
 const HeaderUpContainer = styled.div`
+  position: relative;
   width: 100%;
   height: ${(props) => (props.$atHomepage ? `auto` : "100%  ")};
   display: flex;
   justify-content: space-between;
   align-items: center;
+  ${(props) =>
+    props.$atPlanningPage &&
+    !props.$mouseOver &&
+    `top: -${props.theme.heights.header}`};
+  ${(props) => props.$atPlanningPage && props.$mouseOver && `top: 0px`};
 `;
 
 const Logo = styled.div`
@@ -227,6 +262,7 @@ export default function Header({ isCheckedLogin }) {
   const userData = useSelector((store) => store.users.userData);
   const [isNavbarListShow, setIsNavbarListShow] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(1);
+  const [onMouseOver, setOnMouseOver] = useState(false);
 
   useEffect(() => {
     setTimeout(function () {
@@ -244,13 +280,25 @@ export default function Header({ isCheckedLogin }) {
   }
 
   return (
-    <HeaderContainer $atHomepage={location.pathname === "/"}>
-      <Slide>
-        <SlideImg $currentSlide={currentSlide === 1} src={one} alt="1" />
-        <SlideImg $currentSlide={currentSlide === 2} src={two} alt="2" />
-        <SlideImg $currentSlide={currentSlide === 3} src={three} alt="3" />
-      </Slide>
-      <HeaderUpContainer $atHomepage={location.pathname === "/"}>
+    <HeaderContainer
+      $atHomepage={location.pathname === "/"}
+      $atPlanningPage={location.pathname === "/planning-page"}
+      onMouseLeave={() => setOnMouseOver(false)}
+      $mouseOver={onMouseOver}
+    >
+      <HeaderOverSensor onMouseOver={() => setOnMouseOver(true)} />
+      {location.pathname === "/" && (
+        <Slide>
+          <SlideImg $currentSlide={currentSlide === 1} src={one} alt="1" />
+          <SlideImg $currentSlide={currentSlide === 2} src={two} alt="2" />
+          <SlideImg $currentSlide={currentSlide === 3} src={three} alt="3" />
+        </Slide>
+      )}
+      <HeaderUpContainer
+        $atHomepage={location.pathname === "/"}
+        $atPlanningPage={location.pathname === "/planning-page"}
+        $mouseOver={onMouseOver}
+      >
         <LeftContainer>
           {location.pathname === "/" && (
             <Brand as={Link} to="/">

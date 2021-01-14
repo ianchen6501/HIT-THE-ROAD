@@ -49,7 +49,6 @@ const PlanWrapper = styled.div`
   position: relative;
   display: flex;
   min-height: 100vh;
-  padding-top: ${(props) => props.theme.heights.header};
   padding-bottom: ${(props) => props.theme.heights.footer};
 
   ${MEDIA_QUERY_SM} {
