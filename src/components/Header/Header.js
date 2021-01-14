@@ -36,10 +36,9 @@ const HeaderContainer = styled.div`
   bottom: 0;
   padding: 0px, 30px;
   ${(props) => props.$atHomepage && `padding-top: 30px`};
-  z-index: 2;
   ${(props) =>
     props.$atPlanningPage && props.$mouseOver
-      ? "box-shadow: 0px 2px 2px grey"
+      ? "box-shadow: inset 0px -1px 3px grey"
       : ""}};
   ${(props) => !props.$atPlanningPage && "box-shadow: 0px 2px 2px grey"};
   ${(props) => props.$atHomepage && "background: transparent"};
@@ -64,7 +63,7 @@ const HeaderOverSensor = styled.div`
   width: calc(100% - 55px);
   left: 55px;
   background: transparent;
-  z-index: 3;
+  z-index: 2;
 `;
 
 const HeaderUpContainer = styled.div`
@@ -280,103 +279,105 @@ export default function Header({ isCheckedLogin }) {
   }
 
   return (
-    <HeaderContainer
-      $atHomepage={location.pathname === "/"}
-      $atPlanningPage={location.pathname === "/planning-page"}
-      onMouseLeave={() => setOnMouseOver(false)}
-      $mouseOver={onMouseOver}
-    >
+    <>
       <HeaderOverSensor onMouseOver={() => setOnMouseOver(true)} />
-      {location.pathname === "/" && (
-        <Slide>
-          <SlideImg $currentSlide={currentSlide === 1} src={one} alt="1" />
-          <SlideImg $currentSlide={currentSlide === 2} src={two} alt="2" />
-          <SlideImg $currentSlide={currentSlide === 3} src={three} alt="3" />
-        </Slide>
-      )}
-      <HeaderUpContainer
+      <HeaderContainer
         $atHomepage={location.pathname === "/"}
         $atPlanningPage={location.pathname === "/planning-page"}
+        onMouseLeave={() => setOnMouseOver(false)}
         $mouseOver={onMouseOver}
       >
-        <LeftContainer>
-          {location.pathname === "/" && (
-            <Brand as={Link} to="/">
-              HitTheRoad
-            </Brand>
-          )}
-          {location.pathname !== "/" && (
-            <Logo as={Link} $atHomepage={location.pathname === "/"} to="/" />
-          )}
-        </LeftContainer>
-        {isCheckedLogin && (
-          <NavbarWrapper>
-            <NavbarButton
-              onClick={() => setIsNavbarListShow(!isNavbarListShow)}
-            />
-            <NavbarList $isNavbarListShow={isNavbarListShow}>
-              <Nav
-                to="/explore/location/全部"
-                $active={location.pathname === "/user"}
-                onClick={() => setIsNavbarListShow(false)}
-              >
-                探索行程
-              </Nav>
-              {userData && (
+        {location.pathname === "/" && (
+          <Slide>
+            <SlideImg $currentSlide={currentSlide === 1} src={one} alt="1" />
+            <SlideImg $currentSlide={currentSlide === 2} src={two} alt="2" />
+            <SlideImg $currentSlide={currentSlide === 3} src={three} alt="3" />
+          </Slide>
+        )}
+        <HeaderUpContainer
+          $atHomepage={location.pathname === "/"}
+          $atPlanningPage={location.pathname === "/planning-page"}
+          $mouseOver={onMouseOver}
+        >
+          <LeftContainer>
+            {location.pathname === "/" && (
+              <Brand as={Link} to="/">
+                HitTheRoad
+              </Brand>
+            )}
+            {location.pathname !== "/" && (
+              <Logo as={Link} $atHomepage={location.pathname === "/"} to="/" />
+            )}
+          </LeftContainer>
+          {isCheckedLogin && (
+            <NavbarWrapper>
+              <NavbarButton
+                onClick={() => setIsNavbarListShow(!isNavbarListShow)}
+              />
+              <NavbarList $isNavbarListShow={isNavbarListShow}>
                 <Nav
-                  to="/user"
+                  to="/explore/location/全部"
                   $active={location.pathname === "/user"}
                   onClick={() => setIsNavbarListShow(false)}
                 >
-                  編輯行程
+                  探索行程
                 </Nav>
-              )}
-              {!userData && (
-                <Nav
-                  to="/login"
-                  $active={location.pathname === "/login"}
-                  onClick={() => setIsNavbarListShow(false)}
-                >
-                  登入
-                </Nav>
-              )}
-              {!userData && (
-                <Nav
-                  to="/register"
-                  $active={location.pathname === "/register"}
-                  onClick={() => setIsNavbarListShow(false)}
-                >
-                  註冊
-                </Nav>
-              )}
-              {userData && (
-                <Nav
-                  to="/"
-                  onClick={() => {
-                    setIsNavbarListShow(false);
-                    handleLogout();
-                  }}
-                >
-                  登出
-                </Nav>
-              )}
-            </NavbarList>
-          </NavbarWrapper>
+                {userData && (
+                  <Nav
+                    to="/user"
+                    $active={location.pathname === "/user"}
+                    onClick={() => setIsNavbarListShow(false)}
+                  >
+                    編輯行程
+                  </Nav>
+                )}
+                {!userData && (
+                  <Nav
+                    to="/login"
+                    $active={location.pathname === "/login"}
+                    onClick={() => setIsNavbarListShow(false)}
+                  >
+                    登入
+                  </Nav>
+                )}
+                {!userData && (
+                  <Nav
+                    to="/register"
+                    $active={location.pathname === "/register"}
+                    onClick={() => setIsNavbarListShow(false)}
+                  >
+                    註冊
+                  </Nav>
+                )}
+                {userData && (
+                  <Nav
+                    to="/"
+                    onClick={() => {
+                      setIsNavbarListShow(false);
+                      handleLogout();
+                    }}
+                  >
+                    登出
+                  </Nav>
+                )}
+              </NavbarList>
+            </NavbarWrapper>
+          )}
+        </HeaderUpContainer>
+        {location.pathname === "/" && (
+          <LogoWrapper>
+            <LogoSVG
+              className="LogoSVG"
+              stroke="#DB7290"
+              strokeWidth="1rem"
+              fill="#000000"
+            ></LogoSVG>
+            <Link to={userData ? "/create" : "/login"}>
+              <HeaderSlogan>開始探索旅程</HeaderSlogan>
+            </Link>
+          </LogoWrapper>
         )}
-      </HeaderUpContainer>
-      {location.pathname === "/" && (
-        <LogoWrapper>
-          <LogoSVG
-            className="LogoSVG"
-            stroke="#DB7290"
-            strokeWidth="1rem"
-            fill="#000000"
-          ></LogoSVG>
-          <Link to={userData ? "/create" : "/login"}>
-            <HeaderSlogan>開始探索旅程</HeaderSlogan>
-          </Link>
-        </LogoWrapper>
-      )}
-    </HeaderContainer>
+      </HeaderContainer>
+    </>
   );
 }
