@@ -5,7 +5,7 @@ import {
   setLoginErrorMessage,
 } from "../../redux/reducers/usersReducer";
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory, Link, useLocation } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 import {
   FormContainer,
   UserInput,
@@ -77,12 +77,10 @@ export default function LoginPage() {
   const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
   const dispatch = useDispatch();
   const history = useHistory();
-  const location = useLocation();
   const loginErrorMessage = useSelector(
     (store) => store.users.loginErrorMessage
   );
   const userData = useSelector((store) => store.users.userData);
-  console.log(location);
 
   useEffect(() => {
     if (username) {
