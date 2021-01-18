@@ -37,7 +37,7 @@ hit the road 主要是以 React 所建立的行程規劃專案，結合 Google M
 
 **登入**
 
-- 登入後即可建立規劃行程。也可以利用右上角的 fb 圖示，以 facebook 帳號登入(須先註冊 facebook 帳號)。
+- 登入後即可建立規劃行程。也可以利用 fb 圖示，以 facebook 帳號登入(須先註冊 facebook 帳號)。
 
   ![](./readmeGif/login.gif)
 
