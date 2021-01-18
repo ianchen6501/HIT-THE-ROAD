@@ -140,51 +140,57 @@ export default function CreatePage() {
       <FormWrapper $solidPlate={true}>
         <FormContainer style={FormContainerStyle}>
           <Title>來趟新的旅行吧!</Title>
-          <SubContainer>
-            <SubTitle>旅程名稱</SubTitle>
-            <UserInput
-              value={scheduleName}
-              onChange={(event) => setScheduleName(event.target.value)}
-              placeholder={"請輸入旅程名稱"}
-              style={userInputStyle}
-            ></UserInput>
-            {scheduleNameErrorMessage && (
-              <ErrorMessage>{scheduleNameErrorMessage}</ErrorMessage>
-            )}
-          </SubContainer>
-          <SubContainer>
-            <SubTitle>目的地</SubTitle>
-            <Select
-              value={location}
-              onChange={(event) => setLocation(event.target.value)}
-              name={"location"}
-            >
-              {destinationSelects.map((select) => (
-                <option value={select} key={select}>
-                  {select}
-                </option>
-              ))}
-            </Select>
-          </SubContainer>
-          <SubContainer>
-            <SubTitle>時間</SubTitle>
-            <DatePicker
-              style={{ zIndex: "4" }}
-              startDate={startDate}
-              setStartDate={setStartDate}
-              endDate={endDate}
-              setEndDate={setEndDate}
-            />
-          </SubContainer>
-          <UserButtonContainer onClick={handleSubmitSchedule}>
-            <UserButtonBorder style={{ zIndex: "0" }}>
-              <UserButtonText>next</UserButtonText>
-              <UserButtonBackground />
-            </UserButtonBorder>
-            {createErrorMessage && (
-              <ErrorMessage>{createErrorMessage}</ErrorMessage>
-            )}
-          </UserButtonContainer>
+          <form
+            onKeyPress={(event) =>
+              event.key == "Enter" && handleSubmitSchedule()
+            }
+          >
+            <SubContainer>
+              <SubTitle>旅程名稱</SubTitle>
+              <UserInput
+                value={scheduleName}
+                onChange={(event) => setScheduleName(event.target.value)}
+                placeholder={"請輸入旅程名稱"}
+                style={userInputStyle}
+              ></UserInput>
+              {scheduleNameErrorMessage && (
+                <ErrorMessage>{scheduleNameErrorMessage}</ErrorMessage>
+              )}
+            </SubContainer>
+            <SubContainer>
+              <SubTitle>目的地</SubTitle>
+              <Select
+                value={location}
+                onChange={(event) => setLocation(event.target.value)}
+                name={"location"}
+              >
+                {destinationSelects.map((select) => (
+                  <option value={select} key={select}>
+                    {select}
+                  </option>
+                ))}
+              </Select>
+            </SubContainer>
+            <SubContainer>
+              <SubTitle>時間</SubTitle>
+              <DatePicker
+                style={{ zIndex: "4" }}
+                startDate={startDate}
+                setStartDate={setStartDate}
+                endDate={endDate}
+                setEndDate={setEndDate}
+              />
+            </SubContainer>
+            <UserButtonContainer onClick={handleSubmitSchedule}>
+              <UserButtonBorder style={{ zIndex: "0" }}>
+                <UserButtonText>next</UserButtonText>
+                <UserButtonBackground />
+              </UserButtonBorder>
+              {createErrorMessage && (
+                <ErrorMessage>{createErrorMessage}</ErrorMessage>
+              )}
+            </UserButtonContainer>
+          </form>
         </FormContainer>
       </FormWrapper>
     );

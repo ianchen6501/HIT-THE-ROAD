@@ -109,56 +109,62 @@ export default function RegisterPage() {
     <FormWrapper $solidPlate={true}>
       <FormContainer>
         <Title>please sign up</Title>
-        <UserInputContainer>
-          <UserInput
-            placeholder={"USERNAME"}
-            onChange={(event) => setUsername(event.target.value)}
-            value={username}
-          ></UserInput>
-          {usernameErrorMessage && (
-            <ErrorMessage>{usernameErrorMessage}</ErrorMessage>
-          )}
-        </UserInputContainer>
-        <UserInputContainer>
-          <UserInput
-            placeholder={"PASSWORD"}
-            onChange={(event) => setPassword(event.target.value)}
-            value={password}
-            type="password"
-          ></UserInput>
-          {passwordErrorMessage && (
-            <ErrorMessage>{passwordErrorMessage}</ErrorMessage>
-          )}
-        </UserInputContainer>
-        <UserInputContainer>
-          <UserInput
-            placeholder={"NICKNAME"}
-            onChange={(event) => setNickname(event.target.value)}
-            value={nickname}
-          ></UserInput>
-          {nicknameErrorMessage && (
-            <ErrorMessage>{nicknameErrorMessage}</ErrorMessage>
-          )}
-        </UserInputContainer>
-        <UserInputContainer>
-          <UserInput
-            placeholder={"EMAIL"}
-            onChange={(event) => setEmail(event.target.value)}
-            value={email}
-          ></UserInput>
-          {emailErrorMessage && (
-            <ErrorMessage>{emailErrorMessage}</ErrorMessage>
-          )}
-        </UserInputContainer>
-        <UserButtonContainer>
-          <UserButtonBorder onClick={() => handleUserButtonOnClick()}>
-            <UserButtonText>next</UserButtonText>
-            <UserButtonBackground />
-          </UserButtonBorder>
-          {registerErrorMessage && (
-            <ErrorMessage>{registerErrorMessage}</ErrorMessage>
-          )}
-        </UserButtonContainer>
+        <form
+          onKeyPress={(event) =>
+            event.key == "Enter" && handleUserButtonOnClick()
+          }
+        >
+          <UserInputContainer>
+            <UserInput
+              placeholder={"USERNAME"}
+              onChange={(event) => setUsername(event.target.value)}
+              value={username}
+            ></UserInput>
+            {usernameErrorMessage && (
+              <ErrorMessage>{usernameErrorMessage}</ErrorMessage>
+            )}
+          </UserInputContainer>
+          <UserInputContainer>
+            <UserInput
+              placeholder={"PASSWORD"}
+              onChange={(event) => setPassword(event.target.value)}
+              value={password}
+              type="password"
+            ></UserInput>
+            {passwordErrorMessage && (
+              <ErrorMessage>{passwordErrorMessage}</ErrorMessage>
+            )}
+          </UserInputContainer>
+          <UserInputContainer>
+            <UserInput
+              placeholder={"NICKNAME"}
+              onChange={(event) => setNickname(event.target.value)}
+              value={nickname}
+            ></UserInput>
+            {nicknameErrorMessage && (
+              <ErrorMessage>{nicknameErrorMessage}</ErrorMessage>
+            )}
+          </UserInputContainer>
+          <UserInputContainer>
+            <UserInput
+              placeholder={"EMAIL"}
+              onChange={(event) => setEmail(event.target.value)}
+              value={email}
+            ></UserInput>
+            {emailErrorMessage && (
+              <ErrorMessage>{emailErrorMessage}</ErrorMessage>
+            )}
+          </UserInputContainer>
+          <UserButtonContainer>
+            <UserButtonBorder onClick={() => handleUserButtonOnClick()}>
+              <UserButtonText>next</UserButtonText>
+              <UserButtonBackground />
+            </UserButtonBorder>
+            {registerErrorMessage && (
+              <ErrorMessage>{registerErrorMessage}</ErrorMessage>
+            )}
+          </UserButtonContainer>
+        </form>
         <FacebookOutlined
           onClick={handleFacebookOutlinedOnClick}
           style={FacebookOutlinedStyle}
