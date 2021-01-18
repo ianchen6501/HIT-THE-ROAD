@@ -57,6 +57,7 @@ const HeaderContainer = styled.div`
     width: 100vw;
     background: ${(props) => props.theme.secondaryColors.secondaryLighter};
     box-shadow: inset 0px -1px 3px grey;
+    z-index: 3;
   }
 `;
 
@@ -66,7 +67,7 @@ const HeaderOverSensor = styled.div`
   width: calc(100% - 55px);
   left: 55px;
   background: transparent;
-  z-index: 1;
+  z-index: 4;
 `;
 
 const HeaderUpContainer = styled.div`
@@ -81,6 +82,7 @@ const HeaderUpContainer = styled.div`
     !props.$mouseOver &&
     `top: -${props.theme.heights.header}`};
   ${(props) => props.$atPlanningPage && props.$mouseOver && `top: 0px`};
+  z-index: 2;
 
   ${MEDIA_QUERY_SM} {
     top: 0px;
@@ -240,7 +242,6 @@ const HeaderSlogan = styled.div`
 const LogoWrapper = styled.div`
   position: relative;
   top: -60px;
-  z-index: -1;
 `;
 
 const Slide = styled.div`
@@ -259,7 +260,7 @@ const SlideImg = styled.img`
       ${(props) => props.theme.heights.footer}
   );
   object-fit: cover;
-  z-index: -2;
+  z-index: -1;
   transition: all 0.5s ease;
 `;
 

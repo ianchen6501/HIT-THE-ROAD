@@ -138,36 +138,42 @@ export default function LoginPage() {
     <FormWrapper $solidPlate={true}>
       <FormContainer>
         <Title>please sign in</Title>
-        <UserInputContainer>
-          <UserInput
-            placeholder={"USERNAME"}
-            onChange={(event) => setUsername(event.target.value)}
-            value={username}
-          ></UserInput>
-          {usernameErrorMessage && (
-            <ErrorMessage>{usernameErrorMessage}</ErrorMessage>
-          )}
-        </UserInputContainer>
-        <UserInputContainer>
-          <UserInput
-            placeholder={"PASSWORD"}
-            onChange={(event) => setPassword(event.target.value)}
-            value={password}
-            type="password"
-          ></UserInput>
-          {passwordErrorMessage && (
-            <ErrorMessage>{passwordErrorMessage}</ErrorMessage>
-          )}
-        </UserInputContainer>
-        <UserButtonContainer>
-          <UserButtonBorder onClick={handleUserButtonBorderOnClick}>
-            <UserButtonText>next</UserButtonText>
-            <UserButtonBackground />
-          </UserButtonBorder>
-          {loginErrorMessage && (
-            <ErrorMessage>{loginErrorMessage}</ErrorMessage>
-          )}
-        </UserButtonContainer>
+        <form
+          onKeyPress={(event) =>
+            event.key == "Enter" && handleUserButtonBorderOnClick()
+          }
+        >
+          <UserInputContainer>
+            <UserInput
+              placeholder={"USERNAME"}
+              onChange={(event) => setUsername(event.target.value)}
+              value={username}
+            ></UserInput>
+            {usernameErrorMessage && (
+              <ErrorMessage>{usernameErrorMessage}</ErrorMessage>
+            )}
+          </UserInputContainer>
+          <UserInputContainer>
+            <UserInput
+              placeholder={"PASSWORD"}
+              onChange={(event) => setPassword(event.target.value)}
+              value={password}
+              type="password"
+            ></UserInput>
+            {passwordErrorMessage && (
+              <ErrorMessage>{passwordErrorMessage}</ErrorMessage>
+            )}
+          </UserInputContainer>
+          <UserButtonContainer>
+            <UserButtonBorder onClick={handleUserButtonBorderOnClick}>
+              <UserButtonText>next</UserButtonText>
+              <UserButtonBackground />
+            </UserButtonBorder>
+            {loginErrorMessage && (
+              <ErrorMessage>{loginErrorMessage}</ErrorMessage>
+            )}
+          </UserButtonContainer>
+        </form>
         <FacebookOutlined
           onClick={handleFacebookOutlinedOnClick}
           style={FacebookOutlinedStyle}
