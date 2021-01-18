@@ -63,6 +63,7 @@ const DemoAcountReminder = styled.div`
   color: ${(props) => props.theme.secondaryColors.secondaryDarker};
   font-size: ${(props) => props.theme.fontSizes.small};
   font-weight: 800;
+  text-transform: none;
 `;
 
 const FacebookOutlinedStyle = {
@@ -181,9 +182,9 @@ export default function LoginPage() {
           <DemoAcountReminder>
             測試帳號
             <br />
-            username: demo01
+            USERNAME: demo01
             <br />
-            password: demo01
+            PASSWORD: demo01
             <br />
           </DemoAcountReminder>
         </ReminderContainer>

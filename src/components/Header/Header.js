@@ -51,7 +51,6 @@ const HeaderContainer = styled.div`
     props.$atPlanningPage &&
     props.$mouseOver &&
     `background: ${props.theme.secondaryColors.secondaryLighter}`};
-  z-index: 3;
 
   ${MEDIA_QUERY_SM} {
     position: relative;
@@ -67,7 +66,7 @@ const HeaderOverSensor = styled.div`
   width: calc(100% - 55px);
   left: 55px;
   background: transparent;
-  z-index: 4;
+  z-index: 1;
 `;
 
 const HeaderUpContainer = styled.div`
