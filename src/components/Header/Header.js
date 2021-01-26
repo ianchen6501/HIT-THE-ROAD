@@ -167,15 +167,19 @@ const NavbarList = styled.div`
   ${MEDIA_QUERY_SM} {
     flex-direction: column;
     position: absolute;
-    top: ${(props) => props.theme.heights.header};
-    left: ${(props) => (props.$isNavbarListShow ? "0px" : "-100%")};
+    top: calc(${(props) => props.theme.heights.header} - 3px);
+    right: ${(props) => (props.$isNavbarListShow ? "0px" : "-100%")};
+    margin-right: 0px;
     padding-left: 5px;
     padding-right: 5px;
     width: 100px;
     text-align: center;
-    background: ${(props) => props.theme.secondaryColors.secondaryLighter};
-    box-shadow: -3px 3px 3px grey;
-    transition: left 1s ease;
+    background: ${(props) =>
+      props.$atHomepage
+        ? "rgba(255, 255, 255, 0.7)"
+        : props.theme.secondaryColors.secondaryLighter};
+    box-shadow: 3px 3px 3px grey;
+    transition: right 1s ease;
   }
 `;
 
@@ -317,7 +321,12 @@ export default function Header({ isCheckedLogin }) {
               </Brand>
             )}
             {location.pathname !== "/" && (
-              <Logo as={Link} $atHomepage={location.pathname === "/"} to="/" />
+              <Logo
+                as={Link}
+                $atHomepage={location.pathname === "/"}
+                to="/"
+                onClick={() => setIsNavbarListShow(false)}
+              />
             )}
           </LeftContainer>
           {isCheckedLogin && (
@@ -325,7 +334,10 @@ export default function Header({ isCheckedLogin }) {
               <NavbarButton
                 onClick={() => setIsNavbarListShow(!isNavbarListShow)}
               />
-              <NavbarList $isNavbarListShow={isNavbarListShow}>
+              <NavbarList
+                $isNavbarListShow={isNavbarListShow}
+                $atHomepage={location.pathname === "/"}
+              >
                 <Nav
                   to="/explore/location/全部"
                   $active={location.pathname === "/user"}
