@@ -56,7 +56,7 @@ const theme = {
 
   heights: {
     header: "60px",
-    homepageHeader: "400px",
+    homepageHeader: "520px",
     footer: "30px",
   },
 };

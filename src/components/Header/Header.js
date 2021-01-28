@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { deleteAuthTokenFromLocalStorage } from "../../utils";
 import { setUserData } from "../../redux/reducers/usersReducer";
 import { MEDIA_QUERY_SM } from "../../constants/break_point";
+import Carousel from "nuka-carousel";
 
 import one from "../../static/header/one.jpg";
 import two from "../../static/header/two.jpg";
@@ -35,13 +36,11 @@ const HeaderContainer = styled.div`
   top: 0;
   bottom: 0;
   padding: 0px, 30px;
-  ${(props) => props.$atHomepage && `padding-top: 30px`};
   ${(props) =>
     props.$atPlanningPage && props.$mouseOver
       ? "box-shadow: inset 0px -1px 3px grey"
       : ""}};
   ${(props) => !props.$atPlanningPage && "box-shadow: 0px 2px 2px grey"};
-  ${(props) => props.$atHomepage && "background: transparent"};
   ${(props) => props.$atPlanningPage && "background: transparent"};
   ${(props) =>
     !props.$atHomepage &&
@@ -82,6 +81,7 @@ const HeaderUpContainer = styled.div`
     !props.$mouseOver &&
     `top: -${props.theme.heights.header}`};
   ${(props) => props.$atPlanningPage && props.$mouseOver && `top: 0px`};
+  ${(props) => props.$atHomepage && `margin-top: 30px`};
   z-index: 2;
 
   ${MEDIA_QUERY_SM} {
@@ -188,6 +188,8 @@ const Nav = styled(Link)`
   padding: 10px 15px 5px;
   border-bottom: 1px solid transparent;
   color: ${(props) => props.theme.secondaryColors.secondary};
+  width: 100px;
+  text-align: center;
   font-weight: bold;
   text-decoration: none;
   cursor: pointer;
@@ -221,11 +223,12 @@ const LeftContainer = styled.div`
   }
 `;
 
-const HeaderSlogan = styled.div`
+const HeaderSlogan = styled(Link)`
+  display: block;
   position: relative;
   top: -80px;
   padding: 15px 25px;
-  width: 290px;
+  width: 100%;
   border: 2px solid transparent;
   background: rgb(255, 255, 255, 0.8);
   border-radius: 10px;
@@ -245,27 +248,7 @@ const HeaderSlogan = styled.div`
 
 const LogoWrapper = styled.div`
   position: relative;
-  top: -60px;
-`;
-
-const Slide = styled.div`
-  position: relative;
-  width: 100%;
-  height: 100%;
-`;
-
-const SlideImg = styled.img`
-  display: ${(props) => (props.$currentSlide ? "block" : "none")};
-  position: absolute;
-  top: -${(props) => props.theme.heights.header};
-  width: 100%;
-  height: calc(
-    ${(props) => props.theme.heights.homepageHeader} +
-      ${(props) => props.theme.heights.footer}
-  );
-  object-fit: cover;
-  z-index: -1;
-  transition: all 0.5s ease;
+  width: 320px;
 `;
 
 export default function Header({ isCheckedLogin }) {
@@ -303,12 +286,20 @@ export default function Header({ isCheckedLogin }) {
         $mouseOver={onMouseOver}
       >
         {location.pathname === "/" && (
-          <Slide>
-            <SlideImg $currentSlide={currentSlide === 1} src={one} alt="1" />
-            <SlideImg $currentSlide={currentSlide === 2} src={two} alt="2" />
-            <SlideImg $currentSlide={currentSlide === 3} src={three} alt="3" />
-          </Slide>
+          <Carousel
+            autoplay={true}
+            autoplayReverse={true}
+            wrapAround={true}
+            renderCenterLeftControls={() => null}
+            renderCenterRightControls={() => null}
+            style={{ position: "absolute", zIndex: -1 }}
+          >
+            <img src={one} alt="one" />
+            <img src={two} alt="two" />
+            <img src={three} alt="three" />
+          </Carousel>
         )}
+
         <HeaderUpContainer
           $atHomepage={location.pathname === "/"}
           $atPlanningPage={location.pathname === "/planning-page"}
@@ -395,9 +386,9 @@ export default function Header({ isCheckedLogin }) {
               strokeWidth="1rem"
               fill="#000000"
             ></LogoSVG>
-            <Link to={userData ? "/create" : "/login"}>
-              <HeaderSlogan>開始探索旅程</HeaderSlogan>
-            </Link>
+            <HeaderSlogan to={userData ? "/create" : "/login"}>
+              開始探索旅程
+            </HeaderSlogan>
           </LogoWrapper>
         )}
       </HeaderContainer>

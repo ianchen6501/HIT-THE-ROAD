@@ -17,6 +17,7 @@
     "gsap": "^3.5.1",
     "husky": "^4.3.6",
     "lint-staged": "^10.5.3",
+    "nuka-carousel": "^4.7.5",
     "react": "^17.0.1",
     "react-beautiful-dnd": "^13.0.0",
     "react-datepicker": "^3.3.0",

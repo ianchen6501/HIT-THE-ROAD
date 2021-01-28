@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { Wrapper } from "../../components/public";
+// import { Wrapper } from "../../components/public";
 import { useLocation, Link, useHistory } from "react-router-dom";
 import Post from "../../components/Post";
 import { getPosts, setPosts } from "../../redux/reducers/postsReducer";
@@ -36,10 +36,19 @@ import {
   MEDIA_QUERY_EXMD,
 } from "../../constants/break_point";
 
+const Wrapper = styled.div`
+  width: 75vw;
+  margin: 0 auto;
+`;
+
 const Heading = styled.div`
   position: relative;
-  display: flex;
-  margin: 60px auto 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 40px;
+  margin-bottom: 20px;
+  text-align: center;
+
   ${MEDIA_QUERY_SM} {
     display: block;
     text-align: center;
@@ -48,18 +57,21 @@ const Heading = styled.div`
   & h3 {
     font-weight: bolder;
     font-size: ${(props) => props.theme.titles.h5};
-    color: ${(props) => props.theme.secondaryColors.secondaryDarker};
-    background: white;
+    color: ${(props) => props.theme.primaryColors.primaryLight};
+    ${"" /* background: white; */}
 
-    &:before {
+    ${
+      "" /* &:before {
       content: "";
       margin-right: 5px;
       border-left: 10px solid
         ${(props) => props.theme.secondaryColors.secondary};
+    } */
     }
   }
 
-  & div {
+  ${
+    "" /* & div {
     position: relative;
     top: calc(${(props) => props.theme.titles.h5} / 1.5);
     flex: 1;
@@ -70,6 +82,7 @@ const Heading = styled.div`
     ${MEDIA_QUERY_SM} {
       display: none;
     }
+  } */
   }
 `;
 
@@ -82,6 +95,9 @@ const BannerContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 50px;
+  border: 2px solid ${(props) => props.theme.secondaryColors.secondaryDarker};
+  background: white;
 
   ${MEDIA_QUERY_SM} {
     flex-direction: column;
@@ -102,8 +118,6 @@ const IntroContainer = styled.div`
   width: 300px;
   display: flex;
   flex-direction: column;
-  border-radius: 10px;
-  box-shadow: 0.5px 0.5px 3px -1px;
 
   & + & {
     margin-left: 5px;
@@ -187,6 +201,15 @@ const IntroContent = styled.div`
   }
 `;
 
+// TODO:
+const ExploreArea = styled.div`
+  position: relative;
+  top: -120px;
+  z-index: -1;
+  padding: 160px 40px 60px;
+  background: #355257;
+`;
+
 const MoreTag = styled(Link)`
   display: block;
   margin: 30px auto;
@@ -194,10 +217,11 @@ const MoreTag = styled(Link)`
   width: 200px;
   border-radius: 5px;
   font-size: ${(props) => props.theme.fontSizes.small};
-  border: 1px solid ${(props) => props.theme.secondaryColors.secondaryDarker};
+  border: 1px solid ${(props) => props.theme.secondaryColors.secondary};
   color: ${(props) => props.theme.secondaryColors.secondaryDarker};
   text-align: center;
   font-weight: bold;
+  background: ${(props) => props.theme.secondaryColors.secondaryLight};
   cursor: pointer;
   transition: color 0.5s ease, background 1s ease;
 
@@ -366,6 +390,75 @@ const GoTopButton = styled.button`
   }
 `;
 
+// TODO: test
+
+const TestPosts = styled.div`
+  width: 75vw;
+  height: 100px;
+  display: flex;
+  margin: 20px auto;
+  border-radius: 5px;
+  border: 1px solid white;
+
+  overflow: hidden;
+`;
+
+const TestPostsLeft = styled.div`
+  width: 160px;
+  margin-right: 10px;
+  background: lightgray;
+`;
+
+const TestPostsRight = styled.div`
+  padding: 5px;
+  display: flex;
+  flex: 1;
+`;
+
+const TestPostInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+`;
+
+const TestButtronWrapper = styled.div`
+  position: relative;
+`;
+
+const TestButton = styled.div`
+  width: 160px;
+  height: 40px;
+  line-height: 40px;
+  border-radius: 5px;
+  text-align: center;
+  background: white;
+  ${
+    "" /* background: ${(props) => props.theme.primaryColors.primaryLighter}; */
+  }
+  font-weight: bold;
+  position: absolute;
+  top: 50%;
+  right: 0px;
+  transform: translateY(-50%);
+  box-shadow: inset 0px 0px 3px gray;
+  transition: box-shadow 0.5s ease;
+  cursor: pointer;
+
+  &:hover {
+    box-shadow: none;
+  }
+`;
+
+const TestPostTitle = styled.div`
+  font-size: 24px;
+  font-weight: bold;
+  color: white;
+`;
+
+const TestPostTime = styled.div`
+  color: lightgray;
+`;
+
 export default function HomePage() {
   const location = useLocation();
   const dispatch = useDispatch();
@@ -508,6 +601,7 @@ export default function HomePage() {
           <h3>網站簡介</h3>
           <div></div>
         </Heading>
+        {/* TODO: */}
         <BannerContainer>
           <IntroContainer>
             <IntroImage $01={true}></IntroImage>
@@ -532,20 +626,37 @@ export default function HomePage() {
             </IntroContent>
           </IntroContainer>
         </BannerContainer>
+      </Wrapper>
+      <ExploreArea>
         <Heading>
           <h3>探索別人的旅程</h3>
-          <div></div>
+          {/* <div></div> */}
         </Heading>
-        {postsData && (
+        {/* {postsData && (
           <PostsContainer>
             {postsData.slice(0, 4).map((post, index) => (
               <Post postData={post} key={index}></Post>
             ))}
           </PostsContainer>
-        )}
+        )} */}
+        {/* TODO: */}
+        <TestPosts>
+          <TestPostsLeft></TestPostsLeft>
+          <TestPostsRight>
+            <TestPostInfo>
+              <TestPostTitle>TAIPEI TAIPEI</TestPostTitle>
+              <TestPostTime>2019-02-04 ~ 2019-02-05</TestPostTime>
+            </TestPostInfo>
+            <TestButtronWrapper>
+              <TestButton>see more &gt;&gt; </TestButton>
+            </TestButtronWrapper>
+          </TestPostsRight>
+        </TestPosts>
+        <TestPosts />
+        <TestPosts />
 
         <MoreTag to={"/explore/location/全部"}>more</MoreTag>
-      </Wrapper>
+      </ExploreArea>
       <AreaHeading>
         <h3>依地區搜尋不同旅程</h3>
         <div></div>
