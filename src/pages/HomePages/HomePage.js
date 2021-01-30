@@ -7,9 +7,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowUp } from "@fortawesome/free-solid-svg-icons";
 
-import frontPageIcon01 from "../../static/frontpage_icon-01.jpg";
-import frontPageIcon02 from "../../static/frontpage_icon-02.jpg";
-import frontPageIcon03 from "../../static/frontpage_icon-03.jpg";
+import frontPageIcon01 from "../../static/frontpage_icon-01.png";
+import frontPageIcon02 from "../../static/frontpage_icon-02.png";
+import frontPageIcon03 from "../../static/frontpage_icon-03.png";
 import taiwanMap from "../../static/map/taiwan.png";
 import newtaipei from "../../static/map/newtaipei.png";
 import changhua from "../../static/map/changhua.png";
@@ -206,7 +206,7 @@ const MoreTag = styled(Link)`
   display: block;
   margin: 30px auto;
   padding: 2px 5px;
-  width: 600px;
+  width: 100%;
   border-radius: 5px;
   font-size: ${(props) => props.theme.fontSizes.small};
   border: 1px solid ${(props) => props.theme.secondaryColors.secondary};
@@ -223,70 +223,6 @@ const MoreTag = styled(Link)`
     background: ${(props) => props.theme.secondaryColors.secondaryDarker};
   }
 `;
-
-const AreaSectionWrapper = styled.div`
-  position: relative;
-
-  &:after {
-    content: "";
-    position: absolute;
-    top: 50px;
-    z-index: -1;
-    width: 100%;
-    height: 360px;
-    background: ${(props) => props.theme.primaryColors.primaryLighter};
-    opacity: 0.5;
-
-    ${MEDIA_QUERY_EXMD} {
-      top: 20px;
-      height: 520px;
-    }
-
-    ${MEDIA_QUERY_SM} {
-      display: none;
-    }
-  }
-`;
-
-const AreaSection = styled.div`
-  width: 75vw;
-  margin: auto;
-  position: relative;
-  margin-bottom: 50px;
-  display: flex;
-  justify-content: space-between;
-`;
-
-const CityWrapper = styled.div`
-  padding: 60px 0;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-
-  ${MEDIA_QUERY_EXMD} {
-    position: relative;
-    top: -20px;
-    flex-direction: column;
-  }
-`;
-
-// const MapImageWrapper = styled.div`
-//   min-width: 280px;
-//   height: 480px;
-//   position: relative;
-//   top: -20px;
-//   overflow: hidden;
-
-//   ${MEDIA_QUERY_EXMD} {
-//     top: 40px;
-//   }
-
-//   ${MEDIA_QUERY_SM} {
-//     position: absolute;
-//     right: -40px;
-//     width: 120px;
-//   }
-// `;
 
 const MapImageWrapperTest = styled.div`
   min-width: 280px;
@@ -306,67 +242,6 @@ const TaiwanImage = styled.img`
     width: 300px;
   }
 `;
-
-// const CityInfoWrapper = styled.div`
-//   position: relative;
-//   display: flex;
-//   flex-direction: column;
-//   margin-right: 10px;
-//   width: 200px;
-//   z-index: 3;
-
-//   ${MEDIA_QUERY_LG} {
-//     width: 160px;
-//   }
-
-//   ${MEDIA_QUERY_EXMD} {
-//     & + & {
-//       margin-top: 2px;
-//     }
-//   }
-// `;
-
-// const City = styled.div`
-//   width: 60px;
-//   border: 2px solid ${(props) => props.theme.primaryColors.primaryDark};
-//   border-radius: 20px;
-//   text-align: center;
-//   background: white;
-//   color: ${(props) => props.theme.primaryColors.primaryDark};
-//   font-size: ${(props) => props.theme.fontSizes.medium};
-//   font-weight: bold;
-//   cursor: pointer;
-
-//   &:hover {
-//     color: ${(props) => props.theme.primaryColors.primaryLighter};
-//     background: ${(props) => props.theme.primaryColors.primaryDark};
-//   }
-
-//   ${MEDIA_QUERY_EXMD} {
-//     font-size: ${(props) => props.theme.fontSizes.small};
-//   }
-// `;
-
-// const CityInfo = styled.div`
-//   position: absolute;
-//   left: 65px;
-//   top: -30px;
-//   width: 110px;
-//   z-index: 3;
-//   border: 2px solid ${(props) => props.theme.secondaryColors.secondaryDarker};
-//   border-radius: 5px;
-//   padding: 5px;
-//   color: ${(props) => props.theme.secondaryColors.secondaryDarker};
-//   background: white;
-//   text-align: justify;
-//   word-break: break-all;
-
-//   ${MEDIA_QUERY_EXMD} {
-//     left: 75px;
-//     width: 180px;
-//     background: rgb(255, 255, 255, 0.5);
-//   }
-// `;
 
 const GoTopButton = styled.button`
   position: fixed;
@@ -390,12 +265,41 @@ const GoTopButton = styled.button`
 `;
 
 const ExploreSection = styled.div`
+  position: relative;
+  width: 75vw;
+  margin: 0 auto;
   display: flex;
   justify-content: center;
 `;
 
 const TestArea = styled.div`
   margin-right: 20px;
+  flex: 1;
+`;
+
+const MapInfo = styled.div`
+  position: absolute;
+  top: 0px;
+  z-index: 3;
+`;
+
+const MapLocation = styled.div`
+  border-left: 5px solid ${(props) => props.theme.primaryColors.primaryLighter};
+  margin-bottom: 10px;
+  padding-left: 5px;
+  height: 24px;
+  line-height: 24px;
+  font-size: ${(props) => props.theme.fontSizes.medium};
+  color: ${(props) => props.theme.primaryColors.primaryLighter};
+  font-weight: bold;
+`;
+
+const MapDescription = styled.div`
+  width: 160px;
+  padding: 5px;
+  color: ${(props) => props.theme.secondaryColors.secondaryDarker};
+  background: #f8dfc299;
+  text-align: justify;
 `;
 
 export default function HomePage() {
@@ -508,11 +412,6 @@ export default function HomePage() {
     dispatch(getPosts());
   }, [dispatch]);
 
-  // function handleExploreDirectorOnClick(location) {
-  //   dispatch(setPosts(null));
-  //   history.push(`/explore/location/${location}`);
-  // }
-
   window.onscroll = function () {
     if (
       document.body.scrollTop > 20 ||
@@ -539,7 +438,6 @@ export default function HomePage() {
           <h3>網站簡介</h3>
           <div></div>
         </Heading>
-        {/* TODO: */}
         <BannerContainer>
           <IntroContainer>
             <IntroImage $01={true}></IntroImage>
@@ -569,7 +467,6 @@ export default function HomePage() {
         <AreaHeading>
           <h3>探索別人的旅程</h3>
         </AreaHeading>
-        {/* TODO: */}
         <ExploreSection>
           <TestArea>
             {postsData && (
@@ -577,6 +474,7 @@ export default function HomePage() {
                 {postsData.slice(0, 4).map((post, index) => (
                   <HomePost
                     postData={post}
+                    index={index}
                     key={index}
                     setAreaHoverAt={setAreaHoverAt}
                   />
@@ -586,7 +484,17 @@ export default function HomePage() {
             <MoreTag to={"/explore/location/全部"}>more</MoreTag>
           </TestArea>
 
+          {/* TODO: */}
           <MapImageWrapperTest>
+            {areaHoverAt && (
+              <MapInfo>
+                <MapLocation>{areaHoverAt}</MapLocation>
+                <MapDescription>
+                  {keywords.find((keyword) => keyword[0] === areaHoverAt)[3]}
+                </MapDescription>
+              </MapInfo>
+            )}
+
             {keywords.map((keyword) => (
               <img
                 key={keyword[1]}
@@ -608,51 +516,6 @@ export default function HomePage() {
           </MapImageWrapperTest>
         </ExploreSection>
       </ExploreArea>
-      {/* <AreaHeading>
-        <h3>依地區搜尋不同旅程</h3>
-        <div></div>
-      </AreaHeading> */}
-      {/* <AreaSectionWrapper>
-        <AreaSection>
-          <CityWrapper>
-            {keywords.map((keyword) => (
-              <CityInfoWrapper key={keyword[1]}>
-                <City
-                  onMouseOver={() => setAreaHoverAt(keyword[1])}
-                  onMouseLeave={() => setAreaHoverAt()}
-                  onClick={() => handleExploreDirectorOnClick(keyword[0])}
-                >
-                  {keyword[0]}
-                </City>
-
-                {areaHoverAt && areaHoverAt === keyword[1] && (
-                  <CityInfo>{keyword[3]}</CityInfo>
-                )}
-              </CityInfoWrapper>
-            ))}
-          </CityWrapper>
-          <MapImageWrapper>
-            {keywords.map((keyword) => (
-              <img
-                key={keyword[1]}
-                src={keyword[2]}
-                alt={keyword[1]}
-                width="100%"
-                style={{
-                  display: areaHoverAt === `${keyword[1]}` ? "block" : "none",
-                  position: "absolute",
-                  top: "-40px",
-                  right: 0,
-                  zIndex: "1",
-                  marginRight: "-5%",
-                  width: "320px",
-                }}
-              />
-            ))}
-            <TaiwanImage src={taiwanMap} alt="taiwan map" width="100%" />
-          </MapImageWrapper>
-        </AreaSection>
-      </AreaSectionWrapper> */}
 
       {goTopButtonShow && (
         <GoTopButton onClick={handleTopButtonClick}>

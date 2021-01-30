@@ -1,16 +1,19 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import one from "../../static/homepage/01.jpg";
+import two from "../../static/homepage/02.jpg";
+import three from "../../static/homepage/03.jpg";
+import four from "../../static/homepage/04.jpg";
 
-// TODO: test
-
-const TestPosts = styled(Link)`
+const Posts = styled(Link)`
   position: relative;
-  width: 600px;
+  width: 100%;
   height: 100px;
   display: flex;
-  margin: 10px auto;
+  margin: 0px auto;
   border-radius: 5px;
   border: 1px solid white;
+  background: ${(props) => props.theme.secondaryColors.secondaryLight};
   cursor: pointer;
 
   overflow: hidden;
@@ -36,43 +39,49 @@ const TestPosts = styled(Link)`
       left: 0;
     }
   }
+
+  & + & {
+    margin-top: 10px;
+  }
 `;
 
-const TestPostsLeft = styled.div`
+const PostsLeft = styled.img`
+  display: block;
   width: 120px;
   margin-right: 10px;
-  background: lightgray;
+  object-fit: cover;
+  filter: grayscale(50%);
 `;
 
-const TestPostsRight = styled.div`
+const PostsRight = styled.div`
   padding: 5px;
   display: flex;
   flex: 1;
 `;
 
-const TestPostInfo = styled.div`
+const PostInfo = styled.div`
   display: flex;
   flex-direction: column;
   flex: 1;
 `;
 
-const TestPostTitle = styled.div`
-  font-size: 24px;
+const PostTitle = styled.div`
+  font-size: ${(props) => props.theme.fontSizes.medium};
   font-weight: bold;
   color: white;
 `;
 
-const TestPostTime = styled.div`
-  color: lightgray;
+const PostTime = styled.div`
+  color: white;
 `;
 
-const TestTagsWrapper = styled.div`
+const TagsWrapper = styled.div`
   padding: 4px;
   width: 120px;
   overflow: hidden;
 `;
 
-const TestTag = styled.div`
+const Tag = styled.div`
   width: 100%;
   margin: 2px;
   padding: 2px 5px;
@@ -87,7 +96,7 @@ const TestTag = styled.div`
 
 export default function HomePost(props) {
   const post = props.postData;
-  const setAreaHoverAt = props.setAreaHoverAt;
+  const { setAreaHoverAt, index } = props;
   const hashtags = post.dailyRoutines[post.dateRange.start];
   let hashtagsArr = [];
   hashtags
@@ -102,30 +111,33 @@ export default function HomePost(props) {
   }
 
   return (
-    <TestPosts
+    <Posts
       to={`/explore/${post.id}`}
       onMouseOver={() => setAreaHoverAt(post.location)}
       onMouseLeave={() => setAreaHoverAt()}
     >
-      <TestPostsLeft></TestPostsLeft>
-      <TestPostsRight>
-        <TestPostInfo>
-          <TestPostTitle>{post.scheduleName}</TestPostTitle>
-          <TestPostTime>
+      <PostsLeft
+        src={index === 1 ? one : index === 2 ? two : index === 3 ? three : four}
+        alt="post cover"
+      />
+      <PostsRight>
+        <PostInfo>
+          <PostTitle>{post.scheduleName}</PostTitle>
+          <PostTime>
             {changeMillisecondsToLocalDate(post.dateRange.start)} ~{" "}
             {changeMillisecondsToLocalDate(post.dateRange.end)}
-          </TestPostTime>
-          <TestPostTime>
+          </PostTime>
+          <PostTime>
             {post.User.fbName ? post.User.fbName : post.User.nickname}
-          </TestPostTime>
-        </TestPostInfo>
-        <TestTagsWrapper>
+          </PostTime>
+        </PostInfo>
+        <TagsWrapper>
           {hashtagsArr.length > 0 &&
             hashtagsArr.map((hashtag, index) => (
-              <TestTag key={index}>{hashtag}</TestTag>
+              <Tag key={index}>{hashtag}</Tag>
             ))}
-        </TestTagsWrapper>
-      </TestPostsRight>
-    </TestPosts>
+        </TagsWrapper>
+      </PostsRight>
+    </Posts>
   );
 }
