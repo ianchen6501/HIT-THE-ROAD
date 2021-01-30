@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-// import { Wrapper } from "../../components/public";
 import { useLocation, Link, useHistory } from "react-router-dom";
-import Post from "../../components/Post";
+import HomePost from "../../components/HomePost";
 import { getPosts, setPosts } from "../../redux/reducers/postsReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -37,17 +36,22 @@ import {
 } from "../../constants/break_point";
 
 const Wrapper = styled.div`
+  position: relative;
   width: 75vw;
   margin: 0 auto;
+  margin-top: 100px;
 `;
 
 const Heading = styled.div`
-  position: relative;
+  position: absolute;
+  top: -60px;
   left: 50%;
   transform: translateX(-50%);
   margin-top: 40px;
   margin-bottom: 20px;
+  padding: 5px 20px;
   text-align: center;
+  background: white;
 
   ${MEDIA_QUERY_SM} {
     display: block;
@@ -57,46 +61,27 @@ const Heading = styled.div`
   & h3 {
     font-weight: bolder;
     font-size: ${(props) => props.theme.titles.h5};
-    color: ${(props) => props.theme.primaryColors.primaryLight};
-    ${"" /* background: white; */}
-
-    ${
-      "" /* &:before {
-      content: "";
-      margin-right: 5px;
-      border-left: 10px solid
-        ${(props) => props.theme.secondaryColors.secondary};
-    } */
-    }
-  }
-
-  ${
-    "" /* & div {
-    position: relative;
-    top: calc(${(props) => props.theme.titles.h5} / 1.5);
-    flex: 1;
-    margin-left: 20px;
-    border-top: 2px solid
-      ${(props) => props.theme.secondaryColors.secondaryLight};
-
-    ${MEDIA_QUERY_SM} {
-      display: none;
-    }
-  } */
+    color: ${(props) => props.theme.secondaryColors.secondaryDarker};
   }
 `;
 
 const AreaHeading = styled(Heading)`
-  margin: 10px auto;
-  width: 75vw;
+  position: relative;
+  top: 0px;
+  background: transparent;
+
+  & h3 {
+    color: white;
+  }
 `;
 
 const BannerContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-top: 60px;
   padding: 50px;
-  border: 2px solid ${(props) => props.theme.secondaryColors.secondaryDarker};
+  border: 2px solid ${(props) => props.theme.secondaryColors.secondary};
   background: white;
 
   ${MEDIA_QUERY_SM} {
@@ -174,11 +159,10 @@ const IntroImage = styled.div`
 const IntroTitle = styled.div`
   width: 120px;
   margin: 10px auto 0px;
-  border-bottom: 1px solid ${(props) => props.theme.primaryColors.primaryDarker};
   font-size: ${(props) => props.theme.titles.h6};
   text-align: center;
   font-weight: bold;
-  color: ${(props) => props.theme.primaryColors.primaryDarker};
+  color: ${(props) => props.theme.primaryColors.primaryDark};
 
   ${MEDIA_QUERY_MD} {
     font-size: ${(props) => props.theme.fontSizes.medium};
@@ -191,7 +175,7 @@ const IntroContent = styled.div`
   word-break: break-all;
   text-align: justify;
   font-weight: bold;
-  color: ${(props) => props.theme.primaryColors.primaryDarker};
+  color: ${(props) => props.theme.secondaryColors.secondaryDarker};
 
   ${MEDIA_QUERY_MD} {
     padding: 5px 20px;
@@ -201,20 +185,28 @@ const IntroContent = styled.div`
   }
 `;
 
-// TODO:
 const ExploreArea = styled.div`
   position: relative;
-  top: -120px;
   z-index: -1;
-  padding: 160px 40px 60px;
-  background: #355257;
+  padding: 20px 40px 60px;
+  background: ${(props) => props.theme.secondaryColors.secondary};
+
+  &:after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 120px;
+    top: -120px;
+    left: 0;
+    background: ${(props) => props.theme.secondaryColors.secondary};
+  }
 `;
 
 const MoreTag = styled(Link)`
   display: block;
   margin: 30px auto;
   padding: 2px 5px;
-  width: 200px;
+  width: 600px;
   border-radius: 5px;
   font-size: ${(props) => props.theme.fontSizes.small};
   border: 1px solid ${(props) => props.theme.secondaryColors.secondary};
@@ -278,27 +270,34 @@ const CityWrapper = styled.div`
   }
 `;
 
-const MapImageWrapper = styled.div`
+// const MapImageWrapper = styled.div`
+//   min-width: 280px;
+//   height: 480px;
+//   position: relative;
+//   top: -20px;
+//   overflow: hidden;
+
+//   ${MEDIA_QUERY_EXMD} {
+//     top: 40px;
+//   }
+
+//   ${MEDIA_QUERY_SM} {
+//     position: absolute;
+//     right: -40px;
+//     width: 120px;
+//   }
+// `;
+
+const MapImageWrapperTest = styled.div`
   min-width: 280px;
-  height: 480px;
+  height: 540px;
   position: relative;
-  top: -20px;
   overflow: hidden;
-
-  ${MEDIA_QUERY_EXMD} {
-    top: 40px;
-  }
-
-  ${MEDIA_QUERY_SM} {
-    position: absolute;
-    right: -40px;
-    width: 120px;
-  }
 `;
 
 const TaiwanImage = styled.img`
   position: absolute;
-  top: -40px;
+  top: -5px;
   right: 0;
   margin-right: -5%;
   width: 320px;
@@ -308,66 +307,66 @@ const TaiwanImage = styled.img`
   }
 `;
 
-const CityInfoWrapper = styled.div`
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  margin-right: 10px;
-  width: 200px;
-  z-index: 3;
+// const CityInfoWrapper = styled.div`
+//   position: relative;
+//   display: flex;
+//   flex-direction: column;
+//   margin-right: 10px;
+//   width: 200px;
+//   z-index: 3;
 
-  ${MEDIA_QUERY_LG} {
-    width: 160px;
-  }
+//   ${MEDIA_QUERY_LG} {
+//     width: 160px;
+//   }
 
-  ${MEDIA_QUERY_EXMD} {
-    & + & {
-      margin-top: 2px;
-    }
-  }
-`;
+//   ${MEDIA_QUERY_EXMD} {
+//     & + & {
+//       margin-top: 2px;
+//     }
+//   }
+// `;
 
-const City = styled.div`
-  width: 60px;
-  border: 2px solid ${(props) => props.theme.primaryColors.primaryDark};
-  border-radius: 20px;
-  text-align: center;
-  background: white;
-  color: ${(props) => props.theme.primaryColors.primaryDark};
-  font-size: ${(props) => props.theme.fontSizes.medium};
-  font-weight: bold;
-  cursor: pointer;
+// const City = styled.div`
+//   width: 60px;
+//   border: 2px solid ${(props) => props.theme.primaryColors.primaryDark};
+//   border-radius: 20px;
+//   text-align: center;
+//   background: white;
+//   color: ${(props) => props.theme.primaryColors.primaryDark};
+//   font-size: ${(props) => props.theme.fontSizes.medium};
+//   font-weight: bold;
+//   cursor: pointer;
 
-  &:hover {
-    color: ${(props) => props.theme.primaryColors.primaryLighter};
-    background: ${(props) => props.theme.primaryColors.primaryDark};
-  }
+//   &:hover {
+//     color: ${(props) => props.theme.primaryColors.primaryLighter};
+//     background: ${(props) => props.theme.primaryColors.primaryDark};
+//   }
 
-  ${MEDIA_QUERY_EXMD} {
-    font-size: ${(props) => props.theme.fontSizes.small};
-  }
-`;
+//   ${MEDIA_QUERY_EXMD} {
+//     font-size: ${(props) => props.theme.fontSizes.small};
+//   }
+// `;
 
-const CityInfo = styled.div`
-  position: absolute;
-  left: 65px;
-  top: -30px;
-  width: 110px;
-  z-index: 3;
-  border: 2px solid ${(props) => props.theme.secondaryColors.secondaryDarker};
-  border-radius: 5px;
-  padding: 5px;
-  color: ${(props) => props.theme.secondaryColors.secondaryDarker};
-  background: white;
-  text-align: justify;
-  word-break: break-all;
+// const CityInfo = styled.div`
+//   position: absolute;
+//   left: 65px;
+//   top: -30px;
+//   width: 110px;
+//   z-index: 3;
+//   border: 2px solid ${(props) => props.theme.secondaryColors.secondaryDarker};
+//   border-radius: 5px;
+//   padding: 5px;
+//   color: ${(props) => props.theme.secondaryColors.secondaryDarker};
+//   background: white;
+//   text-align: justify;
+//   word-break: break-all;
 
-  ${MEDIA_QUERY_EXMD} {
-    left: 75px;
-    width: 180px;
-    background: rgb(255, 255, 255, 0.5);
-  }
-`;
+//   ${MEDIA_QUERY_EXMD} {
+//     left: 75px;
+//     width: 180px;
+//     background: rgb(255, 255, 255, 0.5);
+//   }
+// `;
 
 const GoTopButton = styled.button`
   position: fixed;
@@ -390,79 +389,18 @@ const GoTopButton = styled.button`
   }
 `;
 
-// TODO: test
-
-const TestPosts = styled.div`
-  width: 75vw;
-  height: 100px;
+const ExploreSection = styled.div`
   display: flex;
-  margin: 20px auto;
-  border-radius: 5px;
-  border: 1px solid white;
-
-  overflow: hidden;
+  justify-content: center;
 `;
 
-const TestPostsLeft = styled.div`
-  width: 160px;
-  margin-right: 10px;
-  background: lightgray;
-`;
-
-const TestPostsRight = styled.div`
-  padding: 5px;
-  display: flex;
-  flex: 1;
-`;
-
-const TestPostInfo = styled.div`
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-`;
-
-const TestButtronWrapper = styled.div`
-  position: relative;
-`;
-
-const TestButton = styled.div`
-  width: 160px;
-  height: 40px;
-  line-height: 40px;
-  border-radius: 5px;
-  text-align: center;
-  background: white;
-  ${
-    "" /* background: ${(props) => props.theme.primaryColors.primaryLighter}; */
-  }
-  font-weight: bold;
-  position: absolute;
-  top: 50%;
-  right: 0px;
-  transform: translateY(-50%);
-  box-shadow: inset 0px 0px 3px gray;
-  transition: box-shadow 0.5s ease;
-  cursor: pointer;
-
-  &:hover {
-    box-shadow: none;
-  }
-`;
-
-const TestPostTitle = styled.div`
-  font-size: 24px;
-  font-weight: bold;
-  color: white;
-`;
-
-const TestPostTime = styled.div`
-  color: lightgray;
+const TestArea = styled.div`
+  margin-right: 20px;
 `;
 
 export default function HomePage() {
   const location = useLocation();
   const dispatch = useDispatch();
-  const history = useHistory();
   const postsData = useSelector((store) => store.posts.posts);
   const [areaHoverAt, setAreaHoverAt] = useState();
   const [goTopButtonShow, setGoTopButtonShow] = useState(false);
@@ -570,10 +508,10 @@ export default function HomePage() {
     dispatch(getPosts());
   }, [dispatch]);
 
-  function handleExploreDirectorOnClick(location) {
-    dispatch(setPosts(null));
-    history.push(`/explore/location/${location}`);
-  }
+  // function handleExploreDirectorOnClick(location) {
+  //   dispatch(setPosts(null));
+  //   history.push(`/explore/location/${location}`);
+  // }
 
   window.onscroll = function () {
     if (
@@ -628,40 +566,53 @@ export default function HomePage() {
         </BannerContainer>
       </Wrapper>
       <ExploreArea>
-        <Heading>
+        <AreaHeading>
           <h3>探索別人的旅程</h3>
-          {/* <div></div> */}
-        </Heading>
-        {/* {postsData && (
-          <PostsContainer>
-            {postsData.slice(0, 4).map((post, index) => (
-              <Post postData={post} key={index}></Post>
-            ))}
-          </PostsContainer>
-        )} */}
+        </AreaHeading>
         {/* TODO: */}
-        <TestPosts>
-          <TestPostsLeft></TestPostsLeft>
-          <TestPostsRight>
-            <TestPostInfo>
-              <TestPostTitle>TAIPEI TAIPEI</TestPostTitle>
-              <TestPostTime>2019-02-04 ~ 2019-02-05</TestPostTime>
-            </TestPostInfo>
-            <TestButtronWrapper>
-              <TestButton>see more &gt;&gt; </TestButton>
-            </TestButtronWrapper>
-          </TestPostsRight>
-        </TestPosts>
-        <TestPosts />
-        <TestPosts />
+        <ExploreSection>
+          <TestArea>
+            {postsData && (
+              <PostsContainer>
+                {postsData.slice(0, 4).map((post, index) => (
+                  <HomePost
+                    postData={post}
+                    key={index}
+                    setAreaHoverAt={setAreaHoverAt}
+                  />
+                ))}
+              </PostsContainer>
+            )}
+            <MoreTag to={"/explore/location/全部"}>more</MoreTag>
+          </TestArea>
 
-        <MoreTag to={"/explore/location/全部"}>more</MoreTag>
+          <MapImageWrapperTest>
+            {keywords.map((keyword) => (
+              <img
+                key={keyword[1]}
+                src={keyword[2]}
+                alt={keyword[1]}
+                width="100%"
+                style={{
+                  display: areaHoverAt === `${keyword[0]}` ? "block" : "none",
+                  position: "absolute",
+                  top: "-5px",
+                  right: 0,
+                  zIndex: "1",
+                  marginRight: "-5%",
+                  width: "320px",
+                }}
+              />
+            ))}
+            <TaiwanImage src={taiwanMap} alt="taiwan map" width="100%" />
+          </MapImageWrapperTest>
+        </ExploreSection>
       </ExploreArea>
-      <AreaHeading>
+      {/* <AreaHeading>
         <h3>依地區搜尋不同旅程</h3>
         <div></div>
-      </AreaHeading>
-      <AreaSectionWrapper>
+      </AreaHeading> */}
+      {/* <AreaSectionWrapper>
         <AreaSection>
           <CityWrapper>
             {keywords.map((keyword) => (
@@ -701,7 +652,8 @@ export default function HomePage() {
             <TaiwanImage src={taiwanMap} alt="taiwan map" width="100%" />
           </MapImageWrapper>
         </AreaSection>
-      </AreaSectionWrapper>
+      </AreaSectionWrapper> */}
+
       {goTopButtonShow && (
         <GoTopButton onClick={handleTopButtonClick}>
           <FontAwesomeIcon icon={faArrowUp} />
