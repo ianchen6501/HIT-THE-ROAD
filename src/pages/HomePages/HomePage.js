@@ -62,6 +62,10 @@ const Heading = styled.div`
     font-weight: bolder;
     font-size: ${(props) => props.theme.titles.h5};
     color: ${(props) => props.theme.secondaryColors.secondaryDarker};
+
+    ${MEDIA_QUERY_SM} {
+      font-size: ${(props) => props.theme.fontSizes.medium};
+    }
   }
 `;
 
@@ -195,7 +199,7 @@ const ExploreArea = styled.div`
     content: "";
     position: absolute;
     width: 100%;
-    height: 120px;
+    height: 125px;
     top: -120px;
     left: 0;
     background: ${(props) => props.theme.secondaryColors.secondary};
@@ -229,6 +233,10 @@ const MapImageWrapperTest = styled.div`
   height: 540px;
   position: relative;
   overflow: hidden;
+
+  ${MEDIA_QUERY_SM} {
+    display: none;
+  }
 `;
 
 const TaiwanImage = styled.img`
@@ -270,11 +278,19 @@ const ExploreSection = styled.div`
   margin: 0 auto;
   display: flex;
   justify-content: center;
+
+  ${MEDIA_QUERY_SM} {
+    width: 100%;
+  }
 `;
 
-const TestArea = styled.div`
+const PostsArea = styled.div`
   margin-right: 20px;
   flex: 1;
+
+  ${MEDIA_QUERY_SM} {
+    margin-right: 0;
+  }
 `;
 
 const MapInfo = styled.div`
@@ -468,7 +484,7 @@ export default function HomePage() {
           <h3>探索別人的旅程</h3>
         </AreaHeading>
         <ExploreSection>
-          <TestArea>
+          <PostsArea>
             {postsData && (
               <PostsContainer>
                 {postsData.slice(0, 4).map((post, index) => (
@@ -482,9 +498,7 @@ export default function HomePage() {
               </PostsContainer>
             )}
             <MoreTag to={"/explore/location/全部"}>more</MoreTag>
-          </TestArea>
-
-          {/* TODO: */}
+          </PostsArea>
           <MapImageWrapperTest>
             {areaHoverAt && (
               <MapInfo>

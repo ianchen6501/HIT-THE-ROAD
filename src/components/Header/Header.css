@@ -1,11 +1,18 @@
 .LogoSVG {
-  width: 300px;
+  /* width: 300px; */
   stroke-dasharray: 1000;
   stroke-dashoffset: 1000;
 
   animation: Move;
   animation-duration: 2s;
   animation-iteration-count: infinite;
+}
+
+@media screen and (max-width: 600px) {
+  .LogoSVG {
+    position: relative;
+    top: 50px;
+  }
 }
 
 @keyframes Move {

@@ -57,6 +57,7 @@ const HeaderContainer = styled.div`
     background: ${(props) => props.theme.secondaryColors.secondaryLighter};
     box-shadow: inset 0px -1px 3px grey;
     z-index: 3;
+    ${(props) => props.$atHomepage && "height: 200px;"}; 
   }
 `;
 
@@ -244,11 +245,21 @@ const HeaderSlogan = styled(Link)`
     border: 2px solid white;
     color: rgb(255, 255, 255);
   }
+
+  ${MEDIA_QUERY_SM} {
+    padding: 5px 10px;
+    font-size: ${(props) => props.theme.fontSizes.medium};
+  }
 `;
 
 const LogoWrapper = styled.div`
   position: relative;
   width: 320px;
+
+  ${MEDIA_QUERY_SM} {
+    width: 160px;
+    top: -100%;
+  }
 `;
 
 export default function Header({ isCheckedLogin }) {
@@ -256,18 +267,18 @@ export default function Header({ isCheckedLogin }) {
   const location = useLocation();
   const userData = useSelector((store) => store.users.userData);
   const [isNavbarListShow, setIsNavbarListShow] = useState(false);
-  const [currentSlide, setCurrentSlide] = useState(1);
+  // const [currentSlide, setCurrentSlide] = useState(1);
   const [onMouseOver, setOnMouseOver] = useState(false);
 
-  useEffect(() => {
-    setTimeout(function () {
-      if (currentSlide > 2) {
-        setCurrentSlide(1);
-      } else {
-        setCurrentSlide(currentSlide + 1);
-      }
-    }, 5000);
-  }, [currentSlide]);
+  // useEffect(() => {
+  //   setTimeout(function () {
+  //     if (currentSlide > 2) {
+  //       setCurrentSlide(1);
+  //     } else {
+  //       setCurrentSlide(currentSlide + 1);
+  //     }
+  //   }, 5000);
+  // }, [currentSlide]);
 
   function handleLogout() {
     deleteAuthTokenFromLocalStorage();
@@ -292,7 +303,7 @@ export default function Header({ isCheckedLogin }) {
             wrapAround={true}
             renderCenterLeftControls={() => null}
             renderCenterRightControls={() => null}
-            style={{ position: "absolute", zIndex: -1 }}
+            style={{ position: "absolute", zIndex: -1, objectFit: "cover" }}
           >
             <img src={one} alt="one" />
             <img src={two} alt="two" />
@@ -382,6 +393,7 @@ export default function Header({ isCheckedLogin }) {
           <LogoWrapper>
             <LogoSVG
               className="LogoSVG"
+              style={{ width: "100%" }}
               stroke="#DB7290"
               strokeWidth="1rem"
               fill="#000000"

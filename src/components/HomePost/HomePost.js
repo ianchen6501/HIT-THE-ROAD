@@ -5,6 +5,13 @@ import two from "../../static/homepage/02.jpg";
 import three from "../../static/homepage/03.jpg";
 import four from "../../static/homepage/04.jpg";
 
+import {
+  MEDIA_QUERY_LG,
+  MEDIA_QUERY_SM,
+  MEDIA_QUERY_MD,
+  MEDIA_QUERY_EXMD,
+} from "../../constants/break_point";
+
 const Posts = styled(Link)`
   position: relative;
   width: 100%;
@@ -15,7 +22,6 @@ const Posts = styled(Link)`
   border: 1px solid white;
   background: ${(props) => props.theme.secondaryColors.secondaryLight};
   cursor: pointer;
-
   overflow: hidden;
 
   &:before {
@@ -43,6 +49,10 @@ const Posts = styled(Link)`
   & + & {
     margin-top: 10px;
   }
+
+  ${MEDIA_QUERY_SM} {
+    height: 80px;
+  }
 `;
 
 const PostsLeft = styled.img`
@@ -51,6 +61,10 @@ const PostsLeft = styled.img`
   margin-right: 10px;
   object-fit: cover;
   filter: grayscale(50%);
+
+  ${MEDIA_QUERY_SM} {
+    width: 80px;
+  }
 `;
 
 const PostsRight = styled.div`
@@ -69,6 +83,14 @@ const PostTitle = styled.div`
   font-size: ${(props) => props.theme.fontSizes.medium};
   font-weight: bold;
   color: white;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  ${MEDIA_QUERY_SM} {
+    width: 160px;
+    font-size: ${(props) => props.theme.fontSizes.small};
+  }
 `;
 
 const PostTime = styled.div`
@@ -79,6 +101,10 @@ const TagsWrapper = styled.div`
   padding: 4px;
   width: 120px;
   overflow: hidden;
+
+  ${MEDIA_QUERY_SM} {
+    display: none;
+  }
 `;
 
 const Tag = styled.div`
