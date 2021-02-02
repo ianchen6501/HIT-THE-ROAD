@@ -7,7 +7,11 @@ import "./Header.css";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteAuthTokenFromLocalStorage } from "../../utils";
 import { setUserData } from "../../redux/reducers/usersReducer";
-import { MEDIA_QUERY_SM } from "../../constants/break_point";
+import {
+  MEDIA_QUERY_SM,
+  MEDIA_QUERY_MD,
+  MEDIA_QUERY_LG,
+} from "../../constants/break_point";
 import Carousel from "nuka-carousel";
 
 import one from "../../static/header/one.jpg";
@@ -50,6 +54,14 @@ const HeaderContainer = styled.div`
     props.$atPlanningPage &&
     props.$mouseOver &&
     `background: ${props.theme.secondaryColors.secondaryLighter}`};
+
+  ${MEDIA_QUERY_LG} {
+    ${(props) => props.$atHomepage && "height: 420px;"}; 
+  }
+
+  ${MEDIA_QUERY_MD} {
+    ${(props) => props.$atHomepage && "height: 320px;"}; 
+  }
 
   ${MEDIA_QUERY_SM} {
     position: relative;
@@ -255,7 +267,7 @@ const HeaderSlogan = styled(Link)`
     color: rgb(255, 255, 255);
   }
 
-  ${MEDIA_QUERY_SM} {
+  ${MEDIA_QUERY_MD} {
     padding: 5px 10px;
     font-size: ${(props) => props.theme.fontSizes.medium};
   }
@@ -265,9 +277,18 @@ const LogoWrapper = styled.div`
   position: relative;
   width: 320px;
 
+  ${MEDIA_QUERY_LG} {
+    top: -10%;
+  }
+
+  ${MEDIA_QUERY_MD} {
+    width: 240px;
+    top: -30%;
+  }
+
   ${MEDIA_QUERY_SM} {
     width: 160px;
-    top: -100%;
+    top: -90%;
   }
 `;
 
@@ -276,18 +297,7 @@ export default function Header({ isCheckedLogin }) {
   const location = useLocation();
   const userData = useSelector((store) => store.users.userData);
   const [isNavbarListShow, setIsNavbarListShow] = useState(false);
-  // const [currentSlide, setCurrentSlide] = useState(1);
   const [onMouseOver, setOnMouseOver] = useState(false);
-
-  // useEffect(() => {
-  //   setTimeout(function () {
-  //     if (currentSlide > 2) {
-  //       setCurrentSlide(1);
-  //     } else {
-  //       setCurrentSlide(currentSlide + 1);
-  //     }
-  //   }, 5000);
-  // }, [currentSlide]);
 
   function handleLogout() {
     deleteAuthTokenFromLocalStorage();

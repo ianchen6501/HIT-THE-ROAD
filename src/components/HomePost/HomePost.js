@@ -5,7 +5,11 @@ import two from "../../static/homepage/02.jpg";
 import three from "../../static/homepage/03.jpg";
 import four from "../../static/homepage/04.jpg";
 
-import { MEDIA_QUERY_SM } from "../../constants/break_point";
+import {
+  MEDIA_QUERY_SM,
+  MEDIA_QUERY_MD,
+  MEDIA_QUERY_EXMD,
+} from "../../constants/break_point";
 
 const Posts = styled(Link)`
   position: relative;

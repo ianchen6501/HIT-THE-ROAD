@@ -227,13 +227,13 @@ const MoreTag = styled(Link)`
   }
 `;
 
-const MapImageWrapperTest = styled.div`
+const MapImageWrapper = styled.div`
   min-width: 280px;
   height: 540px;
   position: relative;
   overflow: hidden;
 
-  ${MEDIA_QUERY_SM} {
+  ${MEDIA_QUERY_MD} {
     display: none;
   }
 `;
@@ -287,7 +287,7 @@ const PostsArea = styled.div`
   margin-right: 20px;
   flex: 1;
 
-  ${MEDIA_QUERY_SM} {
+  ${MEDIA_QUERY_MD} {
     margin-right: 0;
   }
 `;
@@ -498,7 +498,7 @@ export default function HomePage() {
             )}
             <MoreTag to={"/explore/location/全部"}>more</MoreTag>
           </PostsArea>
-          <MapImageWrapperTest>
+          <MapImageWrapper>
             {areaHoverAt && (
               <MapInfo>
                 <MapLocation>{areaHoverAt}</MapLocation>
@@ -526,7 +526,7 @@ export default function HomePage() {
               />
             ))}
             <TaiwanImage src={taiwanMap} alt="taiwan map" width="100%" />
-          </MapImageWrapperTest>
+          </MapImageWrapper>
         </ExploreSection>
       </ExploreArea>
 
