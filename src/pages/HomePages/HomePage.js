@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { useLocation, Link, useHistory } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import HomePost from "../../components/HomePost";
-import { getPosts, setPosts } from "../../redux/reducers/postsReducer";
+import { getPosts } from "../../redux/reducers/postsReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowUp } from "@fortawesome/free-solid-svg-icons";
@@ -32,7 +32,6 @@ import {
   MEDIA_QUERY_LG,
   MEDIA_QUERY_SM,
   MEDIA_QUERY_MD,
-  MEDIA_QUERY_EXMD,
 } from "../../constants/break_point";
 
 const Wrapper = styled.div`
