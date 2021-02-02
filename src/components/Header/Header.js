@@ -126,13 +126,22 @@ const Brand = styled.div`
   }
 `;
 
-const NavbarWrapper = styled.div``;
+const NavbarWrapper = styled.div`
+  ${MEDIA_QUERY_SM} {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: ${(props) => props.theme.heights.homepageHeader};
+    overflow: hidden;
+  }
+`;
 
 const NavbarButton = styled.div`
   display: none;
 
   ${MEDIA_QUERY_SM} {
-    position: relative;
+    position: absolute;
+    right: 0;
     display: block;
     margin-right: 10px;
     width: 24px;
@@ -168,7 +177,7 @@ const NavbarList = styled.div`
   ${MEDIA_QUERY_SM} {
     flex-direction: column;
     position: absolute;
-    top: calc(${(props) => props.theme.heights.header} - 3px);
+    top: 40px;
     right: ${(props) => (props.$isNavbarListShow ? "0px" : "-100%")};
     margin-right: 0px;
     padding-left: 5px;
