@@ -119,6 +119,7 @@ const Logo = styled.div`
     bottom: 0px;
     transform: scale(0.8);
     width: 120px;
+    z-index: 2;
   }
 `;
 
@@ -141,9 +142,10 @@ const Brand = styled.div`
 const NavbarWrapper = styled.div`
   ${MEDIA_QUERY_SM} {
     position: absolute;
-    top: 0;
-    width: 100%;
-    height: ${(props) => props.theme.heights.homepageHeader};
+    top: ${(props) => (props.$atHomepage ? "0" : "20px")};
+    right: 0;
+    width: 100px;
+    height: 200px;
     overflow: hidden;
   }
 `;
@@ -351,7 +353,7 @@ export default function Header({ isCheckedLogin }) {
             )}
           </LeftContainer>
           {isCheckedLogin && (
-            <NavbarWrapper>
+            <NavbarWrapper $atHomepage={location.pathname === "/"}>
               <NavbarButton
                 onClick={() => setIsNavbarListShow(!isNavbarListShow)}
               />
