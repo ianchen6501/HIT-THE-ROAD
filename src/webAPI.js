@@ -1,4 +1,4 @@
-const BASE_URL = "https://hit-the-road.mings.tw";
+const BASE_URL = "http://localhost:5003";
 // const BASE_URL_BACKUP = "https://hit-the-road.mings.tw";
 
 export function getAllUnfinishedschedulesAPI(id) {
@@ -174,7 +174,11 @@ export const getFilteredPostsAPI = (keyword) => {
 };
 
 export const getPostsAPI = () => {
-  return fetch(`${BASE_URL}/posts`).then((response) => response.json());
+  return fetch(`${BASE_URL}/posts`, {
+    credentials: "include", //FIXME: 測試改為帶 credential header
+  }).then((response) => {
+    return response.json();
+  });
 };
 
 export const registerAPI = (json) => {

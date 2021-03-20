@@ -67,7 +67,7 @@ export default function ExploreSinglePage() {
     window.scroll(0, 0);
     const datesTest = [];
     if (dailyRoutines) {
-      Object.keys(dailyRoutines).map((key) => datesTest.push(key));
+      Object.keys(JSON.parse(dailyRoutines)).map((key) => datesTest.push(key));
     }
     setDates(datesTest);
   }, [dailyRoutines]);
@@ -94,7 +94,7 @@ export default function ExploreSinglePage() {
                     })}
                   </RoutineTitle>
                   <RoutineWrapper>
-                    {dailyRoutines[date] &&
+                    {dailyRoutines[date] === true &&
                       dailyRoutines[date].map((routine) => (
                         <Spot key={routine.id}>
                           <SpotInfo>

@@ -215,9 +215,7 @@ export const initSchedules = (userId, scheduleId) => (dispatch) => {
   getScheduleContent(userId, scheduleId)
     .then((res) => {
       dispatch(setDateRange(res.dateRange));
-      res.routes === null
-        ? dispatch(setRoutes([]))
-        : dispatch(setRoutes(res.routes));
+      dispatch(setRoutes(res.routes));
       dispatch(setSpotId(res.spotId));
     })
     .catch((error) => console.error(error));

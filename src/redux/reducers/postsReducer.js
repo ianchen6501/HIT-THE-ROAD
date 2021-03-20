@@ -50,9 +50,10 @@ export const getSinglePost = (scheduleId) => (dispatch) => {
 
 export const getPosts = () => (dispatch) => {
   dispatch(setIsLoading(true));
-
   getPostsAPI()
-    .then((json) => dispatch(setPosts(json)))
+    .then((posts) => {
+      dispatch(setPosts(posts));
+    })
     .catch((error) => console.log(error));
 
   dispatch(setIsLoading(false));

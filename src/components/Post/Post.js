@@ -98,9 +98,11 @@ export default function Post({ postData }) {
   const history = useHistory();
   const hashtags = postData.dailyRoutines[postData.dateRange.start];
   let hashtagsArr = [];
-  hashtags
-    .filter((hashtag) => hashtag.category !== "hotel")
-    .map((filterHashtag) => hashtagsArr.push(filterHashtag.location));
+  if (hashtags) {
+    hashtags
+      .filter((hashtag) => hashtag.category !== "hotel")
+      .map((filterHashtag) => hashtagsArr.push(filterHashtag.location));
+  }
 
   function changeMillisecondsToLocalDate(milliseconds) {
     const day = new Date(milliseconds).getDate();

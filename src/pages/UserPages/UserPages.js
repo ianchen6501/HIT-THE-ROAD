@@ -207,12 +207,12 @@ function Schedule({
 }) {
   const start = scheduleData.dateRange.start;
   const end = scheduleData.dateRange.end;
-  const startData = `
+  const startDate = `
     ${new Date(start).getFullYear().toString()}, 
     ${(new Date(start).getMonth() + 1).toString()}, 
     ${new Date(start).getDate().toString()}
   `;
-  const endData = `
+  const endDate = `
     ${new Date(end).getFullYear().toString()}, 
     ${(new Date(end).getMonth() + 1).toString()}, 
     ${new Date(end).getDate().toString()}
@@ -227,7 +227,7 @@ function Schedule({
         <LeftDownContainer>
           <SubTitle>{scheduleData.location}</SubTitle>
           <SubTitle>
-            {startData}-{endData}
+            {startDate}-{endDate}
           </SubTitle>
         </LeftDownContainer>
       </LeftContainer>

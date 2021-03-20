@@ -80,7 +80,7 @@ export const registerUser = (username, password, nickname, email) => (
         dispatch(setRegisterErrorMessage(json.message));
         return { ok: false };
       } else {
-        setAuthTokenToLocalStorage(json.token);
+        // setAuthTokenToLocalStorage(json.token);
         dispatch(setUserData(json.userData));
         return { ok: true };
       }
@@ -134,7 +134,7 @@ export const login = (username, password) => (dispatch) => {
       dispatch(setLoginErrorMessage(json.message));
       return { ok: false };
     } else {
-      setAuthTokenToLocalStorage(json.token);
+      // setAuthTokenToLocalStorage(json.token);
       dispatch(setUserData(json.userData));
       return { ok: true };
     }
@@ -186,9 +186,11 @@ export const getFinishedSchedules = (id) => (dispatch) => {
   dispatch(setIsLoading(false));
 };
 
+//TODO:
 export const checkIsLogin = () => async (dispatch) => {
   dispatch(setIsLoading(true));
-  const token = await getAuthTokenFromLocalStorage();
+  // const token = await getAuthTokenFromLocalStorage();
+  const token = true;
   if (token) {
     const json = JSON.stringify({ token });
     await getUserDataAPI(json).then((json) => {
@@ -231,11 +233,13 @@ export const createSchedule = (
         .setDate(new Date(startDate).getDate() + i)
         .toString();
       dates[date] = [];
+      console.log(date);
     }
     return dates;
   }
 
   const dates = calcDates();
+  console.log(dates);
 
   const json = JSON.stringify({
     scheduleName,

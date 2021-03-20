@@ -124,9 +124,11 @@ export default function HomePost(props) {
   const { setAreaHoverAt, index } = props;
   const hashtags = post.dailyRoutines[post.dateRange.start];
   let hashtagsArr = [];
-  hashtags
-    .filter((hashtag) => hashtag.category !== "hotel")
-    .map((filterHashtag) => hashtagsArr.push(filterHashtag.location));
+  if (hashtags) {
+    hashtags
+      .filter((hashtag) => hashtag.category !== "hotel")
+      .map((filterHashtag) => hashtagsArr.push(filterHashtag.location));
+  }
 
   function changeMillisecondsToLocalDate(milliseconds) {
     const day = new Date(milliseconds).getDate();
@@ -149,6 +151,7 @@ export default function HomePost(props) {
         <PostInfo>
           <PostTitle>{post.scheduleName}</PostTitle>
           <PostTime>
+            {/* 這邊待確認 json 儲存方式 */}
             {changeMillisecondsToLocalDate(post.dateRange.start)} ~{" "}
             {changeMillisecondsToLocalDate(post.dateRange.end)}
           </PostTime>
