@@ -1,43 +1,87 @@
 import React, { useState, useEffect } from "react";
-import { setUserData } from "../../redux/reducers/usersReducer";
-import { useDispatch } from "react-redux";
+import {
+  login,
+  FbLogin,
+  setLoginErrorMessage,
+} from "../../redux/reducers/usersReducer";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory, Link } from "react-router-dom";
-import { setAuthTokenToLocalStorage, FBstartApp } from "../../utils";
 import {
   FormContainer,
   UserInput,
   Title,
   UserInputContainer,
+  UserButtonContainer,
   UserButtonBorder,
   UserButtonBackground,
   UserButtonText,
   ErrorMessage,
 } from "../../components/UserForm";
-import { Wrapper } from "../../components/public";
+import { FormWrapper } from "../../components/public";
 import { FacebookOutlined } from "@ant-design/icons";
-import { SERVER_URL } from "../../static/static";
 import styled from "styled-components";
+import { MEDIA_QUERY_MD, MEDIA_QUERY_EXSM } from "../../constants/break_point";
 
-const Reminder = styled.div`
+const ReminderContainer = styled.div`
+  width: 480px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20px;
+
+  ${MEDIA_QUERY_MD} {
+    width: 360px;
+  }
+
+  ${MEDIA_QUERY_EXSM} {
+    width: 225px;
+  }
+`;
+
+const RegisterReminder = styled.div`
+  display: flex;
+  border-bottom: 1px solid
+    ${(props) => props.theme.secondaryColors.secondaryDarker};
+  font-size: ${(props) => props.theme.fontSizes.small};
+  font-weight: 800;
+`;
+
+const RegisterLink = styled.div`
+  color: ${(props) => props.theme.primaryColors.primary};
+  font-size: ${(props) => props.theme.fontSizes.small};
+  font-weight: 800;
+`;
+
+const DemoAcountReminder = styled.div`
   position: relative;
   width: fit-content;
-  margin: 0px auto;
-  padding: 6px 10px;
-  border-radius: 5px;
+  margin-top: 20px;
+  border: 1px solid ${(props) => props.theme.secondaryColors.secondaryDarker};
+  border-radius: 10px;
+  padding: 10px;
   color: ${(props) => props.theme.secondaryColors.secondaryDarker};
-  font-size: ${(props) => props.theme.fontSizes.medium};
+  font-size: ${(props) => props.theme.fontSizes.small};
   font-weight: 800;
-  background: ${(props) => props.theme.primaryColors.primaryLighter};
+  text-transform: none;
 `;
+
+const FacebookOutlinedStyle = {
+  transform: "scale(1.2)",
+  cursor: "pointer",
+};
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [usernameErrorMessage, setUsernameErrorMessage] = useState("");
   const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
   const dispatch = useDispatch();
   const history = useHistory();
+  const loginErrorMessage = useSelector(
+    (store) => store.users.loginErrorMessage
+  );
+  const userData = useSelector((store) => store.users.userData);
 
   useEffect(() => {
     if (username) {
@@ -46,9 +90,19 @@ export default function LoginPage() {
     if (password) {
       setPasswordErrorMessage("");
     }
-  }, [username, password, usernameErrorMessage, passwordErrorMessage]);
 
-  const handleOnClickLogin = () => {
+    return () => {
+      dispatch(setLoginErrorMessage(null));
+    };
+  }, [
+    dispatch,
+    username,
+    password,
+    usernameErrorMessage,
+    passwordErrorMessage,
+  ]);
+  //login
+  const handleUserButtonBorderOnClick = () => {
     const message = "this field can not be empty.";
 
     if (!username) {
@@ -60,110 +114,87 @@ export default function LoginPage() {
     if (!username || !password) {
       return;
     } else {
-      const body = {
-        username,
-        password,
-      };
-      const json = JSON.stringify(body);
-      fetch(`${SERVER_URL}/login/common`, {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: json,
-      })
-        .then((response) => {
-          return response.json();
-        })
-        .then((json) => {
-          if (!json.ok) {
-            setErrorMessage(json.message);
-          } else {
-            setAuthTokenToLocalStorage(json.token);
-            dispatch(setUserData(json.userData));
-            history.push("/");
-          }
-        });
+      dispatch(login(username, password)).then((response) => {
+        //if (response.ok) {
+        //history.push("/");
+        //}
+      });
     }
   };
 
-  const handleOnClickFBLogin = () => {
-    FBstartApp().then((res) => {
-      if (!res.ok) {
-        return setErrorMessage(res.message);
+  const handleFacebookOutlinedOnClick = () => {
+    dispatch(FbLogin()).then((response) => {
+      if (response.ok) {
+        history.push("/");
       }
-      const body = {
-        fbId: res.FBUserData.id,
-        fbName: res.FBUserData.name,
-        fbEmail: res.FBUserData.email,
-      };
-      const json = JSON.stringify(body);
-      fetch(`${SERVER_URL}/login/fb`, {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: json,
-      })
-        .then((response) => {
-          return response.json();
-        })
-        .then((json) => {
-          if (!json.ok) {
-            setErrorMessage(json.message);
-          } else {
-            setAuthTokenToLocalStorage(json.token);
-            dispatch(setUserData(json.userData));
-            history.push("/");
-          }
-        });
     });
   };
 
+  // if (userData) {
+  //   history.push("/");
+  // }
+
   return (
-    <Wrapper $solidPlate={true}>
+    <FormWrapper $solidPlate={true}>
       <FormContainer>
         <Title>please sign in</Title>
+        <form
+          onKeyPress={(event) =>
+            event.key == "Enter" && handleUserButtonBorderOnClick()
+          }
+        >
+          <UserInputContainer>
+            <UserInput
+              placeholder={"USERNAME"}
+              onChange={(event) => setUsername(event.target.value)}
+              value={username}
+            ></UserInput>
+            {usernameErrorMessage && (
+              <ErrorMessage>{usernameErrorMessage}</ErrorMessage>
+            )}
+          </UserInputContainer>
+          <UserInputContainer>
+            <UserInput
+              placeholder={"PASSWORD"}
+              onChange={(event) => setPassword(event.target.value)}
+              value={password}
+              type="password"
+            ></UserInput>
+            {passwordErrorMessage && (
+              <ErrorMessage>{passwordErrorMessage}</ErrorMessage>
+            )}
+          </UserInputContainer>
+          <UserButtonContainer>
+            <UserButtonBorder onClick={handleUserButtonBorderOnClick}>
+              <UserButtonText>next</UserButtonText>
+              <UserButtonBackground />
+            </UserButtonBorder>
+            {loginErrorMessage && (
+              <ErrorMessage>{loginErrorMessage}</ErrorMessage>
+            )}
+          </UserButtonContainer>
+        </form>
         <FacebookOutlined
-          onClick={handleOnClickFBLogin}
-          style={{
-            position: "absolute",
-            right: "10px",
-            top: "10px",
-            transform: "scale(1.2)",
-            cursor: "pointer",
-          }}
+          onClick={handleFacebookOutlinedOnClick}
+          style={FacebookOutlinedStyle}
         />
-        <UserInputContainer>
-          <UserInput
-            placeholder={"USERNAME"}
-            onChange={(event) => setUsername(event.target.value)}
-            value={username}
-          ></UserInput>
-          {usernameErrorMessage && (
-            <ErrorMessage>{usernameErrorMessage}</ErrorMessage>
-          )}
-        </UserInputContainer>
-        <UserInputContainer>
-          <UserInput
-            placeholder={"PASSWORD"}
-            onChange={(event) => setPassword(event.target.value)}
-            value={password}
-            type="password"
-          ></UserInput>
-          {passwordErrorMessage && (
-            <ErrorMessage>{passwordErrorMessage}</ErrorMessage>
-          )}
-        </UserInputContainer>
-        <UserButtonBorder onClick={handleOnClickLogin}>
-          <UserButtonText>next</UserButtonText>
-          <UserButtonBackground />
-        </UserButtonBorder>
-        {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
-        <Link to="/register">
-          <Reminder>如果尚未註冊請先註冊。</Reminder>
-        </Link>
+        <ReminderContainer>
+          <RegisterReminder>
+            還沒有帳戶嗎?
+            <Link to="/register">
+              <RegisterLink>註冊</RegisterLink>
+            </Link>
+          </RegisterReminder>
+          <DemoAcountReminder>
+            測試帳號
+            <br />
+            USERNAME: demo01
+            <br />
+            PASSWORD: demo01
+            <br />
+          </DemoAcountReminder>
+        </ReminderContainer>
       </FormContainer>
-    </Wrapper>
+    </FormWrapper>
   );
 }

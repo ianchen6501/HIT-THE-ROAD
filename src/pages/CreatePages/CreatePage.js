@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { Wrapper } from "../../components/public";
+import { FormWrapper } from "../../components/public";
 import {
   FormContainer,
   UserInput,
@@ -8,6 +8,7 @@ import {
   UserButtonBackground,
   UserButtonText,
   ErrorMessage,
+  UserButtonContainer,
 } from "../../components/UserForm";
 
 import DatePicker from "../../components/DatePicker";
@@ -42,8 +43,16 @@ const SubTitle = styled.div`
 const Select = styled.select`
   width: 100%;
   height: 50px;
+  max-height: 100px;
   border: 1px solid ${(props) => props.theme.secondaryColors.secondaryLight};
+  border-radius: 50px;
+  padding-left: 25px;
   font-size: ${(props) => props.theme.fontSizes.medium};
+  overflow: scroll;
+
+  &:focus {
+    outline: none;
+  }
 `;
 
 const SubContainer = styled.div`
@@ -102,7 +111,6 @@ export default function CreatePage() {
   const [endDate, setEndDate] = useState(
     new Date(currentYear, currentMonth, currentDate).getTime()
   );
-  // const [errorMessage, setErrorMessage] = useState("");
   const [scheduleNameErrorMessage, setScheduleNameErrorMessage] = useState("");
   const userData = useSelector((store) => store.users.userData);
   const createErrorMessage = useSelector(
@@ -122,55 +130,69 @@ export default function CreatePage() {
     ).then(() => history.push("/planning-page"));
   }
 
-  return (
-    <Wrapper $solidPlate={true}>
-      <FormContainer style={FormContainerStyle}>
-        <Title>來趟新的旅行吧!</Title>
-        <SubContainer>
-          <SubTitle>旅程名稱</SubTitle>
-          <UserInput
-            value={scheduleName}
-            onChange={(event) => setScheduleName(event.target.value)}
-            placeholder={"請輸入旅程名稱"}
-            style={userInputStyle}
-          ></UserInput>
-          {scheduleNameErrorMessage && (
-            <ErrorMessage>{scheduleNameErrorMessage}</ErrorMessage>
-          )}
-        </SubContainer>
-        <SubContainer>
-          <SubTitle>目的地</SubTitle>
-          <Select
-            value={location}
-            onChange={(event) => setLocation(event.target.value)}
+  if (!userData) {
+    history.push("/");
+    return <div></div>;
+  }
+
+  if (userData) {
+    return (
+      <FormWrapper $solidPlate={true}>
+        <FormContainer style={FormContainerStyle}>
+          <Title>來趟新的旅行吧!</Title>
+          <form
+            onKeyPress={(event) =>
+              event.key == "Enter" && handleSubmitSchedule()
+            }
           >
-            {destinationSelects.map((select) => (
-              <option value={select} key={select}>
-                {select}
-              </option>
-            ))}
-          </Select>
-        </SubContainer>
-        <SubContainer>
-          <SubTitle>時間</SubTitle>
-          <DatePicker
-            style={{ zIndex: "4" }}
-            startDate={startDate}
-            setStartDate={setStartDate}
-            endDate={endDate}
-            setEndDate={setEndDate}
-          />
-        </SubContainer>
-        <div onClick={handleSubmitSchedule}>
-          <UserButtonBorder style={{ zIndex: "0" }}>
-            <UserButtonText>next</UserButtonText>
-            <UserButtonBackground />
-          </UserButtonBorder>
-        </div>
-        {createErrorMessage && (
-          <ErrorMessage>{createErrorMessage}</ErrorMessage>
-        )}
-      </FormContainer>
-    </Wrapper>
-  );
+            <SubContainer>
+              <SubTitle>旅程名稱</SubTitle>
+              <UserInput
+                value={scheduleName}
+                onChange={(event) => setScheduleName(event.target.value)}
+                placeholder={"請輸入旅程名稱"}
+                style={userInputStyle}
+              ></UserInput>
+              {scheduleNameErrorMessage && (
+                <ErrorMessage>{scheduleNameErrorMessage}</ErrorMessage>
+              )}
+            </SubContainer>
+            <SubContainer>
+              <SubTitle>目的地</SubTitle>
+              <Select
+                value={location}
+                onChange={(event) => setLocation(event.target.value)}
+                name={"location"}
+              >
+                {destinationSelects.map((select) => (
+                  <option value={select} key={select}>
+                    {select}
+                  </option>
+                ))}
+              </Select>
+            </SubContainer>
+            <SubContainer>
+              <SubTitle>時間</SubTitle>
+              <DatePicker
+                style={{ zIndex: "4" }}
+                startDate={startDate}
+                setStartDate={setStartDate}
+                endDate={endDate}
+                setEndDate={setEndDate}
+              />
+            </SubContainer>
+            <UserButtonContainer onClick={handleSubmitSchedule}>
+              <UserButtonBorder style={{ zIndex: "0" }}>
+                <UserButtonText>next</UserButtonText>
+                <UserButtonBackground />
+              </UserButtonBorder>
+              {createErrorMessage && (
+                <ErrorMessage>{createErrorMessage}</ErrorMessage>
+              )}
+            </UserButtonContainer>
+          </form>
+        </FormContainer>
+      </FormWrapper>
+    );
+  }
 }

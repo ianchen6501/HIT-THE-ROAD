@@ -19,7 +19,7 @@ const PagesContainer = styled.div`
 `;
 
 const Page = styled.div`
-  font-size: 20px;
+  font-size: ${(props) => props.theme.fontSizes.small};
   cursor: pointer;
   color: ${(props) => props.theme.secondaryColors.secondaryDarker};
   box-sizing: border-box;

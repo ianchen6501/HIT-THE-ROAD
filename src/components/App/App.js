@@ -23,43 +23,49 @@ function App({ FBstartApp, FBdeleteApp }) {
 
   useEffect(() => {
     dispatch(checkIsLogin()).then(() => setIsCheckedLogin(true));
+
+    return async () => {
+      await dispatch(checkIsLogin()).then(() => setIsCheckedLogin(true));
+    };
   }, []);
 
   return (
     <Router>
       <Header isCheckedLogin={isCheckedLogin} />
-      <Switch>
-        <Route exact path="/">
-          <HomePage />
-        </Route>
-        <Route exact path="/login">
-          <LoginPage />
-        </Route>
-        <Route exact path="/register">
-          <RegisterPage FBstartApp={FBstartApp} FBdeleteApp={FBdeleteApp} />
-        </Route>
-        <Route exact path="/create">
-          <CreatePage />
-        </Route>
-        <Route exact path="/edit/:id">
-          <EditPage />
-        </Route>
-        <Route exact path="/user">
-          <UserPage />
-        </Route>
-        <Route exact path="/explore">
-          <ExpolorePage />
-        </Route>
-        <Route path="/planning-page">
-          <PlanningPage />
-        </Route>
-        <Route path="/finish-plan-page">
-          <FinishPlanPage />
-        </Route>
-        <Route path="/explore/:slug">
-          <ExploreSinglePage />
-        </Route>
-      </Switch>
+      {isCheckedLogin && (
+        <Switch>
+          <Route exact path="/">
+            <HomePage />
+          </Route>
+          <Route exact path="/login">
+            <LoginPage />
+          </Route>
+          <Route exact path="/register">
+            <RegisterPage FBstartApp={FBstartApp} FBdeleteApp={FBdeleteApp} />
+          </Route>
+          <Route exact path="/create">
+            <CreatePage />
+          </Route>
+          <Route exact path="/edit/:id">
+            <EditPage />
+          </Route>
+          <Route exact path="/user">
+            <UserPage />
+          </Route>
+          <Route exact path="/explore/location/:slug">
+            <ExpolorePage />
+          </Route>
+          <Route path="/planning-page">
+            <PlanningPage />
+          </Route>
+          <Route path="/finish-plan-page">
+            <FinishPlanPage />
+          </Route>
+          <Route path="/explore/:slug">
+            <ExploreSinglePage />
+          </Route>
+        </Switch>
+      )}
       <Footer />
     </Router>
   );

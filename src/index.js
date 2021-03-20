@@ -10,6 +10,7 @@ const theme = {
   basicColors: {
     white: "#fff5f6",
     black: "#000000",
+    grayLighter: "#e8e8e8",
   },
 
   primaryColors: {
@@ -55,7 +56,7 @@ const theme = {
 
   heights: {
     header: "60px",
-    homepageHeader: "400px",
+    homepageHeader: "520px",
     footer: "30px",
   },
 };

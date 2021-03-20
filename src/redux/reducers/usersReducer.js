@@ -6,11 +6,17 @@ import {
   getUserDataAPI,
   toggleScheduleIsfinishedAPI,
   createScheduleAPI,
+  registerAPI,
+  FbRegisterAPI,
+  loginAPI,
+  FbLoginAPI,
 } from "../../webAPI";
 import {
   getAuthTokenFromLocalStorage,
   setAuthTokenFromSessionStorage,
   deleteAuthTokenFromSessionStorage,
+  setAuthTokenToLocalStorage,
+  FBstartApp,
 } from "../../utils";
 
 export const usersReducer = createSlice({
@@ -22,6 +28,8 @@ export const usersReducer = createSlice({
     schedules: null,
     scheduleData: null,
     createErrorMessage: null,
+    registerErrorMessage: null,
+    loginErrorMessage: null,
   },
   reducers: {
     setIsLoading: (state, action) => {
@@ -37,10 +45,16 @@ export const usersReducer = createSlice({
       state.schedules = action.payload;
     },
     setScheduleData: (state, action) => {
-      state.schedules = action.payload;
+      state.scheduleData = action.payload;
     },
     setCreateErrorMessage: (state, action) => {
-      state.schedules = action.payload;
+      state.createErrorMessage = action.payload;
+    },
+    setRegisterErrorMessage: (state, action) => {
+      state.registerErrorMessage = action.payload;
+    },
+    setLoginErrorMessage: (state, action) => {
+      state.loginErrorMessage = action.payload;
     },
   },
 });
@@ -52,7 +66,109 @@ export const {
   setSchedules,
   setScheduleData,
   setCreateErrorMessage,
+  setRegisterErrorMessage,
+  setLoginErrorMessage,
 } = usersReducer.actions;
+
+export const registerUser = (username, password, nickname, email) => (
+  dispatch
+) => {
+  const json = JSON.stringify({ username, password, nickname, email });
+  return registerAPI(json)
+    .then((json) => {
+      if (!json.ok) {
+        dispatch(setRegisterErrorMessage(json.message));
+        return { ok: false };
+      } else {
+        // setAuthTokenToLocalStorage(json.token);
+        dispatch(setUserData(json.userData));
+        return { ok: true };
+      }
+    })
+    .catch((error) => {
+      dispatch(setRegisterErrorMessage(error.toString()));
+    });
+};
+
+export const FbRegisterUser = () => async (dispatch) => {
+  const errorMessage = "請確認並根據指示登入fb";
+  const fbResponse = [];
+  await FBstartApp().then((res) => {
+    fbResponse.push(res);
+  });
+
+  if (!fbResponse[0].ok) {
+    return dispatch(setRegisterErrorMessage(errorMessage));
+  } else {
+    const { id, name, email } = fbResponse[0].FBUserData;
+    const json = JSON.stringify({
+      fbId: id,
+      fbName: name,
+      fbEmail: email,
+    });
+    return FbRegisterAPI(json)
+      .then((json) => {
+        if (!json.ok) {
+          dispatch(setRegisterErrorMessage(json.message));
+          return { ok: false };
+        } else {
+          setAuthTokenToLocalStorage(json.token);
+          dispatch(setUserData(json.userData));
+          return { ok: true };
+        }
+      })
+      .catch((error) => {
+        dispatch(setRegisterErrorMessage(error.toString()));
+      });
+  }
+};
+
+export const login = (username, password) => (dispatch) => {
+  const body = {
+    username,
+    password,
+  };
+  const json = JSON.stringify(body);
+  return loginAPI(json).then((json) => {
+    if (!json.ok) {
+      dispatch(setLoginErrorMessage(json.message));
+      return { ok: false };
+    } else {
+      // setAuthTokenToLocalStorage(json.token);
+      dispatch(setUserData(json.userData));
+      return { ok: true };
+    }
+  });
+};
+
+export const FbLogin = () => async (dispatch) => {
+  const fbResponse = [];
+  await FBstartApp().then((res) => {
+    fbResponse.push(res);
+  });
+  if (!fbResponse[0].ok) {
+    dispatch(setLoginErrorMessage(fbResponse[0].message));
+    return new Promise((resolve) => {
+      resolve({ ok: false });
+    });
+  }
+  const body = {
+    fbId: fbResponse[0].FBUserData.id,
+    fbName: fbResponse[0].FBUserData.name,
+    fbEmail: fbResponse[0].FBUserData.email,
+  };
+  const json = JSON.stringify(body);
+  return FbLoginAPI(json).then((json) => {
+    if (!json.ok) {
+      dispatch(setLoginErrorMessage(json.message));
+      return { ok: false };
+    } else {
+      setAuthTokenToLocalStorage(json.token);
+      dispatch(setUserData(json.userData));
+      return { ok: true };
+    }
+  });
+};
 
 export const getUnfinishedSchedules = (id) => (dispatch) => {
   dispatch(setIsLoading(true));
@@ -70,9 +186,11 @@ export const getFinishedSchedules = (id) => (dispatch) => {
   dispatch(setIsLoading(false));
 };
 
+//TODO:
 export const checkIsLogin = () => async (dispatch) => {
   dispatch(setIsLoading(true));
-  const token = await getAuthTokenFromLocalStorage();
+  // const token = await getAuthTokenFromLocalStorage();
+  const token = true;
   if (token) {
     const json = JSON.stringify({ token });
     await getUserDataAPI(json).then((json) => {
@@ -82,7 +200,6 @@ export const checkIsLogin = () => async (dispatch) => {
   dispatch(setIsLoading(false));
 };
 
-//UserPage 刪除行程
 export const deleteSchedule = (id, UserId) => (dispatch) => {
   const json = JSON.stringify({
     UserId,
@@ -116,11 +233,13 @@ export const createSchedule = (
         .setDate(new Date(startDate).getDate() + i)
         .toString();
       dates[date] = [];
+      console.log(date);
     }
     return dates;
   }
 
   const dates = calcDates();
+  console.log(dates);
 
   const json = JSON.stringify({
     scheduleName,

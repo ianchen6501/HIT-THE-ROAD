@@ -40,6 +40,26 @@ export const schedulesReducer = createSlice({
     // 只有一天的
     orderByStartRoutines: [],
     routes: [],
+    scheduleLocations: [
+      "全部",
+      "台北",
+      "新北",
+      "桃園",
+      "新竹",
+      "苗栗",
+      "台中",
+      "彰化",
+      "雲林",
+      "嘉義",
+      "台南",
+      "高雄",
+      "屏東",
+      "台東",
+      "花蓮",
+      "宜蘭",
+      "南投",
+      "離島",
+    ],
   },
   reducers: {
     setIsLoading: (state, action) => {
@@ -121,6 +141,9 @@ export const schedulesReducer = createSlice({
         (route) => route.originId !== action.payload
       );
     },
+    setScheduleLocations: (state, action) => {
+      state.scheduleLocations = action.payload;
+    },
   },
 });
 
@@ -144,6 +167,7 @@ export const {
   setIsRouteSaved,
   setIsRoutineSaved,
   setIsLoading,
+  setScheduleLocations,
 } = schedulesReducer.actions;
 
 export const update = ({ location, start, end, category, budget, memo }) => (
@@ -191,9 +215,7 @@ export const initSchedules = (userId, scheduleId) => (dispatch) => {
   getScheduleContent(userId, scheduleId)
     .then((res) => {
       dispatch(setDateRange(res.dateRange));
-      res.routes === null
-        ? dispatch(setRoutes([]))
-        : dispatch(setRoutes(res.routes));
+      dispatch(setRoutes(res.routes));
       dispatch(setSpotId(res.spotId));
     })
     .catch((error) => console.error(error));

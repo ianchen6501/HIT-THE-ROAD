@@ -1,30 +1,72 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { getPosts, getFilteredPosts } from "../../redux/reducers/postsReducer";
-import { Wrapper } from "../../components/public";
+import { setPosts, getFilteredPosts } from "../../redux/reducers/postsReducer";
+import { LoadingPage, Wrapper } from "../../components/public";
 import Post from "../../components/Post";
 import Paginator from "../../components/Paginator";
+import { MEDIA_QUERY_MD } from "../../constants/break_point";
+import { useHistory, useParams } from "react-router-dom";
 
-const FilterContainer = styled.div`
+const Heading = styled.div`
   margin-top: 30px;
-  margin-bottom: 30px;
+  text-align: center;
+  font-weight: bolder;
+  font-size: ${(props) => props.theme.titles.h5};
+  color: ${(props) => props.theme.secondaryColors.secondaryDarker};
+
+  &::before {
+    content: "";
+    padding-left: 15px;
+    border-left: solid 5px
+      ${(props) => props.theme.secondaryColors.secondaryDarker};
+  }
+
+  ${MEDIA_QUERY_MD} {
+    font-size: ${(props) => props.theme.titles.h6};
+  }
 `;
 
-const KeywordFilter = styled.div`
-  display: inline-block;
+const FilterContainer = styled.div`
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-content: stretch;
+  flex-wrap: wrap;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  border-radius: 10px;
+  padding: 10px 30px 0px 30px;
+  background: ${(props) => props.theme.secondaryColors.secondaryLighter};
+
+  ${MEDIA_QUERY_MD} {
+    width: 80%;
+  }
+`;
+
+const LocationFilter = styled.div`
+  display: relative;
+  width: fit-content;
   margin-bottom: 10px;
-  margin-left: 20px;
-  border: solid 1px ${(props) => props.theme.primaryColors.primaryLight};
+  margin-left: 10px;
+  margin-right: 10px;
+  border: solid 1px ${(props) => props.theme.secondaryColors.secondary};
   border-radius: 13px;
   padding: 4px 8px;
   color: ${(props) => props.theme.primaryColors.dark};
-  font-size: ${(props) => props.theme.fontSizes.medium};
+  font-size: ${(props) => props.theme.fontSizes.small};
+  box-shadow: 0.2px 0.2px 5px -3px;
   transition: transform 0.1s ease-out;
+  background: white;
   cursor: pointer;
 
   &:hover {
-    transform: scale(1.02);
+    transform: scale(1.05);
+    font-weight: 700;
+    border: solid 1.5px ${(props) => props.theme.secondaryColors.secondary};
   }
 
   &:visited {
@@ -32,75 +74,102 @@ const KeywordFilter = styled.div`
   }
 
   ${(props) =>
-    props.$active && `background: ${props.theme.primaryColors.primaryLighter};`}
+    props.$active &&
+    `
+      background: ${props.theme.secondaryColors.secondary};
+      color: white;
+  `}
+
+  ${MEDIA_QUERY_MD} {
+    font-size: ${(props) => props.theme.fontSizes.extraSmall};
+    margin-left: 5px;
+    margin-right: 5px;
+  }
 `;
 
 const PostsContainer = styled.div`
-  min-height: 450px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  min-height: 400px;
+
+  ${MEDIA_QUERY_MD} {
+    justify-content: center;
+  }
+`;
+
+const Reminder = styled.div`
+  position: absolute;
+  display: inline-block;
+  width: 200px;
+  height: 50px;
+  left: 50%;
+  top: 50%;
+  border-radius: 10px;
+  transform: translate(-50%, -50%);
+  background: ${(props) => props.theme.basicColors.white};
+  line-height: 50px;
+  text-align: center;
+  color: ${(props) => props.theme.secondaryColors.secondaryDarker};
+  font-weight: bold;
 `;
 
 export default function ExplorePage() {
   const dispatch = useDispatch();
-  const posts = useSelector((store) => store.posts.posts);
-  const [filter, setFilter] = useState("全部");
+  const history = useHistory();
+  const { slug } = useParams();
+  const [filter, setFilter] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const limit = 3;
-  //假的 filter 資料，之後從資料庫拿
-  const keywords = [
-    "全部",
-    "台北",
-    "新北",
-    "桃園",
-    "新竹",
-    "苗栗",
-    "台中",
-    "彰化",
-    "雲林",
-    "嘉義",
-    "台南",
-    "高雄",
-    "屏東",
-    "台東",
-    "花蓮",
-    "宜蘭",
-    "南投",
-    "離島",
-  ];
+  const posts = useSelector((store) => store.posts.posts);
+  const locations = useSelector((store) => store.schedules.scheduleLocations);
+  const limit = 4;
 
   useEffect(() => {
-    dispatch(getPosts());
-  }, [dispatch, limit]);
+    setFilter(slug);
+    dispatch(getFilteredPosts(slug));
 
-  function handleFilterOnClick(keyword) {
-    setFilter(keyword);
-    dispatch(getFilteredPosts(keyword));
+    return () => {
+      dispatch(setPosts(null));
+    };
+  }, [dispatch, limit, slug]);
+
+  function handleFilterOnClick(location) {
+    setFilter(location);
+    history.push(`/explore/location/${location}`);
   }
 
-  return (
-    <Wrapper>
-      <FilterContainer>
-        {keywords.map((keyword, index) => (
-          <KeywordFilter
-            $active={filter === keyword}
-            onClick={() => handleFilterOnClick(keyword)}
-            key={index}
-          >
-            {keyword}
-          </KeywordFilter>
-        ))}
-      </FilterContainer>
-      <PostsContainer>
-        {posts &&
-          posts
-            .slice((currentPage - 1) * limit, currentPage * limit)
-            .map((post, index) => <Post postData={post} key={index}></Post>)}
-      </PostsContainer>
-      <Paginator
-        posts={posts}
-        setCurrentPage={setCurrentPage}
-        currentPage={currentPage}
-        limit={limit}
-      />
-    </Wrapper>
-  );
+  if (!filter || !posts) {
+    return <LoadingPage />;
+  } else {
+    return (
+      <Wrapper>
+        <Heading>按地區搜尋</Heading>
+        <FilterContainer>
+          {locations.map((location, index) => (
+            <LocationFilter
+              $active={filter === location}
+              onClick={() => handleFilterOnClick(location)}
+              key={index}
+            >
+              {location}
+            </LocationFilter>
+          ))}
+        </FilterContainer>
+        <PostsContainer>
+          {posts && posts.length === 0 && <Reminder>此地區尚無行程</Reminder>}
+          {posts &&
+            posts.length > 0 &&
+            posts
+              .slice((currentPage - 1) * limit, currentPage * limit)
+              .map((post, index) => <Post postData={post} key={index}></Post>)}
+        </PostsContainer>
+        <Paginator
+          posts={posts}
+          setCurrentPage={setCurrentPage}
+          currentPage={currentPage}
+          limit={limit}
+        />
+      </Wrapper>
+    );
+  }
 }

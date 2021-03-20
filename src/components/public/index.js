@@ -1,4 +1,1 @@
-export { 
-  Wrapper,
-  LoadingPage,
- } from './public'
+export { Wrapper, FormWrapper, LoadingPage } from "./public";

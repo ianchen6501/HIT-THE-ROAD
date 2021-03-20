@@ -1,21 +1,29 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { setAuthTokenToLocalStorage, FBstartApp } from "../../utils";
-import { setUserData } from "../../redux/reducers/usersReducer";
+import {
+  registerUser,
+  FbRegisterUser,
+  setRegisterErrorMessage,
+} from "../../redux/reducers/usersReducer";
 import {
   FormContainer,
   UserInput,
   Title,
   UserInputContainer,
+  UserButtonContainer,
   UserButtonBorder,
   UserButtonBackground,
   UserButtonText,
   ErrorMessage,
 } from "../../components/UserForm";
-import { Wrapper } from "../../components/public";
+import { FormWrapper } from "../../components/public";
 import { FacebookOutlined } from "@ant-design/icons";
-import { SERVER_URL } from "../../static/static";
+
+const FacebookOutlinedStyle = {
+  transform: "scale(1.2)",
+  cursor: "pointer",
+};
 
 export default function RegisterPage() {
   const [username, setUsername] = useState("");
@@ -26,9 +34,12 @@ export default function RegisterPage() {
   const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
   const [nicknameErrorMessage, setNicknameErrorMessage] = useState("");
   const [emailErrorMessage, setEmailErrorMessage] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
   const dispatch = useDispatch();
   const history = useHistory();
+  const registerErrorMessage = useSelector(
+    (store) => store.users.registerErrorMessage
+  );
+  const userData = useSelector((store) => store.users.userData);
 
   function handleUserButtonOnClick() {
     const errorMessage = "this field can not be empty.";
@@ -53,66 +64,20 @@ export default function RegisterPage() {
     if (!username || !password || !nickname || !email) {
       return;
     } else {
-      const json = JSON.stringify({ username, password, nickname, email });
-      fetch(`${SERVER_URL}/register/common`, {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: json,
-      })
-        .then((result) => {
-          return result.json();
-        })
-        .then((json) => {
-          if (!json.ok) {
-            return setErrorMessage(json.message);
-          } else {
-            setAuthTokenToLocalStorage(json.token);
-            dispatch(setUserData(json.userData));
-            return history.push("/");
+      dispatch(registerUser(username, password, nickname, email)).then(
+        (response) => {
+          if (response.ok) {
+            history.push("/");
           }
-        })
-        .catch((error) => {
-          return setErrorMessage(error.toString());
-        });
+        }
+      );
     }
   }
 
   function handleFacebookOutlinedOnClick() {
-    const errorMessage = "請確認並根據指示登入fb";
-    FBstartApp().then((res) => {
-      if (!res.ok) {
-        setErrorMessage(errorMessage);
-        return;
-      } else {
-        const { id, name, email } = res.FBUserData;
-        const json = JSON.stringify({
-          fbId: id,
-          fbName: name,
-          fbEmail: email,
-        });
-        fetch(`${SERVER_URL}/register/fb`, {
-          method: "POST",
-          headers: {
-            "content-type": "application/json",
-          },
-          body: json,
-        })
-          .then((response) => {
-            return response.json();
-          })
-          .then((json) => {
-            if (!json.ok) {
-              return setErrorMessage(json.message);
-            }
-            setAuthTokenToLocalStorage(json.token);
-            dispatch(setUserData(json.userData));
-            return history.push("/");
-          })
-          .catch((error) => {
-            return setErrorMessage(error.toString());
-          });
+    dispatch(FbRegisterUser()).then((response) => {
+      if (response.ok) {
+        history.push("/");
       }
     });
   }
@@ -130,69 +95,81 @@ export default function RegisterPage() {
     if (email) {
       setEmailErrorMessage("");
     }
-  }, [username, password, nickname, email]);
+    //刪除 registerErrorMessage
+    return () => {
+      dispatch(setRegisterErrorMessage(null));
+    };
+  }, [dispatch, username, password, nickname, email]);
+
+  if (userData) {
+    history.push("/");
+  }
 
   return (
-    <Wrapper $solidPlate={true}>
+    <FormWrapper $solidPlate={true}>
       <FormContainer>
         <Title>please sign up</Title>
+        <form
+          onKeyPress={(event) =>
+            event.key == "Enter" && handleUserButtonOnClick()
+          }
+        >
+          <UserInputContainer>
+            <UserInput
+              placeholder={"USERNAME"}
+              onChange={(event) => setUsername(event.target.value)}
+              value={username}
+            ></UserInput>
+            {usernameErrorMessage && (
+              <ErrorMessage>{usernameErrorMessage}</ErrorMessage>
+            )}
+          </UserInputContainer>
+          <UserInputContainer>
+            <UserInput
+              placeholder={"PASSWORD"}
+              onChange={(event) => setPassword(event.target.value)}
+              value={password}
+              type="password"
+            ></UserInput>
+            {passwordErrorMessage && (
+              <ErrorMessage>{passwordErrorMessage}</ErrorMessage>
+            )}
+          </UserInputContainer>
+          <UserInputContainer>
+            <UserInput
+              placeholder={"NICKNAME"}
+              onChange={(event) => setNickname(event.target.value)}
+              value={nickname}
+            ></UserInput>
+            {nicknameErrorMessage && (
+              <ErrorMessage>{nicknameErrorMessage}</ErrorMessage>
+            )}
+          </UserInputContainer>
+          <UserInputContainer>
+            <UserInput
+              placeholder={"EMAIL"}
+              onChange={(event) => setEmail(event.target.value)}
+              value={email}
+            ></UserInput>
+            {emailErrorMessage && (
+              <ErrorMessage>{emailErrorMessage}</ErrorMessage>
+            )}
+          </UserInputContainer>
+          <UserButtonContainer>
+            <UserButtonBorder onClick={() => handleUserButtonOnClick()}>
+              <UserButtonText>next</UserButtonText>
+              <UserButtonBackground />
+            </UserButtonBorder>
+            {registerErrorMessage && (
+              <ErrorMessage>{registerErrorMessage}</ErrorMessage>
+            )}
+          </UserButtonContainer>
+        </form>
         <FacebookOutlined
           onClick={handleFacebookOutlinedOnClick}
-          style={{
-            position: "absolute",
-            right: "10px",
-            top: "10px",
-            transform: "scale(1.2)",
-            cursor: "pointer",
-          }}
+          style={FacebookOutlinedStyle}
         />
-        <UserInputContainer>
-          <UserInput
-            placeholder={"USERNAME"}
-            onChange={(event) => setUsername(event.target.value)}
-            value={username}
-          ></UserInput>
-          {usernameErrorMessage && (
-            <ErrorMessage>{usernameErrorMessage}</ErrorMessage>
-          )}
-        </UserInputContainer>
-        <UserInputContainer>
-          <UserInput
-            placeholder={"PASSWORD"}
-            onChange={(event) => setPassword(event.target.value)}
-            value={password}
-            type="password"
-          ></UserInput>
-          {passwordErrorMessage && (
-            <ErrorMessage>{passwordErrorMessage}</ErrorMessage>
-          )}
-        </UserInputContainer>
-        <UserInputContainer>
-          <UserInput
-            placeholder={"NICKNAME"}
-            onChange={(event) => setNickname(event.target.value)}
-            value={nickname}
-          ></UserInput>
-          {nicknameErrorMessage && (
-            <ErrorMessage>{nicknameErrorMessage}</ErrorMessage>
-          )}
-        </UserInputContainer>
-        <UserInputContainer>
-          <UserInput
-            placeholder={"EMAIL"}
-            onChange={(event) => setEmail(event.target.value)}
-            value={email}
-          ></UserInput>
-          {emailErrorMessage && (
-            <ErrorMessage>{emailErrorMessage}</ErrorMessage>
-          )}
-        </UserInputContainer>
-        <UserButtonBorder onClick={() => handleUserButtonOnClick()}>
-          <UserButtonText>next</UserButtonText>
-          <UserButtonBackground />
-        </UserButtonBorder>
-        {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
       </FormContainer>
-    </Wrapper>
+    </FormWrapper>
   );
 }

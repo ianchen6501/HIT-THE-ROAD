@@ -7,10 +7,25 @@ import "./Header.css";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteAuthTokenFromLocalStorage } from "../../utils";
 import { setUserData } from "../../redux/reducers/usersReducer";
-import { MEDIA_QUERY_SM } from "../../constants/break_point";
+import {
+  MEDIA_QUERY_SM,
+  MEDIA_QUERY_MD,
+  MEDIA_QUERY_LG,
+} from "../../constants/break_point";
+import Carousel from "nuka-carousel";
+
+import one from "../../static/header/one.jpg";
+import two from "../../static/header/two.jpg";
+import three from "../../static/header/three.jpg";
 
 const HeaderContainer = styled.div`
-  position: ${(props) => (props.$atHomepage ? `relative` : `fixed`)};
+  ${(props) =>
+    props.$atPlanningPage && props.$mouseOver
+      ? "position: relative"
+      : "position: fixed"}};
+  ${(props) =>
+    !props.$atHomepage && !props.$atPlanningPage && "position: relative"};
+  ${(props) => props.$atHomepage && "position: relative;"}
   height: ${(props) =>
     props.$atHomepage
       ? props.theme.heights.homepageHeader
@@ -25,25 +40,66 @@ const HeaderContainer = styled.div`
   top: 0;
   bottom: 0;
   padding: 0px, 30px;
-  ${(props) => props.$atHomepage && `padding-top: 30px`};
-  z-index: 2;
-  background: linear-gradient(
-    ${(props) => props.theme.primaryColors.primaryLight},
-    ${(props) => props.theme.secondaryColors.secondaryLighter}
-  );
-  box-shadow: 0px 2px 2px grey;
+  ${(props) =>
+    props.$atPlanningPage && props.$mouseOver
+      ? "box-shadow: inset 0px -1px 3px grey"
+      : ""}};
+  ${(props) => !props.$atPlanningPage && "box-shadow: 0px 2px 2px grey"};
+  ${(props) => props.$atPlanningPage && "background: transparent"};
+  ${(props) =>
+    !props.$atHomepage &&
+    !props.$atPlanningPage &&
+    `background: ${props.theme.secondaryColors.secondaryLighter}`};
+  ${(props) =>
+    props.$atPlanningPage &&
+    props.$mouseOver &&
+    `background: ${props.theme.secondaryColors.secondaryLighter}`};
+
+  ${MEDIA_QUERY_LG} {
+    ${(props) => props.$atHomepage && "height: 420px;"}; 
+  }
+
+  ${MEDIA_QUERY_MD} {
+    ${(props) => props.$atHomepage && "height: 320px;"}; 
+  }
 
   ${MEDIA_QUERY_SM} {
+    position: relative;
     width: 100vw;
+    background: ${(props) => props.theme.secondaryColors.secondaryLighter};
+    box-shadow: inset 0px -1px 3px grey;
+    z-index: 3;
+    ${(props) => props.$atHomepage && "height: 200px;"}; 
   }
 `;
 
+const HeaderOverSensor = styled.div`
+  position: absolute;
+  height: 5px;
+  width: calc(100% - 55px);
+  left: 55px;
+  background: transparent;
+  z-index: 4;
+`;
+
 const HeaderUpContainer = styled.div`
+  position: relative;
   width: 100%;
   height: ${(props) => (props.$atHomepage ? `auto` : "100%  ")};
   display: flex;
   justify-content: space-between;
   align-items: center;
+  ${(props) =>
+    props.$atPlanningPage &&
+    !props.$mouseOver &&
+    `top: -${props.theme.heights.header}`};
+  ${(props) => props.$atPlanningPage && props.$mouseOver && `top: 0px`};
+  ${(props) => props.$atHomepage && `margin-top: 30px`};
+  z-index: 2;
+
+  ${MEDIA_QUERY_SM} {
+    top: 0px;
+  }
 `;
 
 const Logo = styled.div`
@@ -63,6 +119,7 @@ const Logo = styled.div`
     bottom: 0px;
     transform: scale(0.8);
     width: 120px;
+    z-index: 2;
   }
 `;
 
@@ -82,13 +139,23 @@ const Brand = styled.div`
   }
 `;
 
-const NavbarWrapper = styled.div``;
+const NavbarWrapper = styled.div`
+  ${MEDIA_QUERY_SM} {
+    position: absolute;
+    top: ${(props) => (props.$atHomepage ? "0" : "20px")};
+    right: 0;
+    width: 100px;
+    height: 200px;
+    overflow: hidden;
+  }
+`;
 
 const NavbarButton = styled.div`
   display: none;
 
   ${MEDIA_QUERY_SM} {
-    position: relative;
+    position: absolute;
+    right: 0;
     display: block;
     margin-right: 10px;
     width: 24px;
@@ -122,18 +189,21 @@ const NavbarList = styled.div`
   margin-right: 10px;
 
   ${MEDIA_QUERY_SM} {
-    display: ${(props) => (props.$isNavbarListShow ? "block" : "none")};
     flex-direction: column;
     position: absolute;
-    top: ${(props) => props.theme.heights.header};
-    left: 0px;
-    margin-left: 10px;
+    top: 40px;
+    right: ${(props) => (props.$isNavbarListShow ? "0px" : "-100%")};
+    margin-right: 0px;
     padding-left: 5px;
     padding-right: 5px;
     width: 100px;
     text-align: center;
-    background: ${(props) => props.theme.secondaryColors.secondaryLighter};
-    box-shadow: -3px 3px 3px grey;
+    background: ${(props) =>
+      props.$atHomepage
+        ? "rgba(255, 255, 255, 0.7)"
+        : props.theme.secondaryColors.secondaryLighter};
+    box-shadow: 3px 3px 3px grey;
+    transition: right 1s ease;
   }
 `;
 
@@ -142,6 +212,8 @@ const Nav = styled(Link)`
   padding: 10px 15px 5px;
   border-bottom: 1px solid transparent;
   color: ${(props) => props.theme.secondaryColors.secondary};
+  width: 100px;
+  text-align: center;
   font-weight: bold;
   text-decoration: none;
   cursor: pointer;
@@ -175,26 +247,50 @@ const LeftContainer = styled.div`
   }
 `;
 
-const HeaderSlogan = styled.div`
+const HeaderSlogan = styled(Link)`
+  display: block;
   position: relative;
-  top: -40px;
-  display: flex;
-  align-items: center;
-  margin-top: 20px;
+  top: -80px;
   padding: 15px 25px;
-  border: solid 3px ${(props) => props.theme.basicColors.white};
-  font-size: ${(props) => props.theme.titles.h3};
+  width: 100%;
+  border: 2px solid transparent;
+  background: rgb(255, 255, 255, 0.8);
+  border-radius: 10px;
+  text-align: center;
+  font-size: ${(props) => props.theme.titles.h4};
   font-weight: bold;
-  color: ${(props) => props.theme.basicColors.white};
+  color: ${(props) => props.theme.secondaryColors.secondaryLight};
   cursor: pointer;
-  transition: border 1s;
+  transition: all 1s ease;
 
   &:hover {
-    animation: Gradient linear;
-    animation-duration: 1s;
-    animation-iteration-count: infinite;
+    background: rgb(255, 255, 255, 0.1);
+    border: 2px solid white;
+    color: rgb(255, 255, 255);
+  }
 
-    border: 3px solid transparent;
+  ${MEDIA_QUERY_MD} {
+    padding: 5px 10px;
+    font-size: ${(props) => props.theme.fontSizes.medium};
+  }
+`;
+
+const LogoWrapper = styled.div`
+  position: relative;
+  width: 320px;
+
+  ${MEDIA_QUERY_LG} {
+    top: -10%;
+  }
+
+  ${MEDIA_QUERY_MD} {
+    width: 240px;
+    top: -30%;
+  }
+
+  ${MEDIA_QUERY_SM} {
+    width: 160px;
+    top: -90%;
   }
 `;
 
@@ -203,6 +299,7 @@ export default function Header({ isCheckedLogin }) {
   const location = useLocation();
   const userData = useSelector((store) => store.users.userData);
   const [isNavbarListShow, setIsNavbarListShow] = useState(false);
+  const [onMouseOver, setOnMouseOver] = useState(false);
 
   function handleLogout() {
     deleteAuthTokenFromLocalStorage();
@@ -210,64 +307,124 @@ export default function Header({ isCheckedLogin }) {
   }
 
   return (
-    <HeaderContainer $atHomepage={location.pathname === "/"}>
-      <HeaderUpContainer $atHomepage={location.pathname === "/"}>
-        <LeftContainer>
-          {location.pathname === "/" && (
-            <Brand as={Link} to="/">
-              HitTheRoad
-            </Brand>
-          )}
-          {location.pathname !== "/" && (
-            <Logo as={Link} $atHomepage={location.pathname === "/"} to="/" />
-          )}
-        </LeftContainer>
-        {isCheckedLogin && (
-          <NavbarWrapper>
-            <NavbarButton
-              onClick={() => setIsNavbarListShow(!isNavbarListShow)}
-            />
-            <NavbarList $isNavbarListShow={isNavbarListShow}>
-              <Nav to="/explore" $active={location.pathname === "/user"}>
-                探索行程
-              </Nav>
-              {userData && (
-                <Nav to="/user" $active={location.pathname === "/user"}>
-                  編輯行程
-                </Nav>
-              )}
-              {!userData && (
-                <Nav to="/login" $active={location.pathname === "/login"}>
-                  登入
-                </Nav>
-              )}
-              {!userData && (
-                <Nav to="/register" $active={location.pathname === "/register"}>
-                  註冊
-                </Nav>
-              )}
-              {userData && (
-                <Nav to="/" onClick={() => handleLogout()}>
-                  登出
-                </Nav>
-              )}
-            </NavbarList>
-          </NavbarWrapper>
-        )}
-      </HeaderUpContainer>
-      {location.pathname === "/" && (
-        <>
-          <LogoSVG
-            className="LogoSVG"
-            stroke="#DB7290"
-            strokeWidth="1rem"
-            fill="#000000"
-          ></LogoSVG>
-          <Link to={userData ? "/create" : "/login"}>
-            <HeaderSlogan>開始探索旅程</HeaderSlogan>
-          </Link>
-        </>
+    <>
+      {location.pathname === "/planning-page" && (
+        <HeaderOverSensor onMouseOver={() => setOnMouseOver(true)} />
       )}
-    </HeaderContainer>
+      <HeaderContainer
+        $atHomepage={location.pathname === "/"}
+        $atPlanningPage={location.pathname === "/planning-page"}
+        onMouseLeave={() => setOnMouseOver(false)}
+        $mouseOver={onMouseOver}
+      >
+        {location.pathname === "/" && (
+          <Carousel
+            autoplay={true}
+            autoplayReverse={true}
+            wrapAround={true}
+            renderCenterLeftControls={() => null}
+            renderCenterRightControls={() => null}
+            style={{ position: "absolute", zIndex: -1, objectFit: "cover" }}
+          >
+            <img src={one} alt="one" />
+            <img src={two} alt="two" />
+            <img src={three} alt="three" />
+          </Carousel>
+        )}
+
+        <HeaderUpContainer
+          $atHomepage={location.pathname === "/"}
+          $atPlanningPage={location.pathname === "/planning-page"}
+          $mouseOver={onMouseOver}
+        >
+          <LeftContainer>
+            {location.pathname === "/" && (
+              <Brand as={Link} to="/">
+                HitTheRoad
+              </Brand>
+            )}
+            {location.pathname !== "/" && (
+              <Logo
+                as={Link}
+                $atHomepage={location.pathname === "/"}
+                to="/"
+                onClick={() => setIsNavbarListShow(false)}
+              />
+            )}
+          </LeftContainer>
+          {isCheckedLogin && (
+            <NavbarWrapper $atHomepage={location.pathname === "/"}>
+              <NavbarButton
+                onClick={() => setIsNavbarListShow(!isNavbarListShow)}
+              />
+              <NavbarList
+                $isNavbarListShow={isNavbarListShow}
+                $atHomepage={location.pathname === "/"}
+              >
+                <Nav
+                  to="/explore/location/全部"
+                  $active={location.pathname === "/user"}
+                  onClick={() => setIsNavbarListShow(false)}
+                >
+                  探索行程
+                </Nav>
+                {userData && (
+                  <Nav
+                    to="/user"
+                    $active={location.pathname === "/user"}
+                    onClick={() => setIsNavbarListShow(false)}
+                  >
+                    編輯行程
+                  </Nav>
+                )}
+                {!userData && (
+                  <Nav
+                    to="/login"
+                    $active={location.pathname === "/login"}
+                    onClick={() => setIsNavbarListShow(false)}
+                  >
+                    登入
+                  </Nav>
+                )}
+                {!userData && (
+                  <Nav
+                    to="/register"
+                    $active={location.pathname === "/register"}
+                    onClick={() => setIsNavbarListShow(false)}
+                  >
+                    註冊
+                  </Nav>
+                )}
+                {userData && (
+                  <Nav
+                    to="/"
+                    onClick={() => {
+                      setIsNavbarListShow(false);
+                      handleLogout();
+                    }}
+                  >
+                    登出
+                  </Nav>
+                )}
+              </NavbarList>
+            </NavbarWrapper>
+          )}
+        </HeaderUpContainer>
+        {location.pathname === "/" && (
+          <LogoWrapper>
+            <LogoSVG
+              className="LogoSVG"
+              style={{ width: "100%" }}
+              stroke="#DB7290"
+              strokeWidth="1rem"
+              fill="#000000"
+            ></LogoSVG>
+            <HeaderSlogan to={userData ? "/create" : "/login"}>
+              開始探索旅程
+            </HeaderSlogan>
+          </LogoWrapper>
+        )}
+      </HeaderContainer>
+    </>
   );
 }

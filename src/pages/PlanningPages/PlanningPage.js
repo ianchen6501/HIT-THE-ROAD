@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
+import { useHistory } from "react-router-dom";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -48,7 +49,6 @@ const PlanWrapper = styled.div`
   position: relative;
   display: flex;
   min-height: 100vh;
-  padding-top: ${(props) => props.theme.heights.header};
   padding-bottom: ${(props) => props.theme.heights.footer};
 
   ${MEDIA_QUERY_SM} {
@@ -267,6 +267,7 @@ const LoadingDiv = styled.div`
 `;
 
 export default function PlanningPage() {
+  const history = useHistory();
   const isPostItsLoading = useSelector((store) => store.postIts.isLoading);
   const isMarkerssLoading = useSelector((store) => store.mapMarks.isLoading);
   const isSchedulesLoading = useSelector((store) => store.schedules.isLoading);
@@ -289,6 +290,12 @@ export default function PlanningPage() {
   const originId = useSelector((store) => store.mapMarks.originId);
   let directionSteps = useSelector((store) => store.mapMarks.directionSteps);
   const routes = useSelector((store) => store.schedules.routes);
+
+  useEffect(() => {
+    if (getAuthTokenFromSessionStorage("userId") === null) {
+      return history.push("/");
+    }
+  }, [history]);
 
   useEffect(() => {
     dispatch(setEditId(null));
