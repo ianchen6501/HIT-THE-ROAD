@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:5003";
+const BASE_URL = "https://localhost";
 // const BASE_URL_BACKUP = "https://hit-the-road.mings.tw";
 
 export function getAllUnfinishedschedulesAPI(id) {
@@ -127,14 +127,15 @@ export const deleteScheculeAPI = (id, json) => {
     body: json,
   }).then((result) => result.json());
 };
-
-export const getUserDataAPI = (json) => {
+//TODO:
+export const getUserDataAPI = () => {
   return fetch(`${BASE_URL}/users`, {
-    method: "POST",
-    headers: {
-      "content-type": "application/json",
-    },
-    body: json,
+    // method: "GET",
+    // headers: {
+    // "content-type": "application/json",
+    // },
+    // body: json,
+    credentials: "include",
   }).then((response) => response.json());
 };
 
@@ -208,6 +209,7 @@ export const loginAPI = (json) => {
       "content-type": "application/json",
     },
     body: json,
+    credentials: "include",
   }).then((response) => response.json());
 };
 
