@@ -315,7 +315,7 @@ export default function PlanningPage() {
   }, [dispatch]);
 
   useEffect(() => {
-    if (Object.keys(dailyRoutines).length > 0 && currentDate) {
+    if (dailyRoutines && currentDate) {
       const isCurrentDateExist = Object.keys(dailyRoutines).find(
         (key) => Number(key) === currentDate
       );

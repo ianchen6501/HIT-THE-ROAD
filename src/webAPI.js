@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:5003";
+const BASE_URL = "https://hit-the-road-server.mings.tw";
 // const BASE_URL_BACKUP = "https://hit-the-road.mings.tw";
 
 export function getAllUnfinishedschedulesAPI(id) {
@@ -22,7 +22,7 @@ export function updateSchedule(url, json) {
     body: json,
   }).then((response) => response.json());
 }
-
+//TODO: 確認回傳資料
 export const getScheduleContent = (userId, scheduleId) => {
   return fetch(`${BASE_URL}/schedules/${userId}/${scheduleId}`).then((res) =>
     res.json()
@@ -127,14 +127,15 @@ export const deleteScheculeAPI = (id, json) => {
     body: json,
   }).then((result) => result.json());
 };
-
-export const getUserDataAPI = (json) => {
+//TODO:
+export const getUserDataAPI = () => {
   return fetch(`${BASE_URL}/users`, {
-    method: "POST",
-    headers: {
-      "content-type": "application/json",
-    },
-    body: json,
+    // method: "GET",
+    // headers: {
+    // "content-type": "application/json",
+    // },
+    // body: json,
+    credentials: "include",
   }).then((response) => response.json());
 };
 
@@ -174,9 +175,7 @@ export const getFilteredPostsAPI = (keyword) => {
 };
 
 export const getPostsAPI = () => {
-  return fetch(`${BASE_URL}/posts`, {
-    credentials: "include", //FIXME: 測試改為帶 credential header
-  }).then((response) => {
+  return fetch(`${BASE_URL}/posts`, {}).then((response) => {
     return response.json();
   });
 };
@@ -208,6 +207,7 @@ export const loginAPI = (json) => {
       "content-type": "application/json",
     },
     body: json,
+    credentials: "include",
   }).then((response) => response.json());
 };
 

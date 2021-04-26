@@ -115,9 +115,9 @@ export default function LoginPage() {
       return;
     } else {
       dispatch(login(username, password)).then((response) => {
-        //if (response.ok) {
-        //history.push("/");
-        //}
+        if (response.ok) {
+          history.push("/");
+        }
       });
     }
   };

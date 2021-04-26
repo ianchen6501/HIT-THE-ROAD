@@ -43,6 +43,7 @@ export const {
 export const getSinglePost = (scheduleId) => (dispatch) => {
   dispatch(setIsLoading(true));
   getSinglePostAPI(scheduleId).then((res) => {
+    console.log(res);
     dispatch(setSinglePost(res));
     dispatch(setIsLoading(false));
   });

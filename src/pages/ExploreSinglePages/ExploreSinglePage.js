@@ -67,7 +67,7 @@ export default function ExploreSinglePage() {
     window.scroll(0, 0);
     const datesTest = [];
     if (dailyRoutines) {
-      Object.keys(JSON.parse(dailyRoutines)).map((key) => datesTest.push(key));
+      Object.keys(dailyRoutines).map((key) => datesTest.push(key));
     }
     setDates(datesTest);
   }, [dailyRoutines]);
