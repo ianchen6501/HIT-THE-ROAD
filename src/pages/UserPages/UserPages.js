@@ -307,58 +307,56 @@ export default function UserPage() {
     history.push("/");
   }
 
-  if (!schedules || isChangingIsFinished) {
+  if (isChangingIsFinished) {
     return <LoadingPage />;
   }
 
-  if (schedules) {
-    return (
-      <Container>
-        <SideList>
-          <SideButton
-            onClick={() => {
-              setButtonActive("unfinish");
-              dispatch(getUnfinishedSchedules(userData.id));
-            }}
-            $active={buttonActive === "unfinish"}
-          >
-            未完成
-          </SideButton>
-          <SideButton
-            onClick={() => {
-              setButtonActive("finish");
-              dispatch(getFinishedSchedules(userData.id));
-            }}
-            $active={buttonActive === "finish"}
-          >
-            已完成
-          </SideButton>
-          <SideButton
-            onClick={() => {
-              setButtonActive("add");
-              history.push("/create");
-            }}
-            $active={buttonActive === "add"}
-          >
-            新增
-          </SideButton>
-        </SideList>
-        <ScheduleWrapper>
-          {schedules.length ? (
-            schedules.map((scheduleData, index) => (
-              <Schedule
-                key={index}
-                scheduleData={scheduleData}
-                handleDeleteOutlinedOnClick={handleDeleteOutlinedOnClick}
-                handleCheckboxOnChange={handleCheckboxOnChange}
-                handleScheduleTitleOnClick={handleScheduleTitleOnClick}
-              />
-            ))
-          ) : (
-            <Reminder>目前沒有行程喔!</Reminder>
-          )}
-        </ScheduleWrapper>
-      </Container>
-    );
-  }
+  return (
+    <Container>
+      <SideList>
+        <SideButton
+          onClick={() => {
+            setButtonActive("unfinish");
+            dispatch(getUnfinishedSchedules(userData.id));
+          }}
+          $active={buttonActive === "unfinish"}
+        >
+          未完成
+        </SideButton>
+        <SideButton
+          onClick={() => {
+            setButtonActive("finish");
+            dispatch(getFinishedSchedules(userData.id));
+          }}
+          $active={buttonActive === "finish"}
+        >
+          已完成
+        </SideButton>
+        <SideButton
+          onClick={() => {
+            setButtonActive("add");
+            history.push("/create");
+          }}
+          $active={buttonActive === "add"}
+        >
+          新增
+        </SideButton>
+      </SideList>
+      <ScheduleWrapper>
+        {schedules.length ? (
+          schedules.map((scheduleData, index) => (
+            <Schedule
+              key={index}
+              scheduleData={scheduleData}
+              handleDeleteOutlinedOnClick={handleDeleteOutlinedOnClick}
+              handleCheckboxOnChange={handleCheckboxOnChange}
+              handleScheduleTitleOnClick={handleScheduleTitleOnClick}
+            />
+          ))
+        ) : (
+          <Reminder>目前沒有行程喔!</Reminder>
+        )}
+      </ScheduleWrapper>
+    </Container>
+  );
 }

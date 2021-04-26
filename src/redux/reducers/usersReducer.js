@@ -25,7 +25,7 @@ export const usersReducer = createSlice({
     isLoading: false,
     authTokenResponse: null,
     userData: null,
-    schedules: null,
+    schedules: [],
     scheduleData: null,
     createErrorMessage: null,
     registerErrorMessage: null,

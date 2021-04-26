@@ -227,7 +227,7 @@ export default function PostItItem() {
             {...provided.droppableProps}
             isDraggingOver={snapshot.isDraggingOver}
           >
-            {Object.keys(spots).length > 0 &&
+            {spots &&
               spotIds &&
               spotIds.map((id, index) => (
                 <Draggable
